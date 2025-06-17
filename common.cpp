@@ -1,0 +1,125 @@
+// the command handler here is wedged in before the normal command handler.
+// it doesn't do partial matches like the usual commands
+
+#include "eqclientmod.h"
+#include "common.h"
+#include "util.h"
+#include "settings.h"
+#include "eq_titanium.h"
+#include <string.h>
+
+// globals
+HMODULE hEQGfxDll;
+#ifdef COMMAND_HANDLER
+std::map<const char *, _slashCommandHandler> ChatCommandMap;
+#endif
+
+#ifdef COMMAND_HANDLER
+#include <map>
+
+void command_eqclientmod(void *LocalPlayer, char *text, char *cmd, char *&sep)
+{
+	char buf[200];
+	sprintf(buf, "eqclientmod %s solar@heliacal.net", BUILD_VERSION);
+	EverQuestObject->dsp_chat(buf, 269, 1);
+}
+
+//#include <WerApi.h>
+void command_crash(void *LocalPlayer, char *text, char *cmd, char *&sep)
+{
+	//WerSetFlags(WER_FAULT_REPORTING_ALWAYS_SHOW_UI);
+	//char *crash = 0;
+	//*crash = 0x90;
+	//RaiseException(0x0000DEAD, 0, 0, 0);
+	ZeroMemory(NULL, 100);
+	//int a = 0;
+	//int b = 100 / a;
+}
+
+// this __fastcall prototype is equivalent to __thiscall, the second argument just isn't meaningful
+// int __fastcall CEverQuest__InterpretCmd_Detour_ExecuteCmd(void *this_ptr, void *edx, void *localplayer, char *text)
+typedef int(__thiscall *_CEverQuest__InterpretCmd)(void *this_ptr, void *localplayer, char *text);
+_CEverQuest__InterpretCmd CEverQuest__InterpretCmd = (_CEverQuest__InterpretCmd)Offset_CEverQuest__InterpretCmd;
+class CEverQuest__InterpretCmd_Detour_type
+{
+public:
+	int CEverQuest__InterpretCmd_Detour(void *LocalPlayer, char *text)
+	{
+		bool handled = false;
+		if (LocalPlayer && text && *text == '/')
+		{
+			char buf2[201];
+			strncpy(buf2, text, 200);
+			buf2[200] = 0;
+
+			char *sep = buf2;
+			char *cmd = strtok_s(sep, " ", &sep);
+
+			//for (auto item : ChatCommandMap)
+			for (std::map<const char *, _slashCommandHandler>::iterator item = ChatCommandMap.begin(); item != ChatCommandMap.end(); ++item)
+			{
+				if (item->first && !strcmp(cmd, item->first))
+				{
+					handled = true;
+					item->second(LocalPlayer, text, cmd, sep);
+				}
+			}
+		}
+
+		if (handled)
+		{
+			return CEverQuest__InterpretCmd(this, NULL, NULL);
+		}
+
+		return CEverQuest__InterpretCmd(this, LocalPlayer, text);
+	}
+};
+#endif
+
+void LoadCommon()
+{
+	Log("LoadCommon()");
+
+	hEQGfxDll = LoadLibrary("EQGraphicsDX9.DLL");
+	if (!hEQGfxDll)
+	{
+		Log("LoadCommon(): NULL result from LoadLibrary(\"EQGraphicsDX9.DLL\")");
+		return;
+	}
+
+#ifdef COMMAND_HANDLER
+	bool enableCommandHandler = true;
+
+#ifdef INI_FILE
+	char buf[2048];
+	const char *desc = "This mod adds the extra command handling that some of the other hacks use but it's not strictly necessary to enable this to use the other hacks.  Basic commands included: /eqclientmod /crash";
+	WritePrivateProfileStringA("CommandHandler", "Description", desc, INI_FILE);
+	GetINIString("CommandHandler", "Enabled", "TRUE", buf, sizeof(buf), true);
+	enableCommandHandler = ParseINIBool(buf);
+#endif
+
+	Log("LoadCommon(): CommandHandler hack is %s", enableCommandHandler ? "ENABLED" : "DISABLED");
+
+	//SetProcessAffinityMask(GetCurrentProcess(), 1);
+	SetThreadAffinityMask(GetCurrentThread(), 1);
+
+	if (enableCommandHandler)
+	{
+		//MethodAddressToVariable(NP_CEverQuest__InterpretCmd_Detour, CEverQuest__InterpretCmd_Detour_type::CEverQuest__InterpretCmd_Detour);
+		intptr_t  NP_CEverQuest__InterpretCmd_Detour; { int(__thiscall CEverQuest__InterpretCmd_Detour_type::* fp)(void *, char *) = &CEverQuest__InterpretCmd_Detour_type::CEverQuest__InterpretCmd_Detour; memcpy(&NP_CEverQuest__InterpretCmd_Detour, &fp, 4); }
+
+		// CChatWindow::WndNotification - this one is for when text is typed into a chat window's input control
+		// .text:004F7390 2518 E8 E3 17 FA FF                               call    CEverQuest__InterpretCmd
+		intptr_t addr = (intptr_t)NP_CEverQuest__InterpretCmd_Detour - (intptr_t)0x004F7390 - 5;
+		Patch((void *)(0x004F7390 + 1), &addr, 4);
+
+		// EQ_Character::DoPassageOfTime
+		// .text:00424015 388 E8 5E 4B 07 00                                call    CEverQuest__InterpretCmd
+		addr = (intptr_t)NP_CEverQuest__InterpretCmd_Detour - (intptr_t)0x00424015 - 5;
+		Patch((void *)(0x00424015 + 1), &addr, 4);
+
+		ChatCommandMap["/eqclientmod"] = command_eqclientmod;
+		ChatCommandMap["/crash"] = command_crash;
+	}
+#endif
+}
