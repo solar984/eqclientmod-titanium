@@ -170,6 +170,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\IDA_types.h"
+			>
+		</File>
+		<File
 			RelativePath=".\InstructionLength.h"
 			>
 		</File>
@@ -183,6 +187,10 @@
 		</File>
 		<File
 			RelativePath=".\Personalities\personality_winmm.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Modules\QeynosCitizenFemaleModelHack.cpp"
 			>
 		</File>
 		<File

@@ -22,7 +22,7 @@ unsigned __int64 GetCpuSpeed2_Detour()
 {
 	LARGE_INTEGER Frequency;
 
-	OutputDebugString("GetCpuSpeed2_Detour");
+	//OutputDebugString("GetCpuSpeed2_Detour");
 	if (!QueryPerformanceFrequency(&Frequency))
 	{
 		MessageBoxW(0, L"This OS is not supported.", L"Error", 0);
@@ -31,7 +31,6 @@ unsigned __int64 GetCpuSpeed2_Detour()
 
 	g_ProcessorSpeed.QuadPart = Frequency.QuadPart / 1000;
 	QueryPerformanceCounter(&g_ProcessorTicks);
-	//Sleep(1000u);
 	return g_ProcessorSpeed.QuadPart;
 }
 
@@ -55,23 +54,18 @@ void LoadTimerHack()
 		Detour((PBYTE)Offset_rdtsc_elapsed, (PBYTE)GetCpuTicks_Detour);
 
 		// these two are in eqgfx_dx8.dll
-		//HMODULE eqgfx_dll = LoadLibraryA("eqgfx_dx8.dll");
 		if (hEQGfxDll)
 		{
-			//HINSTANCE heqGfxMod = GetModuleHandle("eqgfx_dx8.dll");
-
 			// there are two functions: GetCpuSpeed2 and GetCpuSpeed3
 			// the game calls both and compares the results usually to see which worked better, so we'll just override both to go to our new function
 			intptr_t cpuSpeed2 = (intptr_t)GetProcAddress(hEQGfxDll, "EQG_GetCpuSpeed2");
 			if (cpuSpeed2)
 			{
-				///DetourFunction((PBYTE)cpuSpeed2, (PBYTE)GetCpuSpeed2_Detour);
 				Detour((PBYTE)cpuSpeed2, (PBYTE)GetCpuSpeed2_Detour);
 			}
 			intptr_t cpuSpeed3 = (intptr_t)GetProcAddress(hEQGfxDll, "EQG_GetCpuSpeed3");
 			if (cpuSpeed3)
 			{
-				///DetourFunction((PBYTE)cpuSpeed3, (PBYTE)GetCpuSpeed2_Detour);
 				Detour((PBYTE)cpuSpeed3, (PBYTE)GetCpuSpeed2_Detour);
 			}
 		}

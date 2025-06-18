@@ -101,7 +101,7 @@ void LoadCommon()
 	Log("LoadCommon(): CommandHandler hack is %s", enableCommandHandler ? "ENABLED" : "DISABLED");
 
 	//SetProcessAffinityMask(GetCurrentProcess(), 1);
-	SetThreadAffinityMask(GetCurrentThread(), 1);
+	//SetThreadAffinityMask(GetCurrentThread(), 1);
 
 	if (enableCommandHandler)
 	{

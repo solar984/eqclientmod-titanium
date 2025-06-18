@@ -26,3 +26,7 @@ This mod disables the gamma functionality by detouring the function that would d
 
 ### CommandHandler
 This mod adds the extra command handling that some of the other hacks use but it's not strictly necessary to enable this to use the other hacks.  Basic commands included: /eqclientmod /crash
+
+### Qeynos Citizen Female Model Fix
+There is an error in the client that swaps race 71 Qeynos Citizen's female (gender 1) QCF and neuter (gender 2) QCN models.  This results in females falling back to using the default human model.
+This hack swaps it back so it works correctly.

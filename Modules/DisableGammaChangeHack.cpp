@@ -17,7 +17,7 @@ int __fastcall t3dSetGammaLevel_Detour(void *thisptr, float gamma)
 
 void LoadGammaHack()
 {
-	bool enable = true;
+	bool enable = false;
 
 #ifdef INI_FILE
 	char buf[2048];

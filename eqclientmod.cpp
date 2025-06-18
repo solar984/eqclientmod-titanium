@@ -35,6 +35,10 @@ void Payload2()
 	extern void LoadGammaHack();
 	LoadGammaHack();
 #endif
+#ifdef QEYNOS_CITIZEN_FEMALE_MODEL_HACK
+	extern void LoadQeynosCitizenFemaleModelHack();
+	LoadQeynosCitizenFemaleModelHack();
+#endif
 
 	// continue from normal program entry point, this never returns
 	((void (*)())entryPoint)();
