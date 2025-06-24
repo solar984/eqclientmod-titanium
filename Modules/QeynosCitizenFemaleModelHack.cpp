@@ -2,11 +2,9 @@
 // There is an error in the client that swaps race 71's female (1) and neuter (2) models.  This hack swaps them back so the female Qeynos Citizen model works again, rather than showing up as a default human.
 
 #ifdef QEYNOS_CITIZEN_FEMALE_MODEL_HACK
-#include <stdlib.h>
 #include "../common.h"
 #include "../util.h"
 #include "../settings.h"
-#include "../eq_titanium.h"
 
 void LoadQeynosCitizenFemaleModelHack()
 {

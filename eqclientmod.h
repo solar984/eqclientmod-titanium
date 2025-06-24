@@ -6,25 +6,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 
-//#include <stdint.h>
-/*
-typedef uint8_t byte;
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-typedef uint64_t uint64;
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef int64_t int64;
-*/
-
-
 #define INI_FILE ".\\eqclientmod.ini"
 
-#define BUILD_VERSION "SOLAR_TITANIUM_2025061900"
+#define BUILD_VERSION "SOLAR_TITANIUM_2025062400"
 
 #define COMMAND_HANDLER
 #define TIMER_HACK
 #define GAMMA_HACK
 #define QEYNOS_CITIZEN_FEMALE_MODEL_HACK
+#define SLEEP_REMOVER_HACK
+#define PROGRAM_LAUNCH_HACK
+#define ZONE_VERSION_HACK

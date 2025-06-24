@@ -8,6 +8,8 @@
 #include "eq_titanium.h"
 #include <string.h>
 
+//#define DETOUR_SLEEP
+
 // globals
 HMODULE hEQGfxDll;
 #ifdef COMMAND_HANDLER
@@ -76,6 +78,25 @@ public:
 };
 #endif
 
+#ifdef DETOUR_SLEEP
+#include <intrin.h>
+
+typedef void (__stdcall *_Sleep)(DWORD );
+_Sleep Sleep_Trampoline;
+void __stdcall Sleep_Detour(DWORD ms)
+{
+	void* returnAddress = _ReturnAddress();
+	if(ms)
+	{
+		if((int)returnAddress != 0x005EBE61)
+		{
+			Log("Sleep(%d) 0x%08X thread %d", ms, returnAddress, GetCurrentThreadId());
+		}
+	}
+	Sleep(ms);
+}
+#endif
+
 void LoadCommon()
 {
 	Log("LoadCommon()");
@@ -86,6 +107,18 @@ void LoadCommon()
 		Log("LoadCommon(): NULL result from LoadLibrary(\"EQGraphicsDX9.DLL\")");
 		return;
 	}
+
+	//SetProcessAffinityMask(GetCurrentProcess(), 1);
+	//SetThreadAffinityMask(GetCurrentThread(), 1);
+
+	// detour sleep
+#ifdef DETOUR_SLEEP
+	{
+		intptr_t addr = (intptr_t)Sleep_Detour;
+		Sleep_Trampoline = (_Sleep)(*(int *)0x0063F120);
+		Patch((void *)0x0063F120, &addr, 4);
+	}
+#endif
 
 #ifdef COMMAND_HANDLER
 	bool enableCommandHandler = true;
@@ -98,10 +131,7 @@ void LoadCommon()
 	enableCommandHandler = ParseINIBool(buf);
 #endif
 
-	Log("LoadCommon(): CommandHandler hack is %s", enableCommandHandler ? "ENABLED" : "DISABLED");
-
-	//SetProcessAffinityMask(GetCurrentProcess(), 1);
-	//SetThreadAffinityMask(GetCurrentThread(), 1);
+	Log("LoadCommon(): CommandHandler hack is %s thread %d", enableCommandHandler ? "ENABLED" : "DISABLED", GetCurrentThreadId());
 
 	if (enableCommandHandler)
 	{

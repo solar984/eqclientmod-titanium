@@ -39,6 +39,18 @@ void Payload2()
 	extern void LoadQeynosCitizenFemaleModelHack();
 	LoadQeynosCitizenFemaleModelHack();
 #endif
+#ifdef SLEEP_REMOVER_HACK
+	extern void LoadSleepRemoverHack();
+	LoadSleepRemoverHack();
+#endif
+#ifdef PROGRAM_LAUNCH_HACK
+	extern void LoadProgramLaunchHack();
+	LoadProgramLaunchHack();
+#endif
+#ifdef ZONE_VERSION_HACK
+	extern void LoadZoneVersionHack();
+	LoadZoneVersionHack();
+#endif
 
 	// continue from normal program entry point, this never returns
 	((void (*)())entryPoint)();

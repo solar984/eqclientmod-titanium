@@ -1154,20 +1154,20 @@ typedef struct _SPELL {
 /*0x004*/   FLOAT   Range;
 /*0x008*/   FLOAT   AERange;
 /*0x00c*/   FLOAT   PushBack;
-/*0x010*/   BYTE    Unknown0x010[0x04];
+/*0x010*/   FLOAT	PushUp;
 /*0x014*/   DWORD   CastTime;
-/*0x018*/   DWORD   FizzleTime;
+/*0x018*/   DWORD   RecoveryTime;
 /*0x01c*/   DWORD   RecastTime;
-/*0x020*/   DWORD   DurationType;       //DurationFormula on Lucy
+/*0x020*/   DWORD   DurationFormula;       //DurationFormula on Lucy
 /*0x024*/   DWORD   DurationValue1;
-/*0x028*/   DWORD   Unknown0x028;
+/*0x028*/   DWORD   AoeDuration;
 /*0x02c*/   DWORD   Mana;
 /*0x030*/   LONG    Base[0x0c];         //Base1-Base12
 /*0x060*/   LONG    Base2[0x0c];        //Mostly unused, setting name to Base2 from Lucy for now
 /*0x090*/   LONG    Max[0x0c];          //Max1-Max12
 /*0x0c0*/   DWORD   ReagentId[0x4];     //ReagentId1-ReagentId4
 /*0x0d0*/   DWORD   ReagentCount[0x4];  //ReagentCount1-ReagentCount4
-/*0x0e0*/   BYTE    Unknown0x0e0[0x10];
+/*0x0e0*/   DWORD   NoexpendReagent[0x4];
 /*0x0f0*/   DWORD   Calc[0x0c];         //Calc1-Calc12
 /*0x120*/   DWORD   Attrib[0x0c];       //Attrib1-Attrib12
 /*0x150*/   BYTE    Unknown0x150;
@@ -1176,63 +1176,93 @@ typedef struct _SPELL {
 /*0x174*/   DWORD   BookIcon;
 /*0x178*/   DWORD   GemIcon;
 /*0x17c*/   BYTE    LightType;
-/*0x17d*/   BYTE    SpellType;          //0=detrimental, 1=Beneficial, 2=Beneficial, Group Only
-/*0x17e*/   BYTE    Unknown0x12a;
-/*0x17f*/   BYTE    Resist;             //0=un 1=mr 2=fr 3=cr 4=pr 5=dr 6=chromatic
+/*0x17d*/   BYTE    BuffTypeBeneficial;          //0=detrimental, 1=Beneficial, 2=Beneficial, Group Only
+/*0x17e*/   BYTE    Activated;
+/*0x17f*/   BYTE    ResistType;             //0=un 1=mr 2=fr 3=cr 4=pr 5=dr 6=chromatic
 /*0x180*/   BYTE    TargetType;         // 03=Group v1, 04=PB AE, 05=Single, 06=Self, 08=Targeted AE, 0e=Pet, 28=AE PC v2, 29=Group v2
 /*0x181*/   BYTE    FizzleAdj;
 /*0x182*/   BYTE    Skill;
-/*0x183*/   BYTE    Location;           // 01=Outdoors, 02=dungeons, ff=Any
+/*0x183*/   BYTE    ZoneTypeLocation;           // 01=Outdoors, 02=dungeons, ff=Any
 /*0x184*/   BYTE    Environment;
 /*0x185*/   BYTE    TimeOfDay;          // 0=any, 1=day only, 2=night only
 /*0x186*/   BYTE    CastingAnim;
 /*0x187*/   BYTE    TargetAnim;
-/*0x188*/   BYTE    Unknown0x188[0x4];
+/*0x188*/   BYTE    TravelType;
+/*0x189*/	BYTE	DisallowSit;
+  /*0x18a*/   BYTE    Unknown0x18a[0x2];
 /*0x18c*/   DWORD   DescriptionNumber;
-/*0x190*/   BYTE    Uninterruptable;    // 00=Interruptable, 01=Uninterruptable
-/*0x191*/   BYTE    Unknown0x191;
-/*0x192*/   BYTE    Deletable;
-/*0x193*/   BYTE    Unknown0x193;
-/*0x194*/   DWORD   Autocast;           // SpellID of spell to instacast on caster when current spell lands on target
-/*0x198*/   BYTE    Unknown0x198;
+/*0x190*/   BYTE    suspendable;
+/*0x191*/   BYTE    Uninterruptable;    // 00=Interruptable, 01=Uninterruptable
+/*0x192*/   BYTE    DoT_stacking_exempt;
+/*0x193*/   BYTE    Deletable;
+/*0x194*/   DWORD   RecourseSpellID;           // SpellID of spell to instacast on caster when current spell lands on target
+/*0x198*/   BYTE    no_partial_resist;
 /*0x199*/   BYTE    Unknown0x199;
 /*0x19a*/   BYTE    Unknown0x19a;
 /*0x19b*/   BYTE    DurationWindow;     // 0=Long, 1=Short
-/*0x19c*/   DWORD   Unknown144;         // Unknown144 from lucy
-/*0x1a0*/   DWORD   Unknown145;         // Unknown145 from lucy
-/*0x1a4*/   BYTE    Unknown0x1a4[0x1c];
+/*0x19c*/   DWORD   TypeDescNum;         // Unknown144 from lucy
+/*0x1a0*/   DWORD   EffectDescNum;         // Unknown145 from lucy
+/*0x1a4*/	DWORD	EffectDescNum2;
+/*0x1a8*/	BYTE	npc_no_los;
+/*0x1a9*/	BYTE	field160;
+/*0x1aa*/	BYTE	reflectable;
+/*0x1ab*/	DWORD	bonushate;
+/*0x1af*/	DWORD	field163;
+/*0x1b*/	DWORD	field164;
+/*0x1c*/	BYTE	ldon_trap;
+/*0x1d*/	DWORD	EnduranceCost;
 /*0x1c0*/   DWORD   CARecastTimerID;    // ID of combat timer, i think.
-/*0x1c4*/   DWORD   Unknown0x1c4;
-/*0x1c8*/   BYTE    Unknown0x1c8[0x18];
+/*0x1c4*/   BYTE	IsDiscipline;
+/*0x1c8*/   BYTE    Unknown0x1c8[3];
+/*0x1c8*/	DWORD	EndurUpkeep;
+/*0x1cc*/	DWORD	HateAdded;
+/*0x1d0*/	DWORD	numhitstype;
+/*0x1d4*/	DWORD	numhits;
+/*0x1d8*/	DWORD	ConeStartAngle;
+/*0x1dc*/	DWORD	ConeStopAngle;
 /*0x1e0*/   DWORD   PvPResistBase;
 /*0x1e4*/   DWORD   PvPResistCalc;
 /*0x1e8*/   DWORD   PvPResistCap;
-/*0x1ec*/   DWORD   Unknown182;         // Unknown182 from Lucy
-/*0x1f0*/   DWORD   Unknown183;         // Unknown183 from Lucy
-/*0x1f4*/   DWORD   Unknown0x1f4;
-/*0x1f8*/   DWORD   Unknown0x1f8;
-/*0x1fc*/   BYTE    Unknown0x1fc;
+/*0x1ec*/   DWORD   pvp_duration;         // Unknown182 from Lucy
+/*0x1f0*/   DWORD   pvp_duration_cap;         // Unknown183 from Lucy
+/*0x1f4*/   DWORD   spell_category;
+/*0x1f8*/   DWORD   pcnpc_only_flag;
+/*0x1fc*/   BYTE    cast_not_standing;
 /*0x1fd*/   BYTE    CanMGB;
-/*0x1fe*/   BYTE    Unknown0x1fe[0xa];
+/*0x1fe*/	BYTE	no_dispel;
+/*0x1ff*/	BYTE	Unknown0x1ff;
+/*0x200*/	DWORD	npc_category;
+/*0x1fe*/   BYTE    Unknown0x1fe[4];
 /*0x208*/   CHAR    *Name;
-/*0x20c*/   CHAR    *Target;
+/*0x20c*/   CHAR    *Player1;
 /*0x210*/   CHAR    *Extra;             // This is 'Extra' from Lucy (portal shortnames etc)
-/*0x214*/   CHAR    *Unknown0x214;
-/*0x218*/   CHAR    *Unknown0x218;
+/*0x214*/   CHAR    *YouBeginCast;
+/*0x218*/   CHAR    *OtherBeginsCast;
 /*0x21c*/   CHAR    *CastOnYou;
 /*0x220*/   CHAR    *CastOnAnother;
 /*0x224*/   CHAR    *WearOff;
-/*0x228*/   BYTE    Unknown0x228[0x8];
-/*0x230*/   DWORD   Unknown0x230; 
-/*0x234*/   DWORD   spaindex;
-/*0x238*/   DWORD   Unknown0x238;
-/*0x23c*/   DWORD   SpellAnim;
-/*0x240*/   DWORD   Unknown0x240;
-/*0x244*/   DWORD   Unknown130;
-/*0x248*/   DWORD   Unknown0x248;
-/*0x24c*/   DWORD   SpellIcon;
-/*0x250*/   DWORD   ResistAdj;
-/*0x254*/   BYTE    Unknown0x254[0x18];
+/*0x228*/	BYTE	field199;
+/*0x229*/   BYTE    Unknown0x229[3];
+/*0x22c*/	DWORD	Unk0x22c;
+/*0x230*/   DWORD   SPAIndex; 
+/*0x234*/   DWORD   Unk0x234;
+/*0x238*/   DWORD   SpellAnim;
+/*0x23c*/   DWORD   Deities;
+/*0x240*/   BYTE	NPC_no_cast;
+  /*0x241*/   BYTE   Unknown0x241[3];
+/*0x244*/   DWORD   npc_usefulness;
+/*0x248*/   DWORD   new_icon;
+/*0x24c*/   DWORD   ResistAdj;
+/*0x250*/   DWORD   nimbuseffect;
+/*0x254*/	DWORD	MaxResist;
+/*0x258*/	DWORD	MinResist;
+/*0x25c*/	DWORD	viral_targets;
+/*0x260*/	DWORD	viral_timer;
+/*0x264*/	DWORD	viral_range;
+/*0x268*/	BYTE	sneaking;
+/*0x269*/	BYTE	not_extendable;
+/*0x26a*/	BYTE	field198;
+/*0x26b*/   DWORD	songcap;
 /*0x26c*/
 } SPELL, *PSPELL;
 

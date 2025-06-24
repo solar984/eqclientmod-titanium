@@ -30,3 +30,25 @@ This mod adds the extra command handling that some of the other hacks use but it
 ### Qeynos Citizen Female Model Fix
 There is an error in the client that swaps race 71 Qeynos Citizen's female (gender 1) QCF and neuter (gender 2) QCN models.  This results in females falling back to using the default human model.
 This hack swaps it back so it works correctly.
+
+### Sleep Remover
+This hack removes various Sleep() calls to speed up rendering and loading.
+
+1.) RemoveBackgroundSleep - When the game is not the foreground focus, it inserts a 100ms sleep between each frame bringing the framerate way down.  This mod disables that so the game doesn't act any different when it's in the background.
+
+2.) RemoveInterFrameSleep - The game contains an FPS limiter slider that goes from 10 to 100.  When it's set to 100 it's supposed to be unlimited, but there is always a minium of 1ms sleep between frames and this removes that.
+This frame limiter is kind of bad how it's implemented as its resolution is limited to milliseconds and it sleeps for 1ms even if the framerate is lagging behind the target, causing jerky rendering and increased input latency.
+This mod removes the minimum 1ms sleep and completely uncaps the framerate when the slider is set to 100.
+
+3.) RemoveCharSelectSleep/RemoveCharCreateSleep - Character selection and character creation screens have a 10ms sleep between frames and this mod removes that.
+
+4.) RemoveDisconnectedSleep - When using /quit or otherwise being disconnected there is a very long sleep, about 20 seconds total.  This mod removes that long sleep.
+
+5.) RemoveLoadingSleep - There are various small sleeps interspersed during data file loading that can be removed to make the game load slightly faster.
+
+### Program Launch
+This hack removes the requirement to pass the 'patchme' argument to the program to start it.
+
+### Zone Version
+This hack is for switching between the old and new versions of nektulos and lavastorm zones.  There are toggles in the INI file.  The mod works by intercepting the filenames for the new .eqg zone files and acting as if the file was not found.
+This makes the game load the old s3d version of the zones which are still present in the client.

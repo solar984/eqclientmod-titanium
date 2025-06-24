@@ -7,6 +7,11 @@
 #define Offset_CEverQuest__dsp_chat_simple 0x00498436
 #define Offset_EverQuestObject 0x00988DF0
 #define Offset_CEverQuest__InterpretCmd 0x00498B78
+#define Offset_strcpy 0x0060E450
+#define Offset_sprintf 0x0060D5EB
+#define Offset_LoadEnvironmentEmitterInstances 0x004477AB
+#define Offset_EqSoundManager__EmitterLoad 0x0044BD94
+#define Offset_Handle_OP_ExpansionInfo 0x0045386D
 
 // EQGraphicsDX9.DLL
 #define Offset_DX9_t3dSetGammaLevel 0x0007BD80

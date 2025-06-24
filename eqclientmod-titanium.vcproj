@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="eqclientmod-titanium"
 	ProjectGUID="{4AAED291-2032-4244-A30F-D37AE2F3D626}"
+	RootNamespace="eqclientmod-titanium"
 	>
 	<Platforms>
 		<Platform
@@ -190,6 +191,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Modules\ProgramLaunchHack.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\Modules\QeynosCitizenFemaleModelHack.cpp"
 			>
 		</File>
@@ -202,6 +207,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Modules\SleepRemoverHack.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\Modules\TimerHack.cpp"
 			>
 		</File>
@@ -211,6 +220,10 @@
 		</File>
 		<File
 			RelativePath=".\util.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Modules\ZoneVersionHack.cpp"
 			>
 		</File>
 	</Files>
