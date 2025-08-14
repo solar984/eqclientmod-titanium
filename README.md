@@ -52,3 +52,6 @@ This hack removes the requirement to pass the 'patchme' argument to the program 
 ### Zone Version
 This hack is for switching between the old and new versions of nektulos and lavastorm zones.  There are toggles in the INI file.  The mod works by intercepting the filenames for the new .eqg zone files and acting as if the file was not found.
 This makes the game load the old s3d version of the zones which are still present in the client.
+
+### Window Title
+This hack renames the application window from EverQuest to Client1, Client2, etc depending on how many other windows are already open.  This is intended for macro software like hotkeynet and AutoHotKey to make it easier to search for the window.

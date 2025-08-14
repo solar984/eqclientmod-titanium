@@ -51,6 +51,14 @@ void Payload2()
 	extern void LoadZoneVersionHack();
 	LoadZoneVersionHack();
 #endif
+#ifdef DEV_HACK
+	extern void LoadDevHack();
+	LoadDevHack();
+#endif
+#ifdef WINDOW_TITLE_HACK
+	extern void LoadWindowTitleHack();
+	LoadWindowTitleHack();
+#endif
 
 	// continue from normal program entry point, this never returns
 	((void (*)())entryPoint)();
@@ -72,6 +80,7 @@ bool Payload()
 		Log("This doesn't look like the process we expect, skipping eqgame hacks.");
 		return FALSE;
 	}
+	hEQGameEXE = callerModule;
 
 	// This dll expects to be wrapping a dll that the parent module imports from and we're being loaded by the windows dynamic linker before the program starts executing.
 	// By detouring the entry point, we can run anything we want at the start of the program once it's actually ready to run.  We can do that here too but we're inside DllMain().

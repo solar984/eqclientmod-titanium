@@ -3,6 +3,7 @@
 
 //#define MethodAddressToVariable(v, method) intptr_t  v; { auto fp = &method; memcpy(&v, &fp, 4); }
 
+extern HMODULE hEQGameEXE;
 extern HMODULE hEQGfxDll;
 
 #ifdef COMMAND_HANDLER

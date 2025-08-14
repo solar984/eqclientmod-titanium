@@ -11,6 +11,7 @@
 //#define DETOUR_SLEEP
 
 // globals
+HMODULE hEQGameEXE;
 HMODULE hEQGfxDll;
 #ifdef COMMAND_HANDLER
 std::map<const char *, _slashCommandHandler> ChatCommandMap;

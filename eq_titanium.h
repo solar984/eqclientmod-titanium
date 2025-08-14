@@ -12,6 +12,7 @@
 #define Offset_LoadEnvironmentEmitterInstances 0x004477AB
 #define Offset_EqSoundManager__EmitterLoad 0x0044BD94
 #define Offset_Handle_OP_ExpansionInfo 0x0045386D
+#define Offset_LocalPC 0x00905D00
 
 // EQGraphicsDX9.DLL
 #define Offset_DX9_t3dSetGammaLevel 0x0007BD80

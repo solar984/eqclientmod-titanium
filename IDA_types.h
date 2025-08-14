@@ -1,6 +1,18 @@
 // This is mostly copied from MQ2
 // You can import this file in IDA's Local Types page
 
+#pragma pack(1)
+
+typedef uint8_t byte;
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
+typedef int8_t int8;
+typedef int16_t int16;
+typedef int32_t int32;
+typedef int64_t int64;
+
 
 #define VOID void
 
@@ -539,9 +551,8 @@ typedef struct _CI2_INFO {
 /* 0x0060 */
 } CI2_INFO, *PCI2_INFO;
 
-typedef struct _CHARINFO {
-/* 0x0000 */   void      *vtable1;
-/* 0x0004 */   void      *punknown;
+struct _CHARINFO_A
+{
 /* 0x0008 */   struct     _CI_INFO* charinfo_info;
 /* 0x000c */   BYTE       Unknown0xc[0xce4];
 /* 0x0cf0 */   struct     _CONTENTS*   Bank[NUM_BANK_SLOTS];
@@ -567,6 +578,10 @@ typedef struct _CHARINFO {
 /* 0x1a10 */   DWORD      Exp;
 /* 0x1a14 */   BYTE       Unknown0x1a14[0xa864];
 /* 0xc278 */   BYTE       Unknown0xc278[0x8];
+};
+
+struct _CHARINFO_B
+{
 /* 0xc280 */   void      *vtable2;
 /* 0xc284 */   struct     _EQC_INFO* eqc_info;
 /* 0xc288 */   struct     _SPAWNINFO*  pSpawn;
@@ -608,6 +623,10 @@ typedef struct _CHARINFO {
 /* 0xc338 */   DWORD      AttackSpeed;
 /* 0xc33c */   BYTE       Unknown0xc330[0x1c];
 /* 0xc358 */   _CONTENTS  *ActiveGuildTribute[0xc];
+};
+
+struct _CHARINFO_C
+{
 /* 0xc388 */   struct     _CI2_INFO* pCI2;
 /* 0xc38c */   DWORD      Unknown0xc38c;
 /* 0xc390 */   BYTE       languages[0x20];
@@ -629,6 +648,16 @@ typedef struct _CHARINFO {
 /* 0xc4c8 */   DWORD      BankSilver;
 /* 0xc4cc */   DWORD      BankCopper;
 /* 0xc4d0 */
+};
+
+
+
+typedef struct _CHARINFO {
+/* 0x0000 */   void      *vtable1;
+/* 0x0004 */   void      *punknown;
+struct _CHARINFO_A A;
+struct _CHARINFO_B B;
+struct _CHARINFO_C C;
 } CHARINFO, *PCHARINFO;
 
 
@@ -7871,6 +7900,7 @@ public:
 //EQLIB_OBJECT int EQ_Character::GetCachEQSPA(int);
 //EQLIB_OBJECT void EQ_Character::ReCachItemEffects(void);
 //EQLIB_OBJECT void EQ_Character::ReCachSpellEffects(void);
+	struct _CHARINFO CI;
 };
 
 class EQ_CharacterData
@@ -7979,14 +8009,19 @@ public:
 //EQLIB_OBJECT void EQ_PC::SetFatigue(int);
 //EQLIB_OBJECT void EQ_PC::UnpackMyNetPC(char *,int);
 //EQLIB_OBJECT unsigned long EQ_PC::GetItemTimerValue(class EQ_Item *);
+	char pad[0xC280];
+	struct _CHARINFO CI;
+	struct _CHARINFO2 CI2;
 };
 
+/*
 class EQ_Skill
 {
 public:
 //EQLIB_OBJECT EQ_Skill::~EQ_Skill(void);
 //EQLIB_OBJECT EQ_Skill::EQ_Skill(int);
 };
+*/
 
 class EQ_Spell
 {
@@ -8115,6 +8150,143 @@ public:
 //EQLIB_OBJECT virtual bool EQOldPlayerAnimation::GetAlternateAnimTag(char *,char *,bool);
 //EQLIB_OBJECT void EQOldPlayerAnimation::ChangeAttachmentAnimationTrackSpeeds(bool,float);
 //EQLIB_OBJECT void EQOldPlayerAnimation::PlayAttachmentAnimationTracks(int,int,bool,bool,float,bool,unsigned char);
+};
+
+struct Texture_Struct
+{
+	uint32 Material;
+};
+
+struct TextureProfile
+{
+	union {
+		struct {
+			Texture_Struct Head;
+			Texture_Struct Chest;
+			Texture_Struct Arms;
+			Texture_Struct Wrist;
+			Texture_Struct Hands;
+			Texture_Struct Legs;
+			Texture_Struct Feet;
+			Texture_Struct Primary;
+			Texture_Struct Secondary;
+		};
+		Texture_Struct Slot[9];
+	};
+};
+
+struct Tint_Struct {
+	union {
+		struct {
+			uint8 Blue;
+			uint8 Green;
+			uint8 Red;
+			uint8 UseTint; // if there's a tint, this is FF
+		};
+		uint32 Color;
+	};
+};
+
+	struct TintProfile {
+		union {
+			struct {
+				Tint_Struct Head;
+				Tint_Struct Chest;
+				Tint_Struct Arms;
+				Tint_Struct Wrist;
+				Tint_Struct Hands;
+				Tint_Struct Legs;
+				Tint_Struct Feet;
+				Tint_Struct Primary;
+				Tint_Struct Secondary;
+			};
+			Tint_Struct Slot[9]; // materialCount is correct..but, {[weaponPrimary],[weaponSecondary]} are not tintable...
+		};
+	};
+
+
+struct Spawn_Struct {
+/*0000*/ uint8 unknown0000;
+/*0001*/ uint8  gm;             // 0=no, 1=gm
+/*0002*/ uint8 unknown0003;
+/*0003*/ uint8   aaitle;       // 0=none, 1=general, 2=archtype, 3=class
+/*0004*/ uint8 unknown0004;
+/*0005*/ uint8  anon;           // 0=normal, 1=anon, 2=roleplay
+/*0006*/ uint8  face;	          // Face id for players
+/*0007*/ char     name[64];       // Player's Name
+/*0071*/ uint16  deity;          // Player's Deity
+/*0073*/ uint16 unknown0073;
+/*0075*/ float    size;           // Model size
+/*0079*/ uint32 unknown0079;
+/*0083*/ uint8  NPC;            // 0=player,1=npc,2=pc corpse,3=npc corpse,a
+/*0084*/ uint8  invis;          // Invis (0=not, 1=invis)
+/*0085*/ uint8  haircolor;      // Hair color
+/*0086*/ uint8  curHp;          // Current hp %%% wrong
+/*0087*/ uint8  max_hp;         // (name prolly wrong)takes on the value 100 for players, 100 or 110 for NPCs and 120 for PC corpses...
+/*0088*/ uint8  findable;       // 0=can't be found, 1=can be found
+/*0089*/ uint8 unknown0089[5];
+/*0094*/ signed   deltaHeading:10;// change in heading
+         signed   x:19;           // x coord
+         signed   padding0054:3;  // ***Placeholder
+/*0098*/ signed   y:19;           // y coord
+         signed   animation:10;   // animation
+         signed   padding0058:3;  // ***Placeholder
+/*0102*/ signed   z:19;           // z coord
+         signed   deltaY:13;      // change in y
+/*0106*/ signed   deltaX:13;      // change in x
+         unsigned heading:12;     // heading
+         signed   padding0066:7;  // ***Placeholder
+/*0110*/ signed   deltaZ:13;      // change in z
+         signed   padding0070:19; // ***Placeholder
+/*0114*/ uint8  eyecolor1;      // Player's left eye color
+/*0115*/ uint8 unknown0115[24];
+/*0139*/ uint8  showhelm;       // 0=no, 1=yes
+/*0140*/ uint8 unknown0140[4];
+/*0144*/ uint8  is_npc;         // 0=no, 1=yes
+/*0145*/ uint8  hairstyle;      // Hair style
+/*0146*/ uint8  beardcolor;     // Beard color
+/*0147*/ uint8 unknown0147[4];
+/*0151*/ uint8  level;          // Spawn Level
+/*0152*/ uint32 PlayerState;    // PlayerState controls some animation stuff
+/*0156*/ uint8  beard;          // Beard style
+/*0157*/ char     suffix[32];     // Player's suffix (of Veeshan, etc.)
+/*0189*/ uint32 petOwnerId;     // If this is a pet, the spawn id of owner
+/*0193*/ uint8   guildrank;      // 0=normal, 1=officer, 2=leader
+/*0194*/ uint8 unknown0194[3];
+/*0197*/ TextureProfile equipment;
+/*0233*/ float    runspeed;       // Speed when running
+/*0036*/ uint8  afk;            // 0=no, 1=afk
+/*0238*/ uint32 guildID;        // Current guild
+/*0242*/ char     title[32];      // Title
+/*0274*/ uint8 unknown0274;
+/*0275*/ uint8  helm;           // Helm texture
+/*0276*/ uint8  set_to_0xFF[8]; // ***Placeholder (all ff)
+/*0284*/ uint32 race;           // Spawn race
+/*0288*/ uint32 unknown0288;
+/*0292*/ char     lastName[32];   // Player's Lastname
+/*0324*/ float    walkspeed;      // Speed when walking
+/*0328*/ uint8 unknown0328;
+/*0329*/ uint8  is_pet;         // 0=no, 1=yes
+/*0330*/ uint8  light;          // Spawn's lightsource %%% wrong
+/*0331*/ uint8  class_;         // Player's class
+/*0332*/ uint8  eyecolor2;      // Left eye color
+/*0333*/ uint8 flymode;
+/*0334*/ uint8  gender;         // Gender (0=male, 1=female)
+/*0335*/ uint8  bodytype;       // Bodytype
+/*0336*/ uint8 unknown0336[3];
+union
+{
+/*0339*/ uint8 equip_chest2;     // Second place in packet for chest texture (usually 0xFF in live packets)
+                                  // Not sure why there are 2 of them, but it effects chest texture!
+/*0339*/ uint8 mount_color;      // drogmor: 0=white, 1=black, 2=green, 3=red
+                                  // horse: 0=brown, 1=white, 2=black, 3=tan
+};
+/*0340*/ uint32 spawnId;        // Spawn Id
+/*0344*/ float bounding_radius; // used in melee, overrides calc
+/*0348*/ TintProfile equipment_tint;
+/*0384*/ uint8  lfg;            // 0=off, 1=lfg on
+/*0385*/
+
 };
 
 class EQPlayer
@@ -8260,7 +8432,7 @@ public:
 //EQLIB_OBJECT unsigned int EQPlayer::GetUnusedID(void);
 //EQLIB_OBJECT void EQPlayer::FindDefaultEyeMaterialIndexes(void);
 //EQLIB_OBJECT void EQPlayer::InitializeIDArray(void);
-SPAWNINFO Data;
+struct _SPAWNINFO Data;
 };
 
 class EQPMInfo
@@ -8386,6 +8558,7 @@ public:
 //EQLIB_OBJECT EQWorldData::~EQWorldData(void);
 ////EQLIB_OBJECT void * EQWorldData::`scalar deleting destructor'(unsigned int);
 ////EQLIB_OBJECT void * EQWorldData::`vector deleting destructor'(unsigned int);
+	_WORLDDATA Data;
 };
 
 class EQZoneInfo
@@ -9354,4 +9527,1932 @@ public:
 
 
 
+struct PlayerPositionUpdateServer_Struct
+{
+/*0000*/	int32	delta_heading : 10,	// change in heading
+					x_pos : 19,			// x coord
+					padding0002 : 3;	// ***Placeholder
+/*0004*/	int32	y_pos : 19,			// y coord
+					animation : 10,		// animation
+					padding0006 : 3;	// ***Placeholder
+/*0008*/	int32	z_pos : 19,			// z coord
+					delta_y : 13;		// change in y
+/*0012*/	int32	delta_x : 13,		// change in x
+					heading : 12,		// heading
+					padding0014 : 7;	// ***Placeholder
+/*0016*/	int32	delta_z : 13,		// change in z
+					padding0018 : 19;	// ***Placeholder
+/*0020*/
+};
 
+struct ClientUpdateServer_Struct
+{
+	/*0000*/	uint16	spawn_id;
+	struct PlayerPositionUpdateServer_Struct ppu;
+};
+
+struct PlayerPositionUpdateClient_Struct
+{
+/*0000*/	uint16	spawn_id;
+/*0022*/	uint16	sequence;			// increments one each packet
+/*0004*/	float	y_pos;				// y coord
+/*0008*/	float	delta_z;			// Change in z
+/*0016*/	float	delta_x;			// Change in x
+/*0012*/	float	delta_y;			// Change in y
+/*0020*/	int32	animation : 10,		// animation
+					delta_heading : 10,	// change in heading
+					padding0020 : 12;	// ***Placeholder (mostly 1)
+/*0024*/	float	x_pos;				// x coord
+/*0028*/	float	z_pos;				// z coord
+/*0034*/	uint16	heading : 12,		// Directional heading
+					padding0004 : 4;	// ***Placeholder
+/*0032*/	uint8	unknown0006[2];		// ***Placeholder
+/*0036*/
+};
+
+
+struct PhysicsInfo2
+{
+	float pos_y;
+	float pos_x;
+	float pos_z;
+	float phys0;
+	float anim_speed;
+	float delta_z;
+	float delta_y;
+	float delta_x;
+	float delta_heading;
+	float phys6;
+	float phys7;
+};
+
+struct PhysicsInfo3
+{
+/*0094*/ signed   deltaHeading:10;// change in heading
+         signed   x:19;           // x coord
+         signed   padding0054:3;  // ***Placeholder
+/*0098*/ signed   y:19;           // y coord
+         signed   animation:10;   // animation
+         signed   padding0058:3;  // ***Placeholder
+/*0102*/ signed   z:19;           // z coord
+         signed   deltaY:13;      // change in y
+/*0106*/ signed   deltaX:13;      // change in x
+         unsigned heading:12;     // heading
+         signed   padding0066:7;  // ***Placeholder
+/*0110*/ signed   deltaZ:13;      // change in z
+         signed   padding0070:19; // ***Placeholder
+};
+
+
+enum RaceEnum
+{
+RACE_Doug_0 = 0,
+RACE_Human_1 = 1,
+RACE_Barbarian_2 = 2,
+RACE_Erudite_3 = 3,
+RACE_WoodElf_4 = 4,
+RACE_HighElf_5 = 5,
+RACE_DarkElf_6 = 6,
+RACE_HalfElf_7 = 7,
+RACE_Dwarf_8 = 8,
+RACE_Troll_9 = 9,
+RACE_Ogre_10 = 10,
+RACE_Halfling_11 = 11,
+RACE_Gnome_12 = 12,
+RACE_Aviak_13 = 13,
+RACE_Werewolf_14 = 14,
+RACE_Brownie_15 = 15,
+RACE_Centaur_16 = 16,
+RACE_Golem_17 = 17,
+RACE_Giant_18 = 18,
+RACE_Trakanon_19 = 19,
+RACE_VenrilSathir_20 = 20,
+RACE_EvilEye_21 = 21,
+RACE_Beetle_22 = 22,
+RACE_Kerran_23 = 23,
+RACE_Fish_24 = 24,
+RACE_Fairy_25 = 25,
+RACE_Froglok_26 = 26,
+RACE_FroglokGhoul_27 = 27,
+RACE_Fungusman_28 = 28,
+RACE_Gargoyle_29 = 29,
+RACE_Gasbag_30 = 30,
+RACE_GelatinousCube_31 = 31,
+RACE_Ghost_32 = 32,
+RACE_Ghoul_33 = 33,
+RACE_GiantBat_34 = 34,
+RACE_GiantEel_35 = 35,
+RACE_GiantRat_36 = 36,
+RACE_GiantSnake_37 = 37,
+RACE_GiantSpider_38 = 38,
+RACE_Gnoll_39 = 39,
+RACE_Goblin_40 = 40,
+RACE_Gorilla_41 = 41,
+RACE_Wolf_42 = 42,
+RACE_Bear_43 = 43,
+RACE_FreeportGuard_44 = 44,
+RACE_DemiLich_45 = 45,
+RACE_Imp_46 = 46,
+RACE_Griffin_47 = 47,
+RACE_Kobold_48 = 48,
+RACE_LavaDragon_49 = 49,
+RACE_Lion_50 = 50,
+RACE_LizardMan_51 = 51,
+RACE_Mimic_52 = 52,
+RACE_Minotaur_53 = 53,
+RACE_Orc_54 = 54,
+RACE_HumanBeggar_55 = 55,
+RACE_Pixie_56 = 56,
+RACE_Drachnid_57 = 57,
+RACE_SolusekRo_58 = 58,
+RACE_Bloodgill_59 = 59,
+RACE_Skeleton_60 = 60,
+RACE_Shark_61 = 61,
+RACE_Tunare_62 = 62,
+RACE_Tiger_63 = 63,
+RACE_Treant_64 = 64,
+RACE_Vampire_65 = 65,
+RACE_StatueOfRallosZek_66 = 66,
+RACE_HighpassCitizen_67 = 67,
+RACE_TentacleTerror_68 = 68,
+RACE_Wisp_69 = 69,
+RACE_Zombie_70 = 70,
+RACE_QeynosCitizen_71 = 71,
+RACE_Ship_72 = 72,
+RACE_Launch_73 = 73,
+RACE_Piranha_74 = 74,
+RACE_Elemental_75 = 75,
+RACE_Puma_76 = 76,
+RACE_NeriakCitizen_77 = 77,
+RACE_EruditeCitizen_78 = 78,
+RACE_Bixie_79 = 79,
+RACE_ReanimatedHand_80 = 80,
+RACE_RivervaleCitizen_81 = 81,
+RACE_Scarecrow_82 = 82,
+RACE_Skunk_83 = 83,
+RACE_SnakeElemental_84 = 84,
+RACE_Spectre_85 = 85,
+RACE_Sphinx_86 = 86,
+RACE_Armadillo_87 = 87,
+RACE_ClockworkGnome_88 = 88,
+RACE_Drake_89 = 89,
+RACE_HalasCitizen_90 = 90,
+RACE_Alligator_91 = 91,
+RACE_GrobbCitizen_92 = 92,
+RACE_OggokCitizen_93 = 93,
+RACE_KaladimCitizen_94 = 94,
+RACE_CazicThule_95 = 95,
+RACE_Cockatrice_96 = 96,
+RACE_DaisyMan_97 = 97,
+RACE_ElfVampire_98 = 98,
+RACE_Denizen_99 = 99,
+RACE_Dervish_100 = 100,
+RACE_Efreeti_101 = 101,
+RACE_FroglokTadpole_102 = 102,
+RACE_PhinigelAutropos_103 = 103,
+RACE_Leech_104 = 104,
+RACE_Swordfish_105 = 105,
+RACE_Felguard_106 = 106,
+RACE_Mammoth_107 = 107,
+RACE_EyeOfZomm_108 = 108,
+RACE_Wasp_109 = 109,
+RACE_Mermaid_110 = 110,
+RACE_Harpy_111 = 111,
+RACE_Fayguard_112 = 112,
+RACE_Drixie_113 = 113,
+RACE_GhostShip_114 = 114,
+RACE_Clam_115 = 115,
+RACE_SeaHorse_116 = 116,
+RACE_DwarfGhost_117 = 117,
+RACE_EruditeGhost_118 = 118,
+RACE_Sabertooth_119 = 119,
+RACE_WolfElemental_120 = 120,
+RACE_Gorgon_121 = 121,
+RACE_DragonSkeleton_122 = 122,
+RACE_Innoruuk_123 = 123,
+RACE_Unicorn_124 = 124,
+RACE_Pegasus_125 = 125,
+RACE_Djinn_126 = 126,
+RACE_InvisibleMan_127 = 127,
+RACE_Iksar_128 = 128,
+RACE_Scorpion_129 = 129,
+RACE_VahShir_130 = 130,
+RACE_Sarnak_131 = 131,
+RACE_Draglock_132 = 132,
+RACE_Drolvarg_133 = 133,
+RACE_Mosquito_134 = 134,
+RACE_Rhinoceros_135 = 135,
+RACE_Xalgoz_136 = 136,
+RACE_KunarkGoblin_137 = 137,
+RACE_Yeti_138 = 138,
+RACE_IksarCitizen_139 = 139,
+RACE_ForestGiant_140 = 140,
+RACE_Boat_141 = 141,
+RACE_MinorIllusion_142 = 142,
+RACE_Tree_143 = 143,
+RACE_Burynai_144 = 144,
+RACE_Goo_145 = 145,
+RACE_SarnakSpirit_146 = 146,
+RACE_IksarSpirit_147 = 147,
+RACE_KunarkFish_148 = 148,
+RACE_IksarScorpion_149 = 149,
+RACE_Erollisi_150 = 150,
+RACE_Tribunal_151 = 151,
+RACE_Bertoxxulous_152 = 152,
+RACE_Bristlebane_153 = 153,
+RACE_FayDrake_154 = 154,
+RACE_UndeadSarnak_155 = 155,
+RACE_Ratman_156 = 156,
+RACE_Wyvern_157 = 157,
+RACE_Wurm_158 = 158,
+RACE_Devourer_159 = 159,
+RACE_IksarGolem_160 = 160,
+RACE_UndeadIksar_161 = 161,
+RACE_ManEatingPlant_162 = 162,
+RACE_Raptor_163 = 163,
+RACE_SarnakGolem_164 = 164,
+RACE_WaterDragon_165 = 165,
+RACE_AnimatedHand_166 = 166,
+RACE_Succulent_167 = 167,
+RACE_Holgresh_168 = 168,
+RACE_Brontotherium_169 = 169,
+RACE_SnowDervish_170 = 170,
+RACE_DireWolf_171 = 171,
+RACE_Manticore_172 = 172,
+RACE_Totem_173 = 173,
+RACE_IceSpectre_174 = 174,
+RACE_EnchantedArmor_175 = 175,
+RACE_SnowRabbit_176 = 176,
+RACE_Walrus_177 = 177,
+RACE_Geonid_178 = 178,
+RACE_Unknown_179 = 179,
+RACE_Unknown2_180 = 180,
+RACE_Yakkar_181 = 181,
+RACE_Faun_182 = 182,
+RACE_Coldain_183 = 183,
+RACE_VeliousDragon_184 = 184,
+RACE_Hag_185 = 185,
+RACE_Hippogriff_186 = 186,
+RACE_Siren_187 = 187,
+RACE_FrostGiant_188 = 188,
+RACE_StormGiant_189 = 189,
+RACE_Othmir_190 = 190,
+RACE_Ulthork_191 = 191,
+RACE_ClockworkDragon_192 = 192,
+RACE_Abhorrent_193 = 193,
+RACE_SeaTurtle_194 = 194,
+RACE_BlackAndWhiteDragon_195 = 195,
+RACE_GhostDragon_196 = 196,
+RACE_RonnieTest_197 = 197,
+RACE_PrismaticDragon_198 = 198,
+RACE_Shiknar_199 = 199,
+RACE_Rockhopper_200 = 200,
+RACE_Underbulk_201 = 201,
+RACE_Grimling_202 = 202,
+RACE_Worm_203 = 203,
+RACE_EvanTest_204 = 204,
+RACE_KhatiSha_205 = 205,
+RACE_Owlbear_206 = 206,
+RACE_RhinoBeetle_207 = 207,
+RACE_Vampire2_208 = 208,
+RACE_EarthElemental_209 = 209,
+RACE_AirElemental_210 = 210,
+RACE_WaterElemental_211 = 211,
+RACE_FireElemental_212 = 212,
+RACE_WetfangMinnow_213 = 213,
+RACE_ThoughtHorror_214 = 214,
+RACE_Tegi_215 = 215,
+RACE_Horse_216 = 216,
+RACE_Shissar_217 = 217,
+RACE_FungalFiend_218 = 218,
+RACE_VampireVolatalis_219 = 219,
+RACE_Stonegrabber_220 = 220,
+RACE_ScarletCheetah_221 = 221,
+RACE_Zelniak_222 = 222,
+RACE_Lightcrawler_223 = 223,
+RACE_Shade_224 = 224,
+RACE_Sunflower_225 = 225,
+RACE_Shadel_226 = 226,
+RACE_Shrieker_227 = 227,
+RACE_Galorian_228 = 228,
+RACE_Netherbian_229 = 229,
+RACE_Akhevan_230 = 230,
+RACE_GriegVeneficus_231 = 231,
+RACE_SonicWolf_232 = 232,
+RACE_GroundShaker_233 = 233,
+RACE_VahShirSkeleton_234 = 234,
+RACE_Wretch_235 = 235,
+RACE_LordInquisitorSeru_236 = 236,
+RACE_Recuso_237 = 237,
+RACE_VahShirKing_238 = 238,
+RACE_VahShirGuard_239 = 239,
+RACE_TeleportMan_240 = 240,
+RACE_Werewolf2_241 = 241,
+RACE_Nymph_242 = 242,
+RACE_Dryad_243 = 243,
+RACE_Treant2_244 = 244,
+RACE_Fly_245 = 245,
+RACE_TarewMarr_246 = 246,
+RACE_SolusekRo2_247 = 247,
+RACE_ClockworkGolem_248 = 248,
+RACE_ClockworkBrain_249 = 249,
+RACE_Banshee_250 = 250,
+RACE_GuardOfJustice_251 = 251,
+RACE_MiniPom_252 = 252,
+RACE_DiseasedFiend_253 = 253,
+RACE_SolusekRoGuard_254 = 254,
+RACE_BertoxxulousNew_255 = 255,
+RACE_TribunalNew_256 = 256,
+RACE_TerrisThule_257 = 257,
+RACE_Vegerog_258 = 258,
+RACE_Crocodile_259 = 259,
+RACE_Bat_260 = 260,
+RACE_Hraquis_261 = 261,
+RACE_Tranquilion_262 = 262,
+RACE_TinSoldier_263 = 263,
+RACE_NightmareWraith_264 = 264,
+RACE_Malarian_265 = 265,
+RACE_KnightOfPestilence_266 = 266,
+RACE_Lepertoloth_267 = 267,
+RACE_Bubonian_268 = 268,
+RACE_BubonianUnderling_269 = 269,
+RACE_Pusling_270 = 270,
+RACE_WaterMephit_271 = 271,
+RACE_Stormrider_272 = 272,
+RACE_JunkBeast_273 = 273,
+RACE_BrokenClockwork_274 = 274,
+RACE_GiantClockwork_275 = 275,
+RACE_ClockworkBeetle_276 = 276,
+RACE_NightmareGoblin_277 = 277,
+RACE_Karana_278 = 278,
+RACE_BloodRaven_279 = 279,
+RACE_NightmareGargoyle_280 = 280,
+RACE_MouthOfInsanity_281 = 281,
+RACE_SkeletalHorse_282 = 282,
+RACE_Saryrn_283 = 283,
+RACE_FenninRo_284 = 284,
+RACE_Tormentor_285 = 285,
+RACE_SoulDevourer_286 = 286,
+RACE_Nightmare_287 = 287,
+RACE_NewRallosZek_288 = 288,
+RACE_VallonZek_289 = 289,
+RACE_TallonZek_290 = 290,
+RACE_AirMephit_291 = 291,
+RACE_EarthMephit_292 = 292,
+RACE_FireMephit_293 = 293,
+RACE_NightmareMephit_294 = 294,
+RACE_Zebuxoruk_295 = 295,
+RACE_MithanielMarr_296 = 296,
+RACE_UndeadKnight_297 = 297,
+RACE_Rathe_298 = 298,
+RACE_Xegony_299 = 299,
+RACE_Fiend_300 = 300,
+RACE_TestObject_301 = 301,
+RACE_Crab_302 = 302,
+RACE_Phoenix_303 = 303,
+RACE_Quarm_304 = 304,
+RACE_Bear2_305 = 305,
+RACE_EarthGolem_306 = 306,
+RACE_IronGolem_307 = 307,
+RACE_StormGolem_308 = 308,
+RACE_AirGolem_309 = 309,
+RACE_WoodGolem_310 = 310,
+RACE_FireGolem_311 = 311,
+RACE_WaterGolem_312 = 312,
+RACE_WarWraith_313 = 313,
+RACE_Wrulon_314 = 314,
+RACE_Kraken_315 = 315,
+RACE_PoisonFrog_316 = 316,
+RACE_Nilborien_317 = 317,
+RACE_Valorian_318 = 318,
+RACE_WarBoar_319 = 319,
+RACE_Efreeti2_320 = 320,
+RACE_WarBoar2_321 = 321,
+RACE_Valorian2_322 = 322,
+RACE_AnimatedArmor_323 = 323,
+RACE_UndeadFootman_324 = 324,
+RACE_RallosOgre_325 = 325,
+RACE_Arachnid_326 = 326,
+RACE_CrystalSpider_327 = 327,
+RACE_ZebuxoruksCage_328 = 328,
+RACE_Portal_329 = 329,
+RACE_Froglok2_330 = 330,
+RACE_TrollCrewMember_331 = 331,
+RACE_PirateDeckhand_332 = 332,
+RACE_BrokenSkullPirate_333 = 333,
+RACE_PirateGhost_334 = 334,
+RACE_OneArmedPirate_335 = 335,
+RACE_SpiritmasterNadox_336 = 336,
+RACE_BrokenSkullTaskmaster_337 = 337,
+RACE_GnomePirate_338 = 338,
+RACE_DarkElfPirate_339 = 339,
+RACE_OgrePirate_340 = 340,
+RACE_HumanPirate_341 = 341,
+RACE_EruditePirate_342 = 342,
+RACE_Frog_343 = 343,
+RACE_TrollZombie_344 = 344,
+RACE_Luggald_345 = 345,
+RACE_Luggald2_346 = 346,
+RACE_Luggald3_347 = 347,
+RACE_Drogmor_348 = 348,
+RACE_FroglokSkeleton_349 = 349,
+RACE_UndeadFroglok_350 = 350,
+RACE_KnightOfHate_351 = 351,
+RACE_ArcanistOfHate_352 = 352,
+RACE_Veksar_353 = 353,
+RACE_Veksar2_354 = 354,
+RACE_Veksar3_355 = 355,
+RACE_Chokidai_356 = 356,
+RACE_UndeadChokidai_357 = 357,
+RACE_UndeadVeksar_358 = 358,
+RACE_UndeadVampire_359 = 359,
+RACE_Vampire3_360 = 360,
+RACE_RujarkianOrc_361 = 361,
+RACE_BoneGolem_362 = 362,
+RACE_Synarcana_363 = 363,
+RACE_SandElf_364 = 364,
+RACE_MasterVampire_365 = 365,
+RACE_MasterOrc_366 = 366,
+RACE_Skeleton2_367 = 367,
+RACE_Mummy_368 = 368,
+RACE_NewGoblin_369 = 369,
+RACE_Insect_370 = 370,
+RACE_FroglokGhost_371 = 371,
+RACE_Dervish2_372 = 372,
+RACE_Shade2_373 = 373,
+RACE_Golem2_374 = 374,
+RACE_EvilEye2_375 = 375,
+RACE_Box_376 = 376,
+RACE_Barrel_377 = 377,
+RACE_Chest_378 = 378,
+RACE_Vase_379 = 379,
+RACE_Table_380 = 380,
+RACE_WeaponRack_381 = 381,
+RACE_Coffin_382 = 382,
+RACE_Bones_383 = 383,
+RACE_Jokester_384 = 384,
+RACE_Nihil_385 = 385,
+RACE_Trusik_386 = 386,
+RACE_StoneWorker_387 = 387,
+RACE_Hynid_388 = 388,
+RACE_Turepta_389 = 389,
+RACE_Cragbeast_390 = 390,
+RACE_Stonemite_391 = 391,
+RACE_Ukun_392 = 392,
+RACE_Ixt_393 = 393,
+RACE_Ikaav_394 = 394,
+RACE_Aneuk_395 = 395,
+RACE_Kyv_396 = 396,
+RACE_Noc_397 = 397,
+RACE_Ratuk_398 = 398,
+RACE_Taneth_399 = 399,
+RACE_Huvul_400 = 400,
+RACE_Mutna_401 = 401,
+RACE_Mastruq_402 = 402,
+RACE_Taelosian_403 = 403,
+RACE_DiscordShip_404 = 404,
+RACE_StoneWorker2_405 = 405,
+RACE_MataMuram_406 = 406,
+RACE_LightingWarrior_407 = 407,
+RACE_Succubus_408 = 408,
+RACE_Bazu_409 = 409,
+RACE_Feran_410 = 410,
+RACE_Pyrilen_411 = 411,
+RACE_Chimera_412 = 412,
+RACE_Dragorn_413 = 413,
+RACE_Murkglider_414 = 414,
+RACE_Rat_415 = 415,
+RACE_Bat2_416 = 416,
+RACE_Gelidran_417 = 417,
+RACE_Discordling_418 = 418,
+RACE_Girplan_419 = 419,
+RACE_Minotaur2_420 = 420,
+RACE_DragornBox_421 = 421,
+RACE_RunedOrb_422 = 422,
+RACE_DragonBones_423 = 423,
+RACE_MuramiteArmorPile_424 = 424,
+RACE_CrystalShard_425 = 425,
+RACE_Portal2_426 = 426,
+RACE_CoinPurse_427 = 427,
+RACE_RockPile_428 = 428,
+RACE_MurkgliderEggSack_429 = 429,
+RACE_Drake2_430 = 430,
+RACE_Dervish3_431 = 431,
+RACE_Drake3_432 = 432,
+RACE_Goblin2_433 = 433,
+RACE_Kirin_434 = 434,
+RACE_Dragon_435 = 435,
+RACE_Basilisk_436 = 436,
+RACE_Dragon2_437 = 437,
+RACE_Dragon3_438 = 438,
+RACE_Puma2_439 = 439,
+RACE_Spider_440 = 440,
+RACE_SpiderQueen_441 = 441,
+RACE_AnimatedStatue_442 = 442,
+RACE_Unknown3_443 = 443,
+RACE_Unknown4_444 = 444,
+RACE_DragonEgg_445 = 445,
+RACE_DragonStatue_446 = 446,
+RACE_LavaRock_447 = 447,
+RACE_AnimatedStatue2_448 = 448,
+RACE_SpiderEggSack_449 = 449,
+RACE_LavaSpider_450 = 450,
+RACE_LavaSpiderQueen_451 = 451,
+RACE_Dragon4_452 = 452,
+RACE_Giant2_453 = 453,
+RACE_Werewolf3_454 = 454,
+RACE_Kobold2_455 = 455,
+RACE_Sporali_456 = 456,
+RACE_Gnomework_457 = 457,
+RACE_Orc2_458 = 458,
+RACE_Corathus_459 = 459,
+RACE_Coral_460 = 460,
+RACE_Drachnid2_461 = 461,
+RACE_DrachnidCocoon_462 = 462,
+RACE_FungusPatch_463 = 463,
+RACE_Gargoyle2_464 = 464,
+RACE_Witheran_465 = 465,
+RACE_DarkLord_466 = 466,
+RACE_Shiliskin_467 = 467,
+RACE_Snake_468 = 468,
+RACE_EvilEye3_469 = 469,
+RACE_Minotaur3_470 = 470,
+RACE_Zombie2_471 = 471,
+RACE_ClockworkBoar_472 = 472,
+RACE_Fairy2_473 = 473,
+RACE_Witheran2_474 = 474,
+RACE_AirElemental2_475 = 475,
+RACE_EarthElemental2_476 = 476,
+RACE_FireElemental2_477 = 477,
+RACE_WaterElemental2_478 = 478,
+RACE_Alligator2_479 = 479,
+RACE_Bear3_480 = 480,
+RACE_ScaledWolf_481 = 481,
+RACE_Wolf2_482 = 482,
+RACE_SpiritWolf_483 = 483,
+RACE_Skeleton3_484 = 484,
+RACE_Spectre2_485 = 485,
+RACE_Bolvirk_486 = 486,
+RACE_Banshee2_487 = 487,
+RACE_Banshee3_488 = 488,
+RACE_Elddar_489 = 489,
+RACE_ForestGiant2_490 = 490,
+RACE_BoneGolem2_491 = 491,
+RACE_Horse2_492 = 492,
+RACE_Pegasus2_493 = 493,
+RACE_ShamblingMound_494 = 494,
+RACE_Scrykin_495 = 495,
+RACE_Treant3_496 = 496,
+RACE_Vampire4_497 = 497,
+RACE_AyonaeRo_498 = 498,
+RACE_SullonZek_499 = 499,
+RACE_Banner_500 = 500,
+RACE_Flag_501 = 501,
+RACE_Rowboat_502 = 502,
+RACE_BearTrap_503 = 503,
+RACE_ClockworkBomb_504 = 504,
+RACE_DynamiteKeg_505 = 505,
+RACE_PressurePlate_506 = 506,
+RACE_PufferSpore_507 = 507,
+RACE_StoneRing_508 = 508,
+RACE_RootTentacle_509 = 509,
+RACE_RunicSymbol_510 = 510,
+RACE_SaltpetterBomb_511 = 511,
+RACE_FloatingSkull_512 = 512,
+RACE_SpikeTrap_513 = 513,
+RACE_Totem2_514 = 514,
+RACE_Web_515 = 515,
+RACE_WickerBasket_516 = 516,
+RACE_Unicorn2_517 = 517,
+RACE_Horse3_518 = 518,
+RACE_Unicorn3_519 = 519,
+RACE_Bixie2_520 = 520,
+RACE_Centaur2_521 = 521,
+RACE_Drakkin_522 = 522,
+RACE_Giant3_523 = 523,
+RACE_Gnoll2_524 = 524,
+RACE_Griffin2_525 = 525,
+RACE_GiantShade_526 = 526,
+RACE_Harpy2_527 = 527,
+RACE_Mammoth2_528 = 528,
+RACE_Satyr_529 = 529,
+RACE_Dragon5_530 = 530,
+RACE_Dragon6_531 = 531,
+RACE_Dynleth_532 = 532,
+RACE_Boat2_533 = 533,
+RACE_WeaponRack2_534 = 534,
+RACE_ArmorRack_535 = 535,
+RACE_HoneyPot_536 = 536,
+RACE_JumJumBucket_537 = 537,
+RACE_Plant_538 = 538,
+RACE_StoneJug_539 = 539,
+RACE_Plant2_540 = 540,
+RACE_Toolbox_541 = 541,
+RACE_WineCask_542 = 542,
+RACE_StoneJug2_543 = 543,
+RACE_ElvenBoat_544 = 544,
+RACE_GnomishBoat_545 = 545,
+RACE_UndeadBoat_546 = 546,
+RACE_Goo2_547 = 547,
+RACE_Goo3_548 = 548,
+RACE_Goo4_549 = 549,
+RACE_MerchantShip_550 = 550,
+RACE_PirateShip_551 = 551,
+RACE_GhostShip2_552 = 552,
+RACE_Banner2_553 = 553,
+RACE_Banner3_554 = 554,
+RACE_Banner4_555 = 555,
+RACE_Banner5_556 = 556,
+RACE_Banner6_557 = 557,
+RACE_Aviak2_558 = 558,
+RACE_Beetle2_559 = 559,
+RACE_Gorilla2_560 = 560,
+RACE_Kedge_561 = 561,
+RACE_Kerran2_562 = 562,
+RACE_Shissar2_563 = 563,
+RACE_Siren2_564 = 564,
+RACE_Sphinx2_565 = 565,
+RACE_Human2_566 = 566,
+RACE_Campfire_567 = 567,
+RACE_Brownie2_568 = 568,
+RACE_Dragon7_569 = 569,
+RACE_Exoskeleton_570 = 570,
+RACE_Ghoul2_571 = 571,
+RACE_ClockworkGuardian_572 = 572,
+RACE_Unknown5_573 = 573,
+RACE_Minotaur4_574 = 574,
+RACE_Scarecrow2_575 = 575,
+RACE_Shade3_576 = 576,
+RACE_Rotocopter_577 = 577,
+RACE_TentacleTerror2_578 = 578,
+RACE_Wereorc_579 = 579,
+RACE_Worg_580 = 580,
+RACE_Wyvern2_581 = 581,
+RACE_Chimera2_582 = 582,
+RACE_Kirin2_583 = 583,
+RACE_Puma3_584 = 584,
+RACE_Boulder_585 = 585,
+RACE_Banner7_586 = 586,
+RACE_ElvenGhost_587 = 587,
+RACE_HumanGhost_588 = 588,
+RACE_Chest2_589 = 589,
+RACE_Chest3_590 = 590,
+RACE_Crystal_591 = 591,
+RACE_Coffin2_592 = 592,
+RACE_GuardianCpu_593 = 593,
+RACE_Worg2_594 = 594,
+RACE_Mansion_595 = 595,
+RACE_FloatingIsland_596 = 596,
+RACE_Cragslither_597 = 597,
+RACE_Wrulon2_598 = 598,
+RACE_SpellParticle_599 = 599,
+RACE_InvisibleManOfZomm_600 = 600,
+RACE_RobocopterOfZomm_601 = 601,
+RACE_Burynai2_602 = 602,
+RACE_Frog2_603 = 603,
+RACE_Dracolich_604 = 604,
+RACE_IksarGhost_605 = 605,
+RACE_IksarSkeleton_606 = 606,
+RACE_Mephit_607 = 607,
+RACE_Muddite_608 = 608,
+RACE_Raptor2_609 = 609,
+RACE_Sarnak2_610 = 610,
+RACE_Scorpion2_611 = 611,
+RACE_Tsetsian_612 = 612,
+RACE_Wurm2_613 = 613,
+RACE_Nekhon_614 = 614,
+RACE_HydraCrystal_615 = 615,
+RACE_CrystalSphere_616 = 616,
+RACE_Gnoll3_617 = 617,
+RACE_Sokokar_618 = 618,
+RACE_StonePylon_619 = 619,
+RACE_DemonVulture_620 = 620,
+RACE_Wagon_621 = 621,
+RACE_GodOfDiscord_622 = 622,
+RACE_FeranMount_623 = 623,
+RACE_Ogre2_624 = 624,
+RACE_SokokarMount_625 = 625,
+RACE_Giant4_626 = 626,
+RACE_SokokarMount2_627 = 627,
+RACE_TenthAnniversaryBanner_628 = 628,
+RACE_TenthAnniversaryCake_629 = 629,
+RACE_WineCask2_630 = 630,
+RACE_HydraMount_631 = 631,
+RACE_Hydra_632 = 632,
+RACE_WeddingFlowers_633 = 633,
+RACE_WeddingArbor_634 = 634,
+RACE_WeddingAltar_635 = 635,
+RACE_PowderKeg_636 = 636,
+RACE_Apexus_637 = 637,
+RACE_Bellikos_638 = 638,
+RACE_BrellsFirstCreation_639 = 639,
+RACE_Brell_640 = 640,
+RACE_CrystalskinAmbuloid_641 = 641,
+RACE_CliknarQueen_642 = 642,
+RACE_CliknarSoldier_643 = 643,
+RACE_CliknarWorker_644 = 644,
+RACE_Coldain2_645 = 645,
+RACE_Coldain3_646 = 646,
+RACE_CrystalskinSessiloid_647 = 647,
+RACE_Genari_648 = 648,
+RACE_Gigyn_649 = 649,
+RACE_GrekenYoungAdult_650 = 650,
+RACE_GrekenYoung_651 = 651,
+RACE_CliknarMount_652 = 652,
+RACE_Telmira_653 = 653,
+RACE_SpiderMount_654 = 654,
+RACE_BearMount_655 = 655,
+RACE_RatMount_656 = 656,
+RACE_SessiloidMount_657 = 657,
+RACE_MorellThule_658 = 658,
+RACE_Marionette_659 = 659,
+RACE_BookDervish_660 = 660,
+RACE_TopiaryLion_661 = 661,
+RACE_RotDog_662 = 662,
+RACE_Amygdalan_663 = 663,
+RACE_Sandman_664 = 664,
+RACE_GrandfatherClock_665 = 665,
+RACE_GingerbreadMan_666 = 666,
+RACE_RoyalGuard_667 = 667,
+RACE_Rabbit_668 = 668,
+RACE_BlindDreamer_669 = 669,
+RACE_CazicThule2_670 = 670,
+RACE_TopiaryLionMount_671 = 671,
+RACE_RotDogMount_672 = 672,
+RACE_GoralMount_673 = 673,
+RACE_SelyrahMount_674 = 674,
+RACE_ScleraMount_675 = 675,
+RACE_BraxiMount_676 = 676,
+RACE_KangonMount_677 = 677,
+RACE_Erudite2_678 = 678,
+RACE_WurmMount_679 = 679,
+RACE_RaptorMount_680 = 680,
+RACE_InvisibleMan2_681 = 681,
+RACE_Whirligig_682 = 682,
+RACE_GnomishBalloon_683 = 683,
+RACE_GnomishRocketPack_684 = 684,
+RACE_GnomishHoveringTransport_685 = 685,
+RACE_Selyrah_686 = 686,
+RACE_Goral_687 = 687,
+RACE_Braxi_688 = 688,
+RACE_Kangon_689 = 689,
+RACE_InvisibleMan3_690 = 690,
+RACE_FloatingTower_691 = 691,
+RACE_ExplosiveCart_692 = 692,
+RACE_BlimpShip_693 = 693,
+RACE_Tumbleweed_694 = 694,
+RACE_Alaran_695 = 695,
+RACE_Swinetor_696 = 696,
+RACE_Triumvirate_697 = 697,
+RACE_Hadal_698 = 698,
+RACE_HoveringPlatform_699 = 699,
+RACE_ParasiticScavenger_700 = 700,
+RACE_Grendlaen_701 = 701,
+RACE_ShipInABottle_702 = 702,
+RACE_AlaranSentryStone_703 = 703,
+RACE_Dervish4_704 = 704,
+RACE_RegenerationPool_705 = 705,
+RACE_TeleportationStand_706 = 706,
+RACE_RelicCase_707 = 707,
+RACE_AlaranGhost_708 = 708,
+RACE_Skystrider_709 = 709,
+RACE_WaterSpout_710 = 710,
+RACE_AviakPullAlong_711 = 711,
+RACE_GelatinousCube2_712 = 712,
+RACE_Cat_713 = 713,
+RACE_ElkHead_714 = 714,
+RACE_Holgresh2_715 = 715,
+RACE_Beetle3_716 = 716,
+RACE_VineMaw_717 = 717,
+RACE_Ratman2_718 = 718,
+RACE_FallenKnight_719 = 719,
+RACE_FlyingCarpet_720 = 720,
+RACE_CarrierHand_721 = 721,
+RACE_Akheva_722 = 722,
+RACE_ServantOfShadow_723 = 723,
+RACE_Luclin_724 = 724,
+RACE_Xaric_725 = 725,
+RACE_Dervish5_726 = 726,
+RACE_Dervish6_727 = 727,
+RACE_Luclin2_728 = 728,
+RACE_Luclin3_729 = 729,
+RACE_Orb_730 = 730,
+RACE_Luclin4_731 = 731,
+RACE_Pegasus3_732 = 732,
+RACE_InteractiveObject_2250 = 2250,
+RACE_Node_2254 = 2254,
+};
+
+
+enum StartZoneIndexEnum {
+    StartZone_Odus_0 = 0,
+    StartZone_Qeynos_1,
+    StartZone_Halas_2,
+	StartZone_Rivervale_3,
+    StartZone_Freeport_4,
+    StartZone_Neriak_5,
+    StartZone_Grobb_6,
+    StartZone_Oggok_7,
+    StartZone_Kaladim_8,
+    StartZone_GreaterFaydark_9,
+    StartZone_Felwithe_10,
+    StartZone_Akanon_11,
+    StartZone_Cabilis_12,
+    StartZone_SharVahl_13,
+    StartZone_RatheMtn_14
+};
+
+enum SkillEnum : int {
+/*13855*/	Skill1HBlunt = 0,
+/*13856*/	Skill1HSlashing,
+/*13857*/	Skill2HBlunt,
+/*13858*/	Skill2HSlashing,
+/*13859*/	SkillAbjuration,
+/*13861*/	SkillAlteration, // 5
+/*13862*/	SkillApplyPoison,
+/*13863*/	SkillArchery,
+/*13864*/	SkillBackstab,
+/*13866*/	SkillBindWound,
+/*13867*/	SkillBash, // 10
+/*13871*/	SkillBlock,
+/*13872*/	SkillBrassInstruments,
+/*13874*/	SkillChanneling,
+/*13875*/	SkillConjuration,
+/*13876*/	SkillDefense, // 15
+/*13877*/	SkillDisarm,
+/*13878*/	SkillDisarmTraps,
+/*13879*/	SkillDivination,
+/*13880*/	SkillDodge,
+/*13881*/	SkillDoubleAttack, // 20
+/*13882*/	SkillDragonPunch,
+/*13924*/	SkillTailRake = SkillDragonPunch, // Iksar Monk equivilent
+/*13883*/	SkillDualWield,
+/*13884*/	SkillEagleStrike,
+/*13885*/	SkillEvocation,
+/*13886*/	SkillFeignDeath, // 25
+/*13888*/	SkillFlyingKick,
+/*13889*/	SkillForage,
+/*13890*/	SkillHandtoHand,
+/*13891*/	SkillHide,
+/*13893*/	SkillKick, // 30
+/*13894*/	SkillMeditate,
+/*13895*/	SkillMend,
+/*13896*/	SkillOffense,
+/*13897*/	SkillParry,
+/*13899*/	SkillPickLock, // 35
+/*13900*/	Skill1HPiercing,				// Changed in RoF2(05-10-2013)
+/*13903*/	SkillRiposte,
+/*13904*/	SkillRoundKick,
+/*13905*/	SkillSafeFall,
+/*13906*/	SkillSenseHeading, // 40
+/*13908*/	SkillSinging,
+/*13909*/	SkillSneak,
+/*13910*/	SkillSpecializeAbjure,			// No idea why they truncated this one..especially when there are longer ones...
+/*13911*/	SkillSpecializeAlteration,
+/*13912*/	SkillSpecializeConjuration, // 45
+/*13913*/	SkillSpecializeDivination,
+/*13914*/	SkillSpecializeEvocation,
+/*13915*/	SkillPickPockets,
+/*13916*/	SkillStringedInstruments,
+/*13917*/	SkillSwimming, // 50
+/*13919*/	SkillThrowing,
+/*13920*/	SkillTigerClaw,
+/*13921*/	SkillTracking,
+/*13923*/	SkillWindInstruments,
+/*13854*/	SkillFishing, // 55
+/*13853*/	SkillMakePoison,
+/*13852*/	SkillTinkering,
+/*13851*/	SkillResearch,
+/*13850*/	SkillAlchemy,
+/*13865*/	SkillBaking, // 60
+/*13918*/	SkillTailoring,
+/*13907*/	SkillSenseTraps,
+/*13870*/	SkillBlacksmithing,
+/*13887*/	SkillFletching,
+/*13873*/	SkillBrewing, // 65
+/*13860*/	SkillAlcoholTolerance,
+/*13868*/	SkillBegging,
+/*13892*/	SkillJewelryMaking,
+/*13901*/	SkillPottery,
+/*13898*/	SkillPercussionInstruments, // 70
+/*13922*/	SkillIntimidation,
+/*13869*/	SkillBerserking,
+/*13902*/	SkillTaunt,
+/*05837*/	SkillFrenzy, // 74				// This appears to be the only listed one not grouped with the others
+
+// SoF+ specific skills
+/*03670*/	//SkillRemoveTraps, // 75
+/*13049*/	//SkillTripleAttack,
+
+// RoF2+ specific skills
+/*00789*/	//Skill2HPiercing, // 77
+// /*01216*/	SkillNone,					// This needs to move down as new skills are added
+
+/*00000*/	SkillCount						// move to last position of active enumeration labels
+
+// Skill Counts
+// /*-----*/	SkillCount_62 = 75,			// use for Ti and earlier max skill checks
+// /*-----*/	SkillCount_SoF = 77,		// use for SoF thru RoF1 max skill checks
+// /*-----*/	SkillCount_RoF2 = 78,		// use for RoF2 max skill checks
+
+// Support values
+// /*-----*/	SkillServerArraySize = _SkillCount_RoF2,	// Should reflect last client '_SkillCount'
+
+// Superfluous additions to SkillUseTypes..server-use only
+// /*-----*/	ExtSkillGenericTradeskill = 100
+
+		/*					([EQClientVersion]	[0] - Unknown, [3] - SoF, [7] - RoF2[05-10-2013])
+			[Skill]			[index]	|	[0]		[1]		[2]		[3]		[4]		[5]		[6]		[7]
+			Frenzy			(05837)	|	---		074		074		074		074		074		074		074
+			Remove Traps	(03670)	|	---		---		---		075		075		075		075		075
+			Triple Attack	(13049)	|	---		---		---		076		076		076		076		076
+			2H Piercing		(00789)	|	---		---		---		---		---		---		---		077
+		*/
+
+		/*
+			[SkillCaps.txt] (SoF+)
+			a^b^c^d(^e)	(^e is RoF+, but cursory glance appears to be all zeros)
+
+			a - Class
+			b - Skill
+			c - Level
+			d - Max Value
+			(e - Unknown)
+		*/
+
+		/*
+			Changed (tradeskill==75) to ExtSkillGenericTradeskill in tradeskills.cpp for both instances. If it's a pseudo-enumeration of
+			an AA ability, then use the 'ExtSkill' ('ExtendedSkill') prefix with a value >= 100. (current implementation)
+		*/
+};
+
+enum ClassEnum
+{
+Class_None_0 = 0,
+Class_Warrior_1 = 1,
+Class_Cleric_2 = 2,
+Class_Paladin_3 = 3,
+Class_Ranger_4 = 4,
+Class_ShadowKnight_5 = 5,
+Class_Druid_6 = 6,
+Class_Monk_7 = 7,
+Class_Bard_8 = 8,
+Class_Rogue_9 = 9,
+Class_Shaman_10 = 10,
+Class_Necromancer_11 = 11,
+Class_Wizard_12 = 12,
+Class_Magician_13 = 13,
+Class_Enchanter_14 = 14,
+Class_Beastlord_15 = 15,
+Class_Berserker_16 = 16,
+Class_WarriorGM_20 = 20,
+Class_ClericGM_21 = 21,
+Class_PaladinGM_22 = 22,
+Class_RangerGM_23 = 23,
+Class_ShadowKnightGM_24 = 24,
+Class_DruidGM_25 = 25,
+Class_MonkGM_26 = 26,
+Class_BardGM_27 = 27,
+Class_RogueGM_28 = 28,
+Class_ShamanGM_29 = 29,
+Class_NecromancerGM_30 = 30,
+Class_WizardGM_31 = 31,
+Class_MagicianGM_32 = 32,
+Class_EnchanterGM_33 = 33,
+Class_BeastlordGM_34 = 34,
+Class_BerserkerGM_35 = 35,
+Class_Banker_40 = 40,
+Class_Merchant_41 = 41,
+Class_DiscordMerchant_59 = 59,
+Class_AdventureRecruiter_60 = 60,
+Class_AdventureMerchant_61 = 61,
+Class_LDoNTreasure_62 = 62,
+Class_TributeMaster_63 = 63,
+Class_GuildTributeMaster_64 = 64,
+Class_GuildBanker_66 = 66,
+Class_NorrathsKeepersMerchant_67 = 67,
+Class_DarkReignMerchant_68 = 68,
+Class_FellowshipMaster_69 = 69,
+Class_AlternateCurrencyMerchant_70 = 70,
+Class_MercenaryLiaison_71 = 71
+};
+
+		enum ItemTypeEnum : uint8 {
+			/*9138*/ ItemType_1HSlash_0 = 0,
+			/*9141*/ ItemType_2HSlash_1,
+			/*9140*/ ItemType_1HPiercing_2,
+			/*9139*/ ItemType_1HBlunt_3,
+			/*9142*/ ItemType_2HBlunt_4,
+			/*5504*/ ItemType_Bow_5,                 // 5
+			/*----*/ ItemType_Unknown1_6,
+			/*----*/ ItemType_LargeThrowing_7,
+			/*5505*/ ItemType_Shield_8,
+			/*5506*/ ItemType_Scroll_9,
+			/*5507*/ ItemType_Armor_10,               // 10
+			/*5508*/ ItemType_Misc_11,                // a lot of random crap has this item use.
+			/*7564*/ ItemType_LockPick_12,
+			/*----*/ ItemType_Unknown2_13,
+			/*5509*/ ItemType_Food_14,
+			/*5510*/ ItemType_Drink_15,               // 15
+			/*5511*/ ItemType_Light_16,
+			/*5512*/ ItemType_Combinable_17,          // not all stackable items are this use...
+			/*5513*/ ItemType_Bandage_18,
+			/*----*/ ItemType_SmallThrowing_19,
+			/*----*/ ItemType_Spell_20,               // 20	// spells and tomes
+			/*5514*/ ItemType_Potion_21,
+			/*----*/ ItemType_Unknown3_22,
+			/*0406*/ ItemType_WindInstrument_23,
+			/*0407*/ ItemType_StringedInstrument_24,
+			/*0408*/ ItemType_BrassInstrument_25,     // 25
+			/*0405*/ ItemType_PercussionInstrument_26,
+			/*5515*/ ItemType_Arrow_27,
+			/*----*/ ItemType_Unknown4_28,
+			/*5521*/ ItemType_Jewelry_29,
+			/*----*/ ItemType_Skull_30,               // 30
+			/*5516*/ ItemType_Book_31,                // skill-up tomes/books? (would probably need a pp flag if true...)
+			/*5517*/ ItemType_Note_32,
+			/*5518*/ ItemType_Key_33,
+			/*----*/ ItemType_Coin_34,
+			/*5520*/ ItemType_2HPiercing_35,          // 35
+			/*----*/ ItemType_FishingPole_36,
+			/*----*/ ItemType_FishingBait_37,
+			/*5519*/ ItemType_Alcohol_38,
+			/*----*/ ItemType_Key2_39,                // keys and satchels?? (questable keys?)
+			/*----*/ ItemType_Compass_40,             // 40
+			/*----*/ ItemType_Unknown5_41,
+			/*----*/ ItemType_Poison_42,              // might be wrong, but includes poisons
+			/*----*/ ItemType_Unknown6_43,
+			/*----*/ ItemType_Unknown7_44,
+			/*5522*/ ItemType_Martial_45,             // 45
+			/*----*/ ItemType_AllEffects_46,
+			/*----*/ ItemType_Unknown9_47,
+			/*----*/ ItemType_Unknown10_48,
+			/*----*/ ItemType_FocusEffect_49,
+			/*----*/ ItemType_Singing_50,             // 50
+			/*5750*/ ItemType_AllInstrumentTypes_51,
+			/*5776*/ ItemType_Charm_52,
+			/*----*/ ItemType_Dye_53,
+			/*----*/ ItemType_Augmentation_54,
+			/*----*/ ItemType_AugmentationSolvent_55, // 55
+			/*----*/ ItemType_AugmentationDistiller_56,
+			/*----*/ ItemType_AlternateAbility_57,
+			/*----*/ ItemType_FellowshipKit_58,
+			/*----*/ ItemType_Unknown13_59,
+			/*----*/ ItemType_Recipe_60,              // 60
+			/*----*/ ItemType_AdvancedRecipe_61,
+			/*----*/ ItemType_Journal_62,             // only one(1) database entry
+			/*----*/ ItemType_AltCurrency_63,         // alt-currency (as opposed to coinage)
+			/*5881*/ ItemType_PerfectedAugmentationDistiller_64,
+			/*----*/ ItemType_Count_65,
+			/*----*/ ItemType_Collectible_66,
+			/*----*/ ItemType_Container_67,
+			/*----*/ ItemType_All     = 0xFF
+
+/*
+			Unknowns:
+
+			Mounts?
+			Ornamentations?
+			GuildBanners?
+			Collectible?
+			Placeable?
+			(others?)
+*/
+		};
+
+
+		// 756 bytes
+struct EQ_Skill
+{
+/*000*/  int32 name_stringid;
+/*004*/  int32 reuse_time;
+/*008*/  char unk8;
+/*009*/  char unk9;
+/*010*/  char alt_timer;
+/*011*/  char level_limited_cap;
+/*012*/  int32 level_required[36];
+/*156*/  int32 difficulty[36];
+/*300*/  int32 unk300;
+/*304*/  int32 base_dmg;
+/*308*/  int32 unk308;
+/*312*/  int32 unk312;
+/*316*/  float push_force;
+/*320*/  int32 cap1[36];
+/*464*/  int32 cap2[36];
+/*608*/  int32 cap3[36];
+/*752*/  int32 unk752;
+};
+
+enum SpellEffectEnum
+{
+SE_CurrentHP_0 = 0,
+SE_ArmorClass_1 = 1,
+SE_ATK_2 = 2,
+SE_MovementSpeed_3 = 3,
+SE_STR_4 = 4,
+SE_DEX_5 = 5,
+SE_AGI_6 = 6,
+SE_STA_7 = 7,
+SE_INT_8 = 8,
+SE_WIS_9 = 9,
+SE_CHA_10 = 10,
+SE_AttackSpeed_11 = 11,
+SE_Invisibility_12 = 12,
+SE_SeeInvis_13 = 13,
+SE_WaterBreathing_14 = 14,
+SE_CurrentMana_15 = 15,
+SE_NPCFrenzy_16 = 16,
+SE_NPCAwareness_17 = 17,
+SE_Lull_18 = 18,
+SE_AddFaction_19 = 19,
+SE_Blind_20 = 20,
+SE_Stun_21 = 21,
+SE_Charm_22 = 22,
+SE_Fear_23 = 23,
+SE_Stamina_24 = 24,
+SE_BindAffinity_25 = 25,
+SE_Gate_26 = 26,
+SE_CancelMagic_27 = 27,
+SE_InvisVsUndead_28 = 28,
+SE_InvisVsAnimals_29 = 29,
+SE_ChangeFrenzyRad_30 = 30,
+SE_Mez_31 = 31,
+SE_SummonItem_32 = 32,
+SE_SummonPet_33 = 33,
+SE_Confuse_34 = 34,
+SE_DiseaseCounter_35 = 35,
+SE_PoisonCounter_36 = 36,
+SE_DetectHostile_37 = 37,
+SE_DetectMagic_38 = 38,
+SE_TwinCastBlocker_39 = 39,
+SE_DivineAura_40 = 40,
+SE_Destroy_41 = 41,
+SE_ShadowStep_42 = 42,
+SE_Berserk_43 = 43,
+SE_Lycanthropy_44 = 44,
+SE_Vampirism_45 = 45,
+SE_ResistFire_46 = 46,
+SE_ResistCold_47 = 47,
+SE_ResistPoison_48 = 48,
+SE_ResistDisease_49 = 49,
+SE_ResistMagic_50 = 50,
+SE_DetectTraps_51 = 51,
+SE_SenseDead_52 = 52,
+SE_SenseSummoned_53 = 53,
+SE_SenseAnimals_54 = 54,
+SE_Rune_55 = 55,
+SE_TrueNorth_56 = 56,
+SE_Levitate_57 = 57,
+SE_Illusion_58 = 58,
+SE_DamageShield_59 = 59,
+SE_TransferItem_60 = 60,
+SE_Identify_61 = 61,
+SE_ItemID_62 = 62,
+SE_WipeHateList_63 = 63,
+SE_SpinTarget_64 = 64,
+SE_InfraVision_65 = 65,
+SE_UltraVision_66 = 66,
+SE_EyeOfZomm_67 = 67,
+SE_ReclaimPet_68 = 68,
+SE_TotalHP_69 = 69,
+SE_CorpseBomb_70 = 70,
+SE_NecPet_71 = 71,
+SE_PreserveCorpse_72 = 72,
+SE_BindSight_73 = 73,
+SE_FeignDeath_74 = 74,
+SE_VoiceGraft_75 = 75,
+SE_Sentinel_76 = 76,
+SE_LocateCorpse_77 = 77,
+SE_AbsorbMagicAtt_78 = 78,
+SE_CurrentHPOnce_79 = 79,
+SE_EnchantLight_80 = 80,
+SE_Revive_81 = 81,
+SE_SummonPC_82 = 82,
+SE_Teleport_83 = 83,
+SE_TossUp_84 = 84,
+SE_WeaponProc_85 = 85,
+SE_Harmony_86 = 86,
+SE_MagnifyVision_87 = 87,
+SE_Succor_88 = 88,
+SE_ModelSize_89 = 89,
+SE_Cloak_90 = 90,
+SE_SummonCorpse_91 = 91,
+SE_InstantHate_92 = 92,
+SE_StopRain_93 = 93,
+SE_NegateIfCombat_94 = 94,
+SE_Sacrifice_95 = 95,
+SE_Silence_96 = 96,
+SE_ManaPool_97 = 97,
+SE_AttackSpeed2_98 = 98,
+SE_Root_99 = 99,
+SE_HealOverTime_100 = 100,
+SE_CompleteHeal_101 = 101,
+SE_Fearless_102 = 102,
+SE_CallPet_103 = 103,
+SE_Translocate_104 = 104,
+SE_AntiGate_105 = 105,
+SE_SummonBSTPet_106 = 106,
+SE_AlterNPCLevel_107 = 107,
+SE_Familiar_108 = 108,
+SE_SummonItemIntoBag_109 = 109,
+SE_IncreaseArchery_110 = 110,
+SE_ResistAll_111 = 111,
+SE_CastingLevel_112 = 112,
+SE_SummonHorse_113 = 113,
+SE_ChangeAggro_114 = 114,
+SE_Hunger_115 = 115,
+SE_CurseCounter_116 = 116,
+SE_MagicWeapon_117 = 117,
+SE_Amplification_118 = 118,
+SE_AttackSpeed3_119 = 119,
+SE_HealRate_120 = 120,
+SE_ReverseDS_121 = 121,
+SE_ReduceSkill_122 = 122,
+SE_Screech_123 = 123,
+SE_ImprovedDamage_124 = 124,
+SE_ImprovedHeal_125 = 125,
+SE_SpellResistReduction_126 = 126,
+SE_IncreaseSpellHaste_127 = 127,
+SE_IncreaseSpellDuration_128 = 128,
+SE_IncreaseRange_129 = 129,
+SE_SpellHateMod_130 = 130,
+SE_ReduceReagentCost_131 = 131,
+SE_ReduceManaCost_132 = 132,
+SE_FcStunTimeMod_133 = 133,
+SE_LimitMaxLevel_134 = 134,
+SE_LimitResist_135 = 135,
+SE_LimitTarget_136 = 136,
+SE_LimitEffect_137 = 137,
+SE_LimitSpellType_138 = 138,
+SE_LimitSpell_139 = 139,
+SE_LimitMinDur_140 = 140,
+SE_LimitInstant_141 = 141,
+SE_LimitMinLevel_142 = 142,
+SE_LimitCastTimeMin_143 = 143,
+SE_LimitCastTimeMax_144 = 144,
+SE_Teleport2_145 = 145,
+SE_ElectricityResist_146 = 146,
+SE_PercentalHeal_147 = 147,
+SE_StackingCommand_Block_148 = 148,
+SE_StackingCommand_Overwrite_149 = 149,
+SE_DeathSave_150 = 150,
+SE_SuspendPet_151 = 151,
+SE_TemporaryPets_152 = 152,
+SE_BalanceHP_153 = 153,
+SE_DispelDetrimental_154 = 154,
+SE_SpellCritDmgIncrease_155 = 155,
+SE_IllusionCopy_156 = 156,
+SE_SpellDamageShield_157 = 157,
+SE_Reflect_158 = 158,
+SE_AllStats_159 = 159,
+SE_MakeDrunk_160 = 160,
+SE_MitigateSpellDamage_161 = 161,
+SE_MitigateMeleeDamage_162 = 162,
+SE_NegateAttacks_163 = 163,
+SE_AppraiseLDonChest_164 = 164,
+SE_DisarmLDoNTrap_165 = 165,
+SE_UnlockLDoNChest_166 = 166,
+SE_PetPowerIncrease_167 = 167,
+SE_MeleeMitigation_168 = 168,
+SE_CriticalHitChance_169 = 169,
+SE_SpellCritChance_170 = 170,
+SE_CrippBlowChance_171 = 171,
+SE_AvoidMeleeChance_172 = 172,
+SE_RiposteChance_173 = 173,
+SE_DodgeChance_174 = 174,
+SE_ParryChance_175 = 175,
+SE_DualWieldChance_176 = 176,
+SE_DoubleAttackChance_177 = 177,
+SE_MeleeLifetap_178 = 178,
+SE_AllInstrumentMod_179 = 179,
+SE_ResistSpellChance_180 = 180,
+SE_ResistFearChance_181 = 181,
+SE_HundredHands_182 = 182,
+SE_MeleeSkillCheck_183 = 183,
+SE_HitChance_184 = 184,
+SE_DamageModifier_185 = 185,
+SE_MinDamageModifier_186 = 186,
+SE_BalanceMana_187 = 187,
+SE_IncreaseBlockChance_188 = 188,
+SE_CurrentEndurance_189 = 189,
+SE_EndurancePool_190 = 190,
+SE_Amnesia_191 = 191,
+SE_Hate_192 = 192,
+SE_SkillAttack_193 = 193,
+SE_FadingMemories_194 = 194,
+SE_StunResist_195 = 195,
+SE_StrikeThrough_196 = 196,
+SE_SkillDamageTaken_197 = 197,
+SE_CurrentEnduranceOnce_198 = 198,
+SE_Taunt_199 = 199,
+SE_ProcChance_200 = 200,
+SE_RangedProc_201 = 201,
+SE_IllusionOther_202 = 202,
+SE_MassGroupBuff_203 = 203,
+SE_GroupFearImmunity_204 = 204,
+SE_Rampage_205 = 205,
+SE_AETaunt_206 = 206,
+SE_FleshToBone_207 = 207,
+SE_PurgePoison_208 = 208,
+SE_DispelBeneficial_209 = 209,
+SE_PetShield_210 = 210,
+SE_AEMelee_211 = 211,
+SE_FrenziedDevastation_212 = 212,
+SE_PetMaxHP_213 = 213,
+SE_MaxHPChange_214 = 214,
+SE_PetAvoidance_215 = 215,
+SE_Accuracy_216 = 216,
+SE_HeadShot_217 = 217,
+SE_PetCriticalHit_218 = 218,
+SE_SlayUndead_219 = 219,
+SE_SkillDamageAmount_220 = 220,
+SE_Packrat_221 = 221,
+SE_BlockBehind_222 = 222,
+SE_DoubleRiposte_223 = 223,
+SE_GiveDoubleRiposte_224 = 224,
+SE_GiveDoubleAttack_225 = 225,
+SE_TwoHandBash_226 = 226,
+SE_ReduceSkillTimer_227 = 227,
+SE_ReduceFallDamage_228 = 228,
+SE_PersistantCasting_229 = 229,
+SE_ExtendedShielding_230 = 230,
+SE_StunBashChance_231 = 231,
+SE_DivineSave_232 = 232,
+SE_Metabolism_233 = 233,
+SE_ReduceApplyPoisonTime_234 = 234,
+SE_ChannelChanceSpells_235 = 235,
+SE_FreePet_236 = 236,
+SE_GivePetGroupTarget_237 = 237,
+SE_IllusionPersistence_238 = 238,
+SE_FeignedCastOnChance_239 = 239,
+SE_StringUnbreakable_240 = 240,
+SE_ImprovedReclaimEnergy_241 = 241,
+SE_IncreaseChanceMemwipe_242 = 242,
+SE_CharmBreakChance_243 = 243,
+SE_RootBreakChance_244 = 244,
+SE_TrapCircumvention_245 = 245,
+SE_SetBreathLevel_246 = 246,
+SE_RaiseSkillCap_247 = 247,
+SE_SecondaryForte_248 = 248,
+SE_SecondaryDmgInc_249 = 249,
+SE_SpellProcChance_250 = 250,
+SE_ConsumeProjectile_251 = 251,
+SE_FrontalBackstabChance_252 = 252,
+SE_FrontalBackstabMinDmg_253 = 253,
+SE_Blank_254 = 254,
+SE_ShieldDuration_255 = 255,
+SE_ShroudofStealth_256 = 256,
+SE_PetDiscipline_257 = 257,
+SE_TripleBackstab_258 = 258,
+SE_CombatStability_259 = 259,
+SE_AddSingingMod_260 = 260,
+SE_SongModCap_261 = 261,
+SE_RaiseStatCap_262 = 262,
+SE_TradeSkillMastery_263 = 263,
+SE_HastenedAASkill_264 = 264,
+SE_MasteryofPast_265 = 265,
+SE_ExtraAttackChance_266 = 266,
+SE_AddPetCommand_267 = 267,
+SE_ReduceTradeskillFail_268 = 268,
+SE_MaxBindWound_269 = 269,
+SE_BardSongRange_270 = 270,
+SE_BaseMovementSpeed_271 = 271,
+SE_CastingLevel2_272 = 272,
+SE_CriticalDoTChance_273 = 273,
+SE_CriticalHealChance_274 = 274,
+SE_CriticalMend_275 = 275,
+SE_Ambidexterity_276 = 276,
+SE_UnfailingDivinity_277 = 277,
+SE_FinishingBlow_278 = 278,
+SE_Flurry_279 = 279,
+SE_PetFlurry_280 = 280,
+SE_FeignedMinion_281 = 281,
+SE_ImprovedBindWound_282 = 282,
+SE_DoubleSpecialAttack_283 = 283,
+SE_LoHSetHeal_284 = 284,
+SE_NimbleEvasion_285 = 285,
+SE_FcDamageAmt_286 = 286,
+SE_SpellDurationIncByTic_287 = 287,
+SE_SkillAttackProc_288 = 288,
+SE_CastOnFadeEffect_289 = 289,
+SE_IncreaseRunSpeedCap_290 = 290,
+SE_Purify_291 = 291,
+SE_StrikeThrough2_292 = 292,
+SE_FrontalStunResist_293 = 293,
+SE_CriticalSpellChance_294 = 294,
+SE_ReduceTimerSpecial_295 = 295,
+SE_FcSpellVulnerability_296 = 296,
+SE_FcDamageAmtIncoming_297 = 297,
+SE_ChangeHeight_298 = 298,
+SE_WakeTheDead_299 = 299,
+SE_Doppelganger_300 = 300,
+SE_ArcheryDamageModifier_301 = 301,
+SE_FcDamagePctCrit_302 = 302,
+SE_FcDamageAmtCrit_303 = 303,
+SE_OffhandRiposteFail_304 = 304,
+SE_MitigateDamageShield_305 = 305,
+SE_ArmyOfTheDead_306 = 306,
+SE_Appraisal_307 = 307,
+SE_ZoneSuspendMinion_308 = 308,
+SE_GateCastersBindpoint_309 = 309,
+SE_ReduceReuseTimer_310 = 310,
+SE_LimitCombatSkills_311 = 311,
+SE_Sanctuary_312 = 312,
+SE_ForageAdditionalItems_313 = 313,
+SE_Invisibility2_314 = 314,
+SE_InvisVsUndead2_315 = 315,
+SE_ImprovedInvisAnimals_316 = 316,
+SE_ItemHPRegenCapIncrease_317 = 317,
+SE_ItemManaRegenCapIncrease_318 = 318,
+SE_CriticalHealOverTime_319 = 319,
+SE_ShieldBlock_320 = 320,
+SE_ReduceHate_321 = 321,
+SE_GateToHomeCity_322 = 322,
+SE_DefensiveProc_323 = 323,
+SE_HPToMana_324 = 324,
+SE_NoBreakAESneak_325 = 325,
+SE_SpellSlotIncrease_326 = 326,
+SE_MysticalAttune_327 = 327,
+SE_DelayDeath_328 = 328,
+SE_ManaAbsorbPercentDamage_329 = 329,
+SE_CriticalDamageMob_330 = 330,
+SE_Salvage_331 = 331,
+SE_SummonToCorpse_332 = 332,
+SE_CastOnRuneFadeEffect_333 = 333,
+SE_BardAEDot_334 = 334,
+SE_BlockNextSpellFocus_335 = 335,
+SE_IllusionaryTarget_336 = 336,
+SE_PercentXPIncrease_337 = 337,
+SE_SummonAndResAllCorpses_338 = 338,
+SE_TriggerOnCast_339 = 339,
+SE_SpellTrigger_340 = 340,
+SE_ItemAttackCapIncrease_341 = 341,
+SE_ImmuneFleeing_342 = 342,
+SE_InterruptCasting_343 = 343,
+SE_ChannelChanceItems_344 = 344,
+SE_AssassinateLevel_345 = 345,
+SE_HeadShotLevel_346 = 346,
+SE_DoubleRangedAttack_347 = 347,
+SE_LimitManaMin_348 = 348,
+SE_ShieldEquipDmgMod_349 = 349,
+SE_ManaBurn_350 = 350,
+SE_PersistentEffect_351 = 351,
+SE_IncreaseTrapCount_352 = 352,
+SE_AdditionalAura_353 = 353,
+SE_DeactivateAllTraps_354 = 354,
+SE_LearnTrap_355 = 355,
+SE_ChangeTriggerType_356 = 356,
+SE_FcMute_357 = 357,
+SE_CurrentManaOnce_358 = 358,
+SE_PassiveSenseTrap_359 = 359,
+SE_ProcOnKillShot_360 = 360,
+SE_SpellOnDeath_361 = 361,
+SE_PotionBeltSlots_362 = 362,
+SE_BandolierSlots_363 = 363,
+SE_TripleAttackChance_364 = 364,
+SE_ProcOnSpellKillShot_365 = 365,
+SE_GroupShielding_366 = 366,
+SE_SetBodyType_367 = 367,
+SE_FactionMod_368 = 368,
+SE_CorruptionCounter_369 = 369,
+SE_ResistCorruption_370 = 370,
+SE_AttackSpeed4_371 = 371,
+SE_ForageSkill_372 = 372,
+SE_CastOnFadeEffectAlways_373 = 373,
+SE_ApplyEffect_374 = 374,
+SE_DotCritDmgIncrease_375 = 375,
+SE_Fling_376 = 376,
+SE_CastOnFadeEffectNPC_377 = 377,
+SE_SpellEffectResistChance_378 = 378,
+SE_ShadowStepDirectional_379 = 379,
+SE_Knockdown_380 = 380,
+SE_KnockTowardCaster_381 = 381,
+SE_NegateSpellEffect_382 = 382,
+SE_SympatheticProc_383 = 383,
+SE_Leap_384 = 384,
+SE_LimitSpellGroup_385 = 385,
+SE_CastOnCurer_386 = 386,
+SE_CastOnCure_387 = 387,
+SE_SummonCorpseZone_388 = 388,
+SE_FcTimerRefresh_389 = 389,
+SE_FcTimerLockout_390 = 390,
+SE_LimitManaMax_391 = 391,
+SE_FcHealAmt_392 = 392,
+SE_FcHealPctIncoming_393 = 393,
+SE_FcHealAmtIncoming_394 = 394,
+SE_FcHealPctCritIncoming_395 = 395,
+SE_FcHealAmtCrit_396 = 396,
+SE_PetMeleeMitigation_397 = 397,
+SE_SwarmPetDuration_398 = 398,
+SE_FcTwincast_399 = 399,
+SE_HealGroupFromMana_400 = 400,
+SE_ManaDrainWithDmg_401 = 401,
+SE_EndDrainWithDmg_402 = 402,
+SE_LimitSpellClass_403 = 403,
+SE_LimitSpellSubclass_404 = 404,
+SE_TwoHandBluntBlock_405 = 405,
+SE_CastonNumHitFade_406 = 406,
+SE_CastonFocusEffect_407 = 407,
+SE_LimitHPPercent_408 = 408,
+SE_LimitManaPercent_409 = 409,
+SE_LimitEndPercent_410 = 410,
+SE_LimitClass_411 = 411,
+SE_LimitRace_412 = 412,
+SE_FcBaseEffects_413 = 413,
+SE_LimitCastingSkill_414 = 414,
+SE_FFItemClass_415 = 415,
+SE_ACv2_416 = 416,
+SE_ManaRegen_v2_417 = 417,
+SE_SkillDamageAmount2_418 = 418,
+SE_AddMeleeProc_419 = 419,
+SE_FcLimitUse_420 = 420,
+SE_FcIncreaseNumHits_421 = 421,
+SE_LimitUseMin_422 = 422,
+SE_LimitUseType_423 = 423,
+SE_GravityEffect_424 = 424,
+SE_Display_425 = 425,
+SE_IncreaseExtTargetWindow_426 = 426,
+SE_SkillProcAttempt_427 = 427,
+SE_LimitToSkill_428 = 428,
+SE_SkillProcSuccess_429 = 429,
+SE_PostEffect_430 = 430,
+SE_PostEffectData_431 = 431,
+SE_ExpandMaxActiveTrophyBen_432 = 432,
+SE_CriticalDotDecay_433 = 433,
+SE_CriticalHealDecay_434 = 434,
+SE_CriticalRegenDecay_435 = 435,
+SE_BeneficialCountDownHold_436 = 436,
+SE_TeleporttoAnchor_437 = 437,
+SE_TranslocatetoAnchor_438 = 438,
+SE_Assassinate_439 = 439,
+SE_FinishingBlowLvl_440 = 440,
+SE_DistanceRemoval_441 = 441,
+SE_TriggerOnReqTarget_442 = 442,
+SE_TriggerOnReqCaster_443 = 443,
+SE_ImprovedTaunt_444 = 444,
+SE_AddMercSlot_445 = 445,
+SE_AStacker_446 = 446,
+SE_BStacker_447 = 447,
+SE_CStacker_448 = 448,
+SE_DStacker_449 = 449,
+SE_MitigateDotDamage_450 = 450,
+SE_MeleeThresholdGuard_451 = 451,
+SE_SpellThresholdGuard_452 = 452,
+SE_TriggerMeleeThreshold_453 = 453,
+SE_TriggerSpellThreshold_454 = 454,
+SE_AddHatePct_455 = 455,
+SE_AddHateOverTimePct_456 = 456,
+SE_ResourceTap_457 = 457,
+SE_FactionModPct_458 = 458,
+SE_DamageModifier2_459 = 459,
+SE_Ff_Override_NotFocusable_460 = 460,
+SE_ImprovedDamage2_461 = 461,
+SE_FcDamageAmt2_462 = 462,
+SE_Shield_Target_463 = 463,
+SE_PC_Pet_Rampage_464 = 464,
+SE_PC_Pet_AE_Rampage_465 = 465,
+SE_PC_Pet_Flurry_Chance_466 = 466,
+SE_DS_Mitigation_Amount_467 = 467,
+SE_DS_Mitigation_Percentage_468 = 468,
+SE_Chance_Best_in_Spell_Grp_469 = 469,
+SE_Trigger_Best_in_Spell_Grp_470 = 470,
+SE_Double_Melee_Round_471 = 471,
+SE_Buy_AA_Rank_472 = 472,
+SE_Double_Backstab_Front_473 = 473,
+SE_Pet_Crit_Melee_Damage_Pct_Owner_474 = 474,
+SE_Trigger_Spell_Non_Item_475 = 475,
+SE_Weapon_Stance_476 = 476,
+SE_Hatelist_To_Top_Index_477 = 477,
+SE_Hatelist_To_Tail_Index_478 = 478,
+SE_Ff_Value_Min_479 = 479,
+SE_Ff_Value_Max_480 = 480,
+SE_Fc_Cast_Spell_On_Land_481 = 481,
+SE_Skill_Base_Damage_Mod_482 = 482,
+SE_Fc_Spell_Damage_Pct_IncomingPC_483 = 483,
+SE_Fc_Spell_Damage_Amt_IncomingPC_484 = 484,
+SE_Ff_CasterClass_485 = 485,
+SE_Ff_Same_Caster_486 = 486,
+SE_Extend_Tradeskill_Cap_487 = 487,
+SE_Defender_Melee_Force_Pct_PC_488 = 488,
+SE_Worn_Endurance_Regen_Cap_489 = 489,
+SE_Ff_ReuseTimeMin_490 = 490,
+SE_Ff_ReuseTimeMax_491 = 491,
+SE_Ff_Endurance_Min_492 = 492,
+SE_Ff_Endurance_Max_493 = 493,
+SE_Pet_Add_Atk_494 = 494,
+SE_Ff_DurationMax_495 = 495,
+SE_Critical_Melee_Damage_Mod_Max_496 = 496,
+SE_Ff_FocusCastProcNoBypass_497 = 497,
+SE_AddExtraAttackPct_1h_Primary_498 = 498,
+SE_AddExtraAttackPct_1h_Secondary_499 = 499,
+SE_Fc_CastTimeMod2_500 = 500,
+SE_Fc_CastTimeAmt_501 = 501,
+SE_Fearstun_502 = 502,
+SE_Melee_Damage_Position_Mod_503 = 503,
+SE_Melee_Damage_Position_Amt_504 = 504,
+SE_Damage_Taken_Position_Mod_505 = 505,
+SE_Damage_Taken_Position_Amt_506 = 506,
+SE_Fc_Amplify_Mod_507 = 507,
+SE_Fc_Amplify_Amt_508 = 508,
+SE_Health_Transfer_509 = 509,
+SE_Fc_ResistIncoming_510 = 510,
+SE_Ff_FocusTimerMin_511 = 511,
+SE_Proc_Timer_Modifier_512 = 512,
+SE_Mana_Max_Percent_513 = 513,
+SE_Endurance_Max_Percent_514 = 514,
+SE_AC_Avoidance_Max_Percent_515 = 515,
+SE_AC_Mitigation_Max_Percent_516 = 516,
+SE_Attack_Offense_Max_Percent_517 = 517,
+SE_Attack_Accuracy_Max_Percent_518 = 518,
+SE_Luck_Amount_519 = 519,
+SE_Luck_Percent_520 = 520,
+SE_Endurance_Absorb_Pct_Damage_521 = 521,
+SE_Instant_Mana_Pct_522 = 522,
+SE_Instant_Endurance_Pct_523 = 523,
+SE_Duration_HP_Pct_524 = 524,
+SE_Duration_Mana_Pct_525 = 525,
+SE_Duration_Endurance_Pct_526 = 526
+};
+
+enum TargetTypeEnum {
+/* 01 */	ST_TargetOptional_1 = 0x01, //only used for targeted projectile spells
+/* 02 */	ST_AEClientV1_2 = 0x02,
+/* 03 */	ST_GroupTeleport_3 = 0x03,
+/* 04 */	ST_AECaster_4 = 0x04,
+/* 05 */	ST_Target_5 = 0x05,
+/* 06 */	ST_Self_6 = 0x06,
+/* 07 */	// NOT USED
+/* 08 */	ST_AETarget_8 = 0x08,
+/* 09 */	ST_Animal_9 = 0x09,
+/* 10 */	ST_Undead_10 = 0x0a,
+/* 11 */	ST_Summoned_11 = 0x0b,
+/* 12 */	// NOT USED error is 218 (This spell only works on things that are flying.)
+/* 13 */	ST_Tap_13 = 0x0d,
+/* 14 */	ST_Pet_14 = 0x0e,
+/* 15 */	ST_Corpse_15 = 0x0f,
+/* 16 */	ST_Plant_16 = 0x10,
+/* 17 */	ST_Giant_17 = 0x11, //special giant
+/* 18 */	ST_Dragon_18 = 0x12, //special dragon
+/* 19 */	// NOT USED error is 227 (This spell only works on specific coldain.)
+/* 20 */	ST_TargetAETap_20 = 0x14,
+/* 21 */	// NOT USED same switch case as ST_Undead
+/* 22 */	// NOT USED same switch case as ST_Summoned
+/* 23 */	// NOT USED same switch case as ST_Animal
+/* 24 */	ST_UndeadAE_24 = 0x18,
+/* 25 */	ST_SummonedAE_25 = 0x19,
+/* 26 */	// NOT USED
+/* 27 */	// NOT USED error is 223 (This spell only works on insects.)
+/* 28 */	// NOT USED error is 223 (This spell only works on insects.)
+/* 29 */	// NOT USED
+/* 30 */	// NOT USED
+/* 31 */	// NOT USED
+/* 32 */	ST_AETargetHateList_32 = 0x20,
+/* 33 */	ST_HateList_33 = 0x21,
+/* 34 */	ST_LDoNChest_Cursed_34 = 0x22,
+/* 35 */	ST_Muramite_35 = 0x23, //only works on special muramites
+/* 36 */	ST_AreaClientOnly_36 = 0x24,
+/* 37 */	ST_AreaNPCOnly_37 = 0x25,
+/* 38 */	ST_SummonedPet_38 = 0x26,
+/* 39 */	ST_GroupNoPets_39 = 0x27,
+/* 40 */	ST_AEBard_40 = 0x28,
+/* 41 */	ST_Group_41 = 0x29,
+/* 42 */	ST_Directional_42 = 0x2a, //ae around this target between two angles
+/* 43 */	ST_GroupClientAndPet_43 = 0x2b,
+/* 44 */	ST_Beam_44 = 0x2c,
+/* 45 */	ST_Ring_45 = 0x2d,
+/* 46 */	ST_TargetsTarget_46 = 0x2e, // uses the target of your target
+/* 47 */	ST_PetMaster_47 = 0x2f, // uses the master as target
+/* 48 */	// UNKNOWN
+/* 49 */	// NOT USED
+/* 50 */	ST_TargetAENoPlayersPets_50 = 0x32,
+};
+
+enum ResistTypeEnum
+{
+	RESIST_NONE_0 = 0,
+	RESIST_MAGIC_1 = 1,
+	RESIST_FIRE_2 = 2,
+	RESIST_COLD_3 = 3,
+	RESIST_POISON_4 = 4,
+	RESIST_DISEASE_5 = 5,
+	RESIST_CHROMATIC_6 = 6,
+	RESIST_PRISMATIC_7 = 7,
+	RESIST_PHYSICAL_8 = 8,	// see Muscle Shock, Back Swing
+	RESIST_CORRUPTION_9 = 9
+};
+
+
+/*
+
+Item fields
+
+itemclass			ItemClass
+name				Name
+lore				Lore
+idfile				IDFile
+id					ID
+weight				Weight
+norent				NoRent
+nodrop				NoDrop
+size				Size
+slots				Slots
+price				Price
+icon				Icon
+0
+0
+benefitflag			BenefitFlag
+tradeskills			Tradeskills
+cr					CR
+dr					DR
+pr					PR
+mr					MR
+fr					FR
+astr				AStr
+asta				ASta
+aagi				AAgi
+adex				ADex
+acha				ACha
+aint				AInt
+awis				AWis
+hp					HP
+mana				Mana
+ac					AC
+deity				Deity
+skillmodvalue		SkillModValue
+skillmodmax			SkillModMax
+skillmodtype		SkillModType
+banedmgrace			BaneDmgRace
+banedmgamt			BaneDmgAmt
+banedmgbody			BaneDmgBody
+magic				Magic
+casttime_			CastTime_ // TODO fix this
+reqlevel			ReqLevel
+bardtype			BardType
+bardvalue			BardValue
+light				Light
+delay				Delay
+reclevel			RecLevel
+recskill			RecSkill
+elemdmgtype			ElemDmgType
+elemdmgamt			ElemDmgAmt
+range				Range
+damage				Damage
+color				Color
+classes				Classes
+races				Races
+0
+maxcharges			MaxCharges
+itemtype			ItemType
+material			Material
+sellrate			SellRate
+0
+casttime_			CastTime_ // TODO fix this
+0
+procrate			ProcRate
+combateffects		CombatEffects
+shielding			Shielding
+stunresist			StunResist
+strikethrough		StrikeThrough
+extradmgskill		ExtraDmgSkill
+extradmgamt			ExtraDmgAmt
+spellshield			SpellShield
+avoidance			Avoidance
+accuracy			Accuracy
+charmfileid			CharmFileID
+factionmod1			FactionMod1
+factionmod2			FactionMod2
+factionmod3			FactionMod3
+factionmod4			FactionMod4
+factionamt1			FactionAmt1
+factionamt2			FactionAmt2
+factionamt3			FactionAmt3
+factionamt4			FactionAmt4
+charmfile			CharmFile
+augtype				AugType
+augslot1type		AugSlotType0
+augslot1visible		AugSlotVisible0
+augslot2type		AugSlotType1
+augslot2visible		AugSlotVisible1
+augslot3type		AugSlotType2
+augslot3visible		AugSlotVisible2
+augslot4type		AugSlotType3
+augslot4visible		AugSlotVisible3
+augslot5type		AugSlotType4
+augslot5visible		AugSlotVisible4
+ldontheme			LDoNTheme
+ldonprice			LDoNPrice
+ldonsold			LDoNSold
+bagtype				BagType
+bagslots			BagSlots
+bagsize				BagSize
+bagwr				BagWR
+book				Book
+booktype			BookType
+filename			Filename
+banedmgraceamt		BaneDmgRaceAmt
+augrestrict			AugRestrict
+loregroup			LoreGroup
+pendingloreflag		PendingLoreFlag
+artifactflag		ArtifactFlag
+summonedflag		SummonedFlag
+favor				Favor
+fvnodrop			FVNoDrop
+endur				Endur
+dotshielding		DotShielding
+attack				Attack
+regen				Regen
+manaregen			ManaRegen
+enduranceregen		EnduranceRegen
+haste				Haste
+damageshield		DamageShield
+recastdelay			RecastDelay
+recasttype			RecastType
+guildfavor			GuildFavor
+augdistiller		AugDistiller
+0
+0
+attuneable			Attuneable
+nopet				NoPet
+0
+pointtype			PointType
+potionbelt			PotionBelt
+potionbeltslots		PotionBeltSlots
+stacksize			StackSize
+notransfer			NoTransfer
+stackable			Stackable
+clickeffect			Click.Effect
+clicktype			Click.Type
+clicklevel2			Click.Level2
+clicklevel			Click.Level
+0
+proceffect			Proc.Effect
+proctype			Proc.Type
+proclevel2			Proc.Level2
+proclevel			Proc.Level
+0
+worneffect			Worn.Effect
+worntype			Worn.Type
+wornlevel2			Worn.Level2
+wornlevel			Worn.Level
+0
+focuseffect			Focus.Effect
+focustype			Focus.Type
+focuslevel2			Focus.Level2
+focuslevel			Focus.Level
+0
+Scroll.Effect		scrolleffect
+Scroll.Type			scrolltype
+Scroll.Level2		scrolllevel2
+Scroll.Level		scrolllevel
+0
+
+
+Out of era
+
+questitemflag
+subtype
+expendablearrow
+elitematerial
+herosforgemodel
+svcorruption
+heroic_cr
+heroic_dr
+heroic_fr
+heroic_mr
+heroic_pr
+heroic_svcorrup
+heroic_agi
+heroic_cha
+heroic_dex
+heroic_int
+heroic_sta
+heroic_str
+heroic_wis
+backstabdmg
+clairvoyance
+dsmitigation
+healamt
+purity
+spelldmg
+augslot6type
+augslot6visible
+ldonsellbackrate
+bardeffect
+bardtype
+bardlevel
+bardlevel2
+clickname
+focusname
+scrollname
+wornname
+procname
+scriptfileid
+
+//maybe?
+evoid
+evoitem
+evolvinglevel
+evomax
+
+
+*/

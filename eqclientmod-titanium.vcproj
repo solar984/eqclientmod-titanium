@@ -151,6 +151,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Modules\DevHack.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\Modules\DisableGammaChangeHack.cpp"
 			>
 		</File>
@@ -220,6 +224,10 @@
 		</File>
 		<File
 			RelativePath=".\util.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Modules\WindowTitleHack.cpp"
 			>
 		</File>
 		<File
