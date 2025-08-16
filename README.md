@@ -21,7 +21,7 @@ CPU high clock speed overflow fix.  If you have a CPU that's more than 4.2 Ghz y
 This issue happens with all AMD Ryzen 7xxx and 9xxxx CPUs at least.  The game normally samples the TSC by using the `rdtsc` instruction.  This mod makes it use a modern API called `QueryPerformanceCounter`.
 
 ### Disable Gamma Change
-The game has a gamma slider in it but it does it in a really annoying way that changes the desktop gamma.  I tries to restore it when the game exits but this doesn't always happen with multiple clients and crashes.
+The game has a gamma slider in it but it does it in a really annoying way that changes the desktop gamma.  It tries to restore it when the game exits but this doesn't always happen with multiple clients and crashes.
 This mod disables the gamma functionality by detouring the function that would do this and instead doing nothing.  If you like the gamma, make sure you edit `eqclientmod.ini` and disable this mod.
 
 ### CommandHandler
@@ -45,6 +45,8 @@ This mod removes the minimum 1ms sleep and completely uncaps the framerate when 
 4.) RemoveDisconnectedSleep - When using /quit or otherwise being disconnected there is a very long sleep, about 20 seconds total.  This mod removes that long sleep.
 
 5.) RemoveLoadingSleep - There are various small sleeps interspersed during data file loading that can be removed to make the game load slightly faster.
+
+6.) HighFPSPhysicsFix - This fixes an issue with gravity that happens as a result of using the RemoveInterFrameSleep mod.  The player can end up floating in mid air without falling back down after doing an in-place jump without this.
 
 ### Program Launch
 This hack removes the requirement to pass the 'patchme' argument to the program to start it.

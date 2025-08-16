@@ -27,8 +27,9 @@ void command_consumption(void *LocalPlayer, char *text, char *cmd, char *&sep)
 // 00420F51
 // int __thiscall EQ_Character::ProcessHungerandThirst(EQ_PC *this, int a2)
 
-class Dev;
-typedef int (__thiscall *_ProcessHungerandThirst)(Dev *, int);
+//class Dev;
+//typedef int (__thiscall *_ProcessHungerandThirst)(Dev *, int);
+
 
 
 void LoadDevHack()
@@ -48,7 +49,7 @@ void LoadDevHack()
 	if(enable)
 	{
 #ifdef COMMAND_HANDLER
-	ChatCommandMap["/consumption"] = command_consumption;
+		ChatCommandMap["/consumption"] = command_consumption;
 #endif
 	}
 }

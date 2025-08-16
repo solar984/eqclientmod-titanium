@@ -23,7 +23,7 @@ void LoadGammaHack()
 	char buf[2048];
 	const char *desc = "This hack prevents the game from changing the desktop gamma.";
 	WritePrivateProfileStringA("DisableGammaChange", "Description", desc, INI_FILE);
-	GetINIString("DisableGammaChange", "Enabled", "TRUE", buf, sizeof(buf), true);
+	GetINIString("DisableGammaChange", "Enabled", "FALSE", buf, sizeof(buf), true);
 	enable = ParseINIBool(buf);
 #endif
 

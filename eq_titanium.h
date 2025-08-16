@@ -3,6 +3,7 @@
 // eqgame.exe
 #define Offset_WindowNameString 0x00645FAC
 #define Offset_rdtsc_elapsed 0x004CC98F
+#define Offset_EqGetTime 0x0046D655
 #define Offset_CEverQuest__dsp_chat 0x004982C6
 #define Offset_CEverQuest__dsp_chat_simple 0x00498436
 #define Offset_EverQuestObject 0x00988DF0
@@ -13,6 +14,9 @@
 #define Offset_EqSoundManager__EmitterLoad 0x0044BD94
 #define Offset_Handle_OP_ExpansionInfo 0x0045386D
 #define Offset_LocalPC 0x00905D00
+#define Offset_LocalPlayer 0x00905CE4
+#define Offset_process_physics 0x004BFE0F
+#define Offset_EQPlayer__MovePlayer 0x0048BA76
 
 // EQGraphicsDX9.DLL
 #define Offset_DX9_t3dSetGammaLevel 0x0007BD80
