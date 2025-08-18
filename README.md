@@ -48,6 +48,8 @@ This mod removes the minimum 1ms sleep and completely uncaps the framerate when 
 
 6.) HighFPSPhysicsFix - This fixes an issue with gravity that happens as a result of using the RemoveInterFrameSleep mod.  The player can end up floating in mid air without falling back down after doing an in-place jump without this.
 
+7.) PhysicsMovePlayerWaitMS - Default 10, this is how often the MovePlayer physics operation is run.  16 would be equivalent to 60fps (1000/60).  Note that this is the minimum delay and only applies if the FPS exceeds the target.
+
 ### Program Launch
 This hack removes the requirement to pass the 'patchme' argument to the program to start it.
 

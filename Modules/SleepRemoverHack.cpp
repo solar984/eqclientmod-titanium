@@ -20,6 +20,8 @@
 #include "../settings.h"
 #include "../eq_titanium.h"
 
+int can_move_wait_ms = 10;
+
 // 0x004BFE0F
 // void __cdecl process_physics(EQPlayer *player, int missile, char *effect)
 typedef void (*_process_physics)(int player, int missile, int effect);
@@ -37,7 +39,7 @@ void __cdecl process_physics_Detour(int player, int missile, int effect)
 		int time_diff = cur_time - prev_time;
 		prev_time = cur_time;
 		int physics_delta = cur_time - Physics_timestamp;
-		if (physics_delta > 0) 
+		if (physics_delta >= can_move_wait_ms) 
 		{
 			process_physics_Trampoline(player, missile, effect);
 		}
@@ -66,7 +68,7 @@ bool can_move(int spawn_id)
 	{
 		move_timers[spawn_id] = 0;
 	}
-	move = cur_time - move_timers[spawn_id] >= 4;
+	move = cur_time - move_timers[spawn_id] >= can_move_wait_ms;
 
 	if(move)
 		move_timers[spawn_id] = cur_time;
@@ -125,6 +127,8 @@ void LoadSleepRemoverHack()
 	removeLoadingSleep = ParseINIBool(buf);
 	GetINIString("SleepRemover", "HighFPSPhysicsFix", "TRUE", buf, sizeof(buf), true);
 	highFPSPhysicsFix = ParseINIBool(buf);
+	GetINIString("SleepRemover", "PhysicsMovePlayerWaitMS", "10", buf, sizeof(buf), true);
+	can_move_wait_ms = atoi(buf);
 #endif
 
 	Log("LoadSleepRemoverHack(): hack is %s", enable ? "ENABLED" : "DISABLED");
