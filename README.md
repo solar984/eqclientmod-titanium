@@ -51,7 +51,7 @@ This mod removes the minimum 1ms sleep and completely uncaps the framerate when 
 7.) PhysicsMovePlayerWaitMS - Default 10, this is how often the MovePlayer physics operation is run.  16 would be equivalent to 60fps (1000/60).  Note that this is the minimum delay and only applies if the FPS exceeds the target.
 
 ### Program Launch
-This hack removes the requirement to pass the 'patchme' argument to the program to start it.
+This hack removes the requirement to pass the 'patchme' argument to the program to start it.  It also allows killing the game immediately with Alt-F4.
 
 ### Zone Version
 This hack is for switching between the old and new versions of nektulos and lavastorm zones.  There are toggles in the INI file.  The mod works by intercepting the filenames for the new .eqg zone files and acting as if the file was not found.
