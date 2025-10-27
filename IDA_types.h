@@ -15,6 +15,8 @@ typedef int64_t int64;
 
 
 #define VOID void
+//#define BYTE uint8
+//#define DOUBLE double
 
 #define BI_TARGETABLE					1
 #define BI_TRIGGER						2 
@@ -296,168 +298,208 @@ typedef struct _UILOCATION {
 
 // size is 0xc 01-27-2005
 typedef struct _ITEMSPELLS { 
-/*0x00*/ DWORD SpellID; 
-/*0x04*/ BYTE RequiredLevel; 
-/*0x05*/ BYTE EffectType; 
-/*0x06*/ BYTE Unknown[2]; 
-/*0x08*/ DWORD Unknown0x08;
-/*0x0c*/ DWORD Unknown0x0c;
+int Effect_SpellID;
+char Level2_ReqLevel;
+char Type;
+char _pad[2];
+int Unknown8;
+int Level;
 } ITEMSPELLS, *PITEMSPELLS; 
 
 typedef struct _ITEMINFO {
 /*0x000*/ CHAR Name[ITEM_NAME_LEN];
 /*0x040*/ CHAR LoreName[LORE_NAME_LEN];
 /*0x090*/ CHAR IDFile[0x20];
-/*0x0b0*/ DWORD ItemNumber;
-/*0x0b4*/ DWORD EquipSlots;
-/*0x0b8*/ DWORD Cost;
-/*0x0bc*/ DWORD IconNumber;
-/*0x0c0*/ BYTE Unknown0x0c0[0x11];
-/*0x0d1*/ BYTE Weight;
-/*0x0d2*/ BYTE NoRent;
-/*0x0d3*/ BYTE NoDrop; // 0=can drop (and place in bank), 1=no drop, (2=no bank)
-/*0x0d4*/ BYTE Size;
-/*0x0d5*/ BYTE Type;
-/*0x0d6*/ BYTE TradeSkills;
-/*0x0d7*/ BYTE Unknown0x0d7;
-/*0x0d8*/ BYTE Lore;
-/*0x0d9*/ BYTE PendingLore;
-/*0x0da*/ BYTE Artifact;
-/*0x0db*/ BYTE Summoned;
-/*0x0dc*/ BYTE Unknown0x0dc[0x3];
-/*0x0df*/ BYTE SvCold;
-/*0x0e0*/ BYTE SvFire;
-/*0x0e1*/ BYTE SvMagic;
-/*0x0e2*/ BYTE SvDisease;
-/*0x0e3*/ BYTE SvPoison;
-/*0x0e4*/ BYTE STR;
-/*0x0e5*/ BYTE STA;
-/*0x0e6*/ BYTE AGI;
-/*0x0e7*/ BYTE DEX;
-/*0x0e8*/ BYTE CHA;
-/*0x0e9*/ BYTE INT;
-/*0x0ea*/ BYTE WIS;
-/*0x0eb*/ BYTE Skill;  //is this right?
-/*0x0ec*/ DWORD HP;
-/*0x0f0*/ DWORD Mana;
-/*0x0f4*/ DWORD AC;
-/*0x0f8*/ DWORD Unknown0x0f8;   // New value added with DoN expansion
-/*0x0fc*/ DWORD SkillModValue;
-/*0x100*/ DWORD BaneDMGRace;
-/*0x104*/ DWORD BaneDMGBodyType;
-/*0x108*/ DWORD RequiredLevel;
-/*0x10c*/ DWORD InstrumentType;
-/*0x110*/ DWORD InstrumentMod;
-/*0x114*/ DWORD Classes;
-/*0x118*/ DWORD Races;
-/*0x11c*/ DWORD Diety;
-/*0x120*/ BYTE Unknown0x11c[0x4];
-/*0x124*/ DWORD Unknown0x120;
-/*0x128*/ BYTE SkillModType;
-/*0x129*/ BYTE BaneDMGBodyTypeValue;
-/*0x12a*/ BYTE BaneDMGRaceValue;
-/*0x12b*/ BYTE Magic;
-/*0x12c*/ BYTE Light;
-/*0x12d*/ BYTE Delay;
-/*0x12e*/ BYTE RecommendedLevel;
-/*0x12f*/ BYTE RecommendedSkill;
-/*0x130*/ BYTE DmgBonusType;
-/*0x131*/ BYTE DmgBonusVal;
-/*0x132*/ BYTE Range;
-/*0x133*/ BYTE Damage;
-/*0x134*/ BYTE ItemType;
-/*0x135*/ BYTE Material;
-/*0x136*/ BYTE Unknown0x132;
-/*0x137*/ BYTE Unknown0x133;
-/*0x138*/ DWORD AugSlot1;
-/*0x13c*/ DWORD AugSlot1_Unkown;
-/*0x140*/ DWORD AugSlot2;
-/*0x144*/ DWORD AugSlot2_Unkown;
-/*0x148*/ DWORD AugSlot3;
-/*0x14c*/ DWORD AugSlot3_Unkown;
-/*0x150*/ DWORD AugSlot4;
-/*0x154*/ DWORD AugSlot4_Unkown;
-/*0x158*/ DWORD AugSlot5;
-/*0x15c*/ DWORD AugSlot5_Unkown;
-/*0x160*/ DWORD AugType;
-/*0x164*/ DWORD AugRestrictions;
-/*0x168*/ DWORD LDTheme;
-/*0x16c*/ DWORD LDCost;
-/*0x170*/ DWORD LDType;
-/*0x174*/ BYTE Unknown0x15c[4];
-/*0x178*/ DWORD FactionModType[0x4];
-/*0x188*/ DWORD FactionModValue[0x4];
-/*0x198*/ BYTE CharmFile[0x20];
-/*0x1b8*/ FLOAT QuestValue;
+/*0x0b0*/ int ItemNumber;
+/*0x0b4*/ int EquipSlots;
+/*0x0b8*/ int Price;
+/*0x0bc*/ int IconNumber;
+			int unk0c0_1;
+			int unk0c0_2;
+			int BenefitFlag;
+			int unk0c0_3;
+			char unk0c0_4;
+/*0x0d1*/ char Weight;
+/*0x0d2*/ char NoRent;
+/*0x0d3*/ char NoDrop; // 0=can drop (and place in bank), 1=no drop, (2=no bank)
+/*0x0d4*/ unsigned char Size;
+/*0x0d5*/ unsigned char ItemClass;
+/*0x0d6*/ char TradeSkills;
+/*0x0d7*/ char Unknown0x0d7;
+/*0x0d8*/ int LoreGroup;
+/*0x0d9*/ char PendingLore;
+/*0x0da*/ char Artifact;
+/*0x0db*/ char Summoned;
+/*0x0df*/ char SvCold;
+/*0x0e0*/ char SvFire;
+/*0x0e1*/ char SvMagic;
+/*0x0e2*/ char SvDisease;
+/*0x0e3*/ char SvPoison;
+/*0x0e4*/ char STR;
+/*0x0e5*/ char STA;
+/*0x0e6*/ char AGI;
+/*0x0e7*/ char DEX;
+/*0x0e8*/ char CHA;
+/*0x0e9*/ char INT;
+/*0x0ea*/ char WIS;
+/*0x0eb*/ char Skill;  //is this right?
+/*0x0ec*/ int HP;
+/*0x0f0*/ int Mana;
+/*0x0f4*/ int AC;
+/*0x0fc*/ int SkillModValue;
+/*0x0f8*/ int SkillModMax;   // New value added with DoN expansion
+/*0x100*/ int BaneDmgRace;
+/*0x104*/ int BaneDmgBody;
+/*0x108*/ int RequiredLevel;
+/*0x10c*/ int InstrumentType;
+/*0x110*/ int InstrumentMod;
+/*0x114*/ int Classes;
+/*0x118*/ int Races;
+/*0x11c*/ int Diety;
+/*0x120*/ int Unknown0x11c;
+/*0x124*/ int Color;
+/*0x128*/ char SkillModType;
+/*0x129*/ char BaneDmgAmt;
+/*0x12a*/ char BaneDmgRaceAmt;
+/*0x12b*/ char Magic;
+/*0x12c*/ char Light;
+/*0x12d*/ char Delay;
+/*0x12e*/ char RecommendedLevel;
+/*0x12f*/ char RecommendedSkill;
+/*0x130*/ char ElemDmgType;
+/*0x131*/ char ElemDmgAmt;
+/*0x132*/ char Range;
+/*0x133*/ unsigned char Damage;
+/*0x134*/ unsigned char ItemType;
+/*0x135*/ char Material;
+/*0x136*/ char Unknown0x132;
+/*0x137*/ char Unknown0x133;
+/*0x138*/ int AugSlotType1;
+/*0x13c*/ char AugSlotVisible1;
+			char _pad_asv1[3];
+/*0x140*/ int AugSlotType2;
+/*0x144*/ char AugSlotVisible2;
+			char _pad_asv2[3];
+/*0x148*/ int AugSlotType3;
+/*0x14c*/ char AugSlotVisible3;
+			char _pad_asv3[3];
+/*0x150*/ int AugSlotType4;
+/*0x154*/ char AugSlotVisible4;
+			char _pad_asv4[3];
+/*0x158*/ int AugSlotType5;
+/*0x15c*/ char AugSlotVisible5;
+			char _pad_asv5[3];
+/*0x160*/ int AugType;
+/*0x164*/ int AugRestrictions;
+/*0x168*/ int LDoNTheme;
+/*0x16c*/ int LDoNPrice;
+/*0x174*/ int PointType;
+/*0x170*/ int LDoNSold;
+/*0x178*/ int FactionModType[4];
+/*0x188*/ int FactionModValue[4];
+/*0x198*/ CHAR CharmFile[32];
+/*0x1b8*/ FLOAT SellRate;
 /*0x1bc*/ struct _ITEMSPELLS Clicky;
 /*0x1cc*/ struct _ITEMSPELLS Proc;
 /*0x1dc*/ struct _ITEMSPELLS Worn;
 /*0x1ec*/ struct _ITEMSPELLS Focus;
 /*0x1fc*/ struct _ITEMSPELLS Scroll;
-/*0x20c*/ DWORD Unknown0x1e0;
-/*0x210*/ DWORD Unknown0x1e4;
-/*0x214*/ DWORD ProcRate;
-/*0x218*/ DWORD CombatEffects;
-/*0x21c*/ DWORD Shielding;
-/*0x220*/ DWORD StunResist;
-/*0x224*/ DWORD DoTShielding;
-/*0x228*/ DWORD StrikeThrough;
-/*0x22c*/ DWORD DmgBonusSkill; // SkillMinDamageMod;
-/*0x230*/ DWORD DmgBonusValue; // MinDamageMod;
-/*0x234*/ DWORD SpellShield;
-/*0x238*/ DWORD Avoidance;
-/*0x23c*/ DWORD Accuracy;
-/*0x240*/ DWORD CharmFileID;
-/*0x244*/ DWORD CastTime;
-union{
-/*0x248*/ DWORD MaxCharges; // Also has something to do with item stacking
-/*0x248*/ DWORD Stackable;
-};
-/*0x24c*/ BYTE BookType; // 0=note, !0=book
-/*0x24d*/ BYTE BookLang;
-/*0x24e*/ CHAR BookFile[0x1e];
-/*0x26c*/ BYTE Combine;
-/*0x26d*/ BYTE Slots;
-/*0x26e*/ BYTE SizeCapacity;
-/*0x26f*/ BYTE WeightReduction;
-/*0x270*/ DWORD Favor; // Tribute Value
-/*0x274*/ DWORD GuildFavor;
-/*0x278*/ DWORD Unknown0x24c;
-/*0x27c*/ DWORD Endurance;
-/*0x280*/ DWORD Attack;     
-/*0x284*/ DWORD HPRegen;
-/*0x28c*/ DWORD ManaRegen;
-/*0x290*/ DWORD Haste;
-/*0x294*/ DWORD DamShield;
-/*0x298*/ DWORD Recast;
-/*0x29c*/ DWORD TimerID;
-/*0x2a0*/ DWORD SolventNeeded; //ID# of Solvent (Augs only)
-/*0x2a4*/ DWORD Unknown0x274;
-/*0x2a8*/ DWORD Unknown0x278;
-/*0x2ac*/ DWORD Attuneable;
-/*0x2b0*/ BYTE Unknown0x280[0x14];
+/*0x20c*/ int Unknown0x1e0;
+/*0x210*/ int Unknown0x1e4;
+/*0x214*/ int ProcRate;
+/*0x218*/ int CombatEffects;
+/*0x21c*/ int Shielding;
+/*0x220*/ int StunResist;
+/*0x224*/ int DoTShielding;
+/*0x228*/ int StrikeThrough;
+/*0x22c*/ int ExtraDmgSkill; // SkillMinDamageMod;
+/*0x230*/ int ExtraDmgAmt; // MinDamageMod;
+/*0x234*/ int SpellShield;
+/*0x238*/ int Avoidance;
+/*0x23c*/ int Accuracy;
+/*0x240*/ int CharmFileID;
+/*0x244*/ int CastTime;
+/*0x248*/ int MaxCharges; // Also has something to do with item stacking
+/*0x24c*/ char Book; // 0=note, !0=book
+/*0x24d*/ char BookType;
+/*0x24e*/ CHAR Filename[30];
+/*0x26c*/ unsigned char BagType;
+/*0x26d*/ unsigned char BagSlots;
+/*0x26e*/ char BagSize;
+/*0x26f*/ char BagWR;
+/*0x270*/ int Favor; // Tribute Value
+/*0x274*/ int GuildFavor;
+/*0x278*/ char FVNoDrop;
+			char pad_fv[3];
+/*0x27c*/ int Endurance;
+/*0x280*/ int Attack;     
+/*0x284*/ int HPRegen;
+/*0x28c*/ int ManaRegen;
+			int EnduranceRegen;
+/*0x290*/ int Haste;
+/*0x294*/ int DamageShield;
+/*0x298*/ int RecastDelay;
+/*0x29c*/ int RecastType;
+/*0x2a0*/ int AugDistiller; //ID# of Solvent (Augs only)
+/*0x2a4*/ int Unknown0x274;
+/*0x2a8*/ int Unknown0x278;
+/*0x2ac*/ int Attuneable;
+			char NoPet;
+			char unk_280_1;
+			char PotionBelt;
+			char PointTypexxx;
+			char PotionBeltSlots;
+			char unk2222;
+			char pad_x[3];
+			char pad_nt[3];
+			int StackSize;
+			char NoTransfer;
+			char Stackable;
+			char Click_Effect;
+			char pad_y[12];
 /*0x2c4*/
 } ITEMINFO, *PITEMINFO;
 
+struct ItemDefinition
+{
+	struct _ITEMINFO Data;
+};
 
 // 9-17-05 Size 0xa8
 typedef struct _CONTENTS {
-/*0x00*/  BYTE    Unknown0x0[0x1c];
-/*0x1c*/  struct _ITEMINFO *Item;
-   union {
-/*0x20*/  struct _CONTENTS *Contents[0x0a]; //addresses to whats inside the bag if its a bag
-/*0x20*/  struct _ITEMINFO *Augments[0x0a]; //Only 1-5 are actually used (for now)
-   };
+		DWORD vtable;
+		DWORD unk4;
+		char item_guid[16];
+			int unk_yy;
+/*0x1c*/  ItemDefinition *Item;
+//   union {
+/*0x20*/  ItemBase *Contents[10]; //addresses to whats inside the bag if its a bag
+/*0x20*/ // struct _ITEMINFO *Augments[0x0a]; //Only 1-5 are actually used (for now)
+   //};
 /*0x48*/  DWORD   StackCount;
 /*0x5c*/  DWORD   ItemSlot;// slotid for Player Items
-/*0x4c*/  BYTE    Unknown0x4c[0x8];
+			int unk4c_1;
+			int ItemRecastTimestamp;
 /*0x58*/  DWORD   Charges;
-/*0x5C*/  BYTE    Unknown0x5c[0x24];
+			int Attuned;
+			char EvolvingItem;
+			char _pad5c[3];
+			int EvolFinalItem;
+			int EvolCurrentLevel;
+			int unk5c_5;
+			double	EvolveProgressionPct;
+			char EvolActivated;
+			char pad_x[3];
+			int unk_i2;
 /*0x80*/  DWORD   ItemSlot2;// slotid for Merchant Items
 /*0x84*/  DWORD   Unknown0x88;
 /*0x88*/  DWORD   Price; //price a player vendor set the item at
+			int MerchantCount;
 /*0x8c*/  DWORD   Open;
-/*0x90*/  BYTE    Unknown0x94[0x14];
+			int BookOpen;
+			int ScriptAdjustment;
+			int EvolMaxLevel;
+			char EvolUnk1;
 /*0xa4*/   
 } CONTENTS, *PCONTENTS;
 
@@ -477,41 +519,41 @@ typedef struct _SPELLBUFF {
 
 // 12-23-2003   TheColonel
 typedef struct _INVENTORY { 
-/*0x00*/  struct	_CONTENTS* Charm; 
-/*0x04*/  struct	_CONTENTS* LeftEar; 
-/*0x08*/  struct	_CONTENTS* Head; 
-/*0x0c*/  struct	_CONTENTS* Face; 
-/*0x10*/  struct	_CONTENTS* RightEar; 
-/*0x14*/  struct	_CONTENTS* Neck; 
-/*0x18*/  struct	_CONTENTS* Shoulders; 
-/*0x1c*/  struct	_CONTENTS* Arms; 
-/*0x20*/  struct	_CONTENTS* Back; 
-/*0x24*/  struct	_CONTENTS* LeftWrist; 
-/*0x28*/  struct	_CONTENTS* RightWrist; 
-/*0x2c*/  struct	_CONTENTS* Range; 
-/*0x30*/  struct	_CONTENTS* Hands; 
-/*0x34*/  struct	_CONTENTS* Primary; 
-/*0x38*/  struct	_CONTENTS* Secondary; 
-/*0x3c*/  struct	_CONTENTS* LeftFinger; 
-/*0x40*/  struct	_CONTENTS* RightFinger; 
-/*0x44*/  struct	_CONTENTS* Chest; 
-/*0x48*/  struct	_CONTENTS* Legs; 
-/*0x4c*/  struct	_CONTENTS* Feet; 
-/*0x50*/  struct	_CONTENTS* Waist; 
-/*0x54*/  struct	_CONTENTS* Ammo; 
-/*0x58*/  struct	_CONTENTS* Pack[0x8]; 
+/*0x00*/  	ItemBase* Charm; 
+/*0x04*/  	ItemBase* LeftEar; 
+/*0x08*/  	ItemBase* Head; 
+/*0x0c*/  	ItemBase* Face; 
+/*0x10*/  	ItemBase* RightEar; 
+/*0x14*/  	ItemBase* Neck; 
+/*0x18*/  	ItemBase* Shoulders; 
+/*0x1c*/  	ItemBase* Arms; 
+/*0x20*/  	ItemBase* Back; 
+/*0x24*/  	ItemBase* LeftWrist; 
+/*0x28*/  	ItemBase* RightWrist; 
+/*0x2c*/  	ItemBase* Range; 
+/*0x30*/  	ItemBase* Hands; 
+/*0x34*/  	ItemBase* Primary; 
+/*0x38*/  	ItemBase* Secondary; 
+/*0x3c*/  	ItemBase* LeftFinger; 
+/*0x40*/  	ItemBase* RightFinger; 
+/*0x44*/  	ItemBase* Chest; 
+/*0x48*/  	ItemBase* Legs; 
+/*0x4c*/  	ItemBase* Feet; 
+/*0x50*/  	ItemBase* Waist; 
+/*0x54*/  	ItemBase* Ammo; 
+/*0x58*/  	ItemBase* Pack[0x8]; 
 } INVENTORY, *PINVENTORY; 
 
 #define NUM_ALT_ABILITIES_ARRAY   0x1F7 
 #define NUM_ALT_ABILITIES   1500            // GetAltAbility require an index
-                                            // which is really a hash table 
-                                            // index.  the index is divided
-                                            // with 0x1f7 and the remainder
-                                            // is used the hash table slot.
-                                            // the slot is walked to find the
-                                            // entry corresponding to the 
-                                            // original index (before the
-                                            // divide
+											// which is really a hash table 
+											// index.  the index is divided
+											// with 0x1f7 and the remainder
+											// is used the hash table slot.
+											// the slot is walked to find the
+											// entry corresponding to the 
+											// original index (before the
+											// divide
 
 //these two will merge when i get a chance
 #define AA_CHAR_MAX         0xF5
@@ -554,7 +596,7 @@ typedef struct _CI2_INFO {
 struct _CHARINFO_A
 {
 /* 0x0008 */   struct     _CI_INFO* charinfo_info;
-/* 0x000c */   BYTE       Unknown0xc[0xce4];
+/* 0x000c */   BYTE       Unknown0xc[3300];
 /* 0x0cf0 */   struct     _CONTENTS*   Bank[NUM_BANK_SLOTS];
 /* 0x0d38 */   BYTE       unknown0xd38[0xd4];
 /* 0x0e0c */   DWORD      GuildID;
@@ -562,7 +604,9 @@ struct _CHARINFO_A
 /* 0x0e28 */   DWORD      AAExp;
 /* 0x0e2c */   BYTE       Unknown0xe2c;
 /* 0x0e2d */   BYTE       PercentEXPtoAA;
-/* 0x0e2e */   BYTE       Unknown0xe2e[0x4a];
+BYTE pad1[2];
+DWORD airSupply;
+/* 0x0e2e */   BYTE       Unknown0xe2e[64];
 /* 0x0e78 */   DWORD      CareerFavor;
 /* 0x0e7c */   DWORD      Unknown0xe7c;
 /* 0x0e80 */   DWORD      CurrFavor;
@@ -584,7 +628,7 @@ struct _CHARINFO_B
 {
 /* 0xc280 */   void      *vtable2;
 /* 0xc284 */   struct     _EQC_INFO* eqc_info;
-/* 0xc288 */   struct     _SPAWNINFO*  pSpawn;
+/* 0xc288 */   struct     PlayerZoneClient*  pSpawn;
 /* 0xc28c */   DWORD      Unknown0xc284;
 /* 0xc290 */   DWORD      STR;
 /* 0xc294 */   DWORD      STA;
@@ -599,6 +643,7 @@ struct _CHARINFO_B
 /* 0xc2b8 */   DWORD      SaveFire;
 /* 0xc2bc */   DWORD      SavePoison;
 /* 0xc2c0 */   DWORD      SaveDisease;
+
 /* 0xc2c4 */   DWORD      Unknown0xc2bc;
 /* 0xc2c8 */   DWORD      CurrWeight;
 /* 0xc2cc */   DWORD      Unknown0xc2c4;
@@ -621,24 +666,54 @@ struct _CHARINFO_B
 /* 0xc330 */   DWORD      Unknown0xc328;
 /* 0xc334 */   DWORD      DamageShieldBonus;
 /* 0xc338 */   DWORD      AttackSpeed;
-/* 0xc33c */   BYTE       Unknown0xc330[0x1c];
+				int unk330a;
+				int unk330b;
+				DWORD SpellCache;
+				int SpellCacheIsUsable;
+				int unk330c;
+				int unk330d;
+				int unk330e;
 /* 0xc358 */   _CONTENTS  *ActiveGuildTribute[0xc];
 };
 
 struct _CHARINFO_C
 {
 /* 0xc388 */   struct     _CI2_INFO* pCI2;
-/* 0xc38c */   DWORD      Unknown0xc38c;
+/* 0xc38c */   ProfileManager PM;
 /* 0xc390 */   BYTE       languages[0x20];
-/* 0xc3b0 */   BYTE       Unknown0xc3b0[0x10];
+				float cur_x;
+				float cur_y;
+				float cur_z;
+				float heading;
 /* 0xc3c0 */   CHAR       Name[0x40];
 /* 0xc400 */   CHAR       Lastname[0x20];
-/* 0xc420 */   BYTE       Unknown0xc420[0x60];
+/* 0xc420 */   BYTE       Title[32];
+/* 0xc420 */   BYTE       VehicleName[32];
+/* 0xc420 */   BYTE       Unknown0xc420c[32];
 /* 0xc480 */   DWORD      Stunned;
-/* 0xc484 */   WORD       zoneId;
+/* 0xc484 */   WORD       cur_zone_id;
 /* 0xc486 */   WORD       instance;
-/* 0xc488 */   DWORD      standstate;
-/* 0xc48c */   BYTE       Unknown0xc489[0x24];
+/* 0xc488 */   uint8      standstate;
+				uint8	_pad5[3];
+					uint32 ExpansionFlags;
+					uint8 SuperPKILL;
+					uint8 Unclone;
+					uint8 Dead;
+					uint8 _pad1;
+					int32 PcLdTimer;
+					int32 SpellInterruptCount;
+					uint8 AutoSplit;
+					uint8 TellsOff;
+					uint8 GmInvis;
+					uint8 _pad3;
+					int32 KillMe;
+					uint8 CheaterLdFlag;
+					uint8 NoRent;
+					uint8 Corpse;
+					uint8 _pad2;
+					int32 SoulMarkCount;
+					uint8 ClientGmFlagSet;
+					uint8 _pad4[3];
 /* 0xc4b0 */   DWORD      BankSharedPlat;
 /* 0xc4b4 */   DWORD      BankSharedGold;
 /* 0xc4b8 */   DWORD      BankSharedSilver;
@@ -662,20 +737,25 @@ struct _CHARINFO_C C;
 
 
 typedef struct  _CHARINFO2 {
-/* 0x0000 */   BYTE       Unknown0x0[0x10];
+/*0x0000*/ int32 vtable;
+/*0x0004*/ uint32_t                              padding;
+/*0x0008*/ BaseProfile*                          nextProfile;
+/*0x000c*/ BaseProfile*                          prevProfile;
 union {
 /* 0x0010 */   struct     _INVENTORY   Inventory;
 /* 0x0010 */   struct     _CONTENTS*   InventoryArray[0x1e];
 };
 /* 0x0088 */   struct     _CONTENTS*   Cursor;
-/* 0x008c */   BYTE       Unknown0x8c[0x14];
+				int32		TributeBenefitItem[4];
+				int32		TribUnk1;
 /* 0x00a0 */   struct     _SPELLBUFF   Buff[0x19];
 /* 0x0294 */   struct     _SPELLBUFF   ShortBuff[0x23];
 /* 0x0550 */   BYTE       Unknown0x550[0x1e0];
 /* 0x0730 */   DWORD      SpellBook[NUM_BOOK_SLOTS];
 /* 0x0f30 */   DWORD      MemorizedSpells[0x10];
-/* 0x0f70 */   DWORD      Skill[0x64];
-/* 0x1100 */   BYTE       Unknown0x1100[0x94];
+/* 0x0f70 */   DWORD      Skill[100];
+				int32		InnateSkill[25];
+/* 0x1100 */   BYTE       Unknown0x1100[48];
 /* 0x1194 */   DWORD      Gender;
 /* 0x1198 */   DWORD      Race;
 /* 0x119c */   DWORD      Class;
@@ -703,7 +783,11 @@ union {
 /* 0x11f4 */   BYTE       Unknown0x11f4[0x24];
 /* 0x1218 */   DWORD      thirstlevel;
 /* 0x121c */   DWORD      hungerlevel;
-/* 0x1220 */   BYTE       Unknown0x1220[0x6c];
+				int32	unk1220;
+				int32	profileType;
+/* 0x1220 */   BYTE       Unknown0x1220a[20];
+				float	monsterProfileHPLevelFactor;
+/* 0x1220 */   BYTE       Unknown0x1220b[76];
 /* 0x128c */   DWORD      ZoneBoundID;
 /* 0x1290 */   FLOAT      ZoneBoundX;
 /* 0x1294 */   FLOAT      ZoneBoundY;
@@ -794,39 +878,72 @@ typedef struct _ACTOREX {
 typedef struct _ACTORINFO { 
 /*0x000*/ struct       _ACTOREX *pActorEx; 
 /*0x004*/ DWORD        T3D_POINTLIGHT; 
-/*0x008*/ CHAR         ActorDef[0x40]; 
-/*0x048*/ FLOAT        Z;            // Z coordinates for the floor where standing 
-/*0x04c*/ BYTE         Unknown0x04c[0x4]; 
+/*0x008*/ CHAR         ActorDef[64]; 
+/*0x048*/ FLOAT        floorHeight;            // Z coordinates for the floor where standing 
+/*0x04c*/ float			ceilingHeight;
 /*0x050*/ DWORD        TimeStamp;      
 /*0x054*/ DWORD        Unknown0x054;  
 /*0x058*/ DWORD        LastTick;    
-/*0x05c*/ BYTE         Unknown0x05c[0x80-0x5c]; 
+/*0x05c*/ BYTE         Unknown0x05c[4]; 
+			int32		TimerUnk01;
+			int32		TimerUnk02;
+			int32		TimerUnk03;
+			int32		TimerUnk04;
+			int32		Timer05_60sec;
+			int32		Timer06_18sec;
+			int32		Timer06_60sec;
+			int32		TimerUnk08;
 /*0x080*/ FLOAT        BobbingAmount; 
-/*0x084*/ BYTE         Unknown0x084[0xa0-0x84]; 
+/*0x084*/ BYTE         Unknown0x084[24]; 
+			int8		IsAffectedByGravity;
+			int8		pad157[3];
 /*0x0a0*/ BYTE		   UnderWater;
-/*0x0a1*/ BYTE		   Unknown0x0a1[0x0ae-0x0a1];
+/*0x0a1*/ BYTE		   Unknown0x0a1[12];
+			int8		SwimmingWaterType;
 /*0x0ae*/ BYTE		   FeetWet;
-/*0x0af*/ BYTE		   Unknown0x0af[0x0d8-0x0af];
+/*0x0af*/ BYTE		   Unknown0x0af[41];
 /*0x0d8*/ DWORD        SpellETA;      //Calculated TimeStamp when current spell being cast will land. 0 while not casting. 
-/*0x0dc*/ BYTE         Unknown0x0dc[0x44]; 
+/*0x0dc*/ BYTE         Unknown0x0dc[12]; 
+				int32	memorized_spell_timer[9];
+				int32	ability_slot_timer;
+				int32	spellbar_fadeout_timer;
+				int32	unkaas[2];
 /*0x120*/ DWORD        FishingETA;      // EQMisc__SteveGetTime 
 /*0x124*/ BYTE         Unknown0x124[0x8]; 
 /*0x12c*/ VOID         *FaceRelatedActorStruct; 
-/*0x130*/ DWORD        Unknown0x0130; 
+/*0x130*/ DWORD        CollisionTime; 
 /*0x134*/ DWORD        Animation; 
 /*0x138*/ DWORD        Unknown0x138; 
-/*0x13c*/ BYTE         Unknown0x13c[0x16]; 
+			int32		CollisionMovementTimer; // might be an array of timers
+			int32		Animation2;
+/*0x13c*/ BYTE         Unknown0x13c[14]; 
 /*0x152*/ BYTE         FishingEvent;   // 0=not fishing, 1=some event, 2-6=some other event 
-/*0x153*/ BYTE         Unknown0x153[0x9]; 
-/*0x15c*/ struct       _SPAWNINFO *Mount; //NULL if no mount present 
-/*0x160*/ BYTE         Unknown0x0160[0xc]; 
-/*0x16c*/ DWORD        PetID;  
-/*0x170*/ struct       _SPAWNINFO *pGroupAssistNPC[1]; 
-/*0x174*/ struct       _SPAWNINFO *pRaidAssistNPC[3]; 
-/*0x180*/ struct       _SPAWNINFO *pGroupMarkNPC[3]; 
-/*0x18c*/ struct       _SPAWNINFO *pRaidMarkNPC[3]; 
-/*0x198*/ struct       _SPAWNINFO *pTargetOfTarget; 
-/*0x19c*/ BYTE         Unknown0x19c[0xd90]; 
+/*0x153*/ BYTE         Unknown0x153[5]; 
+			PlayerZoneClient *Vehicle;
+/*0x15c*/ struct       PlayerZoneClient *Mount; //NULL if no mount present 
+						PlayerZoneClient *MyRider;
+/*0x160*/ BYTE         Unknown0x0160[8]; 
+/*0x16c*/ int32        PetID;  
+/*0x170*/ struct       PlayerZoneClient *pGroupAssistNPC[1]; 
+/*0x174*/ struct       PlayerZoneClient *pRaidAssistNPC[3]; 
+/*0x180*/ struct       PlayerZoneClient *pGroupMarkNPC[3]; 
+/*0x18c*/ struct       PlayerZoneClient *pRaidMarkNPC[3]; 
+/*0x198*/ struct       PlayerZoneClient *pTargetOfTarget; 
+			int32		unk_sadff[4];
+			int32		anim_timer1;
+			int32		anim_timer2;
+			int32		anim_timer3;
+			int32		anim_timer4;
+/*0x19c*/ BYTE         Unknown0x19c[3328];
+			int32 unk_aaaa;
+			int32 physicsTime;
+			int32 unk_bbbb;
+			int32 unk_cccc;
+			int32 unk_dddd;
+			int32 dragonBreathEffect_time;
+			int32 dragonBreathEffect_duration;
+			int32 dragonBreathEffect_spell_id;
+		  BYTE         unk3800[84];
 /*0xf2c*/ struct       _MODELINFO *Model[0x11];  // 0x11 is the correct number, or are there more? 
 /*0xf70*/ BYTE         Unknown0xf70[0x1c]; 
 /*0xf8c*/ DWORD        InvitedToGroup; // 1=currently invited to group 
@@ -834,11 +951,14 @@ typedef struct _ACTORINFO {
 /*0xf98*/ DWORD        CastingSpellID;      // -1 = not casting a spell 
 /*0xf9c*/ DWORD        CastingAnimation;  //unsure, FF for not casting, low numbers while casting 
 /*0xfa0*/ BYTE         Unknown0xfa0[0x48]; 
-/*0xfe8*/struct        _SPAWNINFO *WhoFollowing; // NULL if autofollow off 
+/*0xfe8*/struct        PlayerZoneClient *WhoFollowing; // NULL if autofollow off 
 /*0xfec*/ BYTE         Unknown0xfec[0xc]; 
 /*0xff8*/ FLOAT        CastingY; 
 /*0xffc*/ FLOAT        CastingX; 
-/*0x1000*/ BYTE        Unknown0x1000[0x6c];
+/*0x1000*/ BYTE        Unknown0x1000[68];
+			int8		BeneficialBuffTimersPaused;
+			int8		pad_BBTP[3];
+			BYTE        Unknown0x1000b[36];
 /*0x106c*/ DWORD       Trader;            //0=normal 1=trader 
 /*0x1070*/ BYTE        Unknown0x1070[0x50]; 
 /*0x10c0*/ 
@@ -871,69 +991,58 @@ typedef struct _ACTORINFO {
 */
 
 typedef struct _ARGBCOLOR {
-    union {
-        struct {
-            BYTE B;
-            BYTE G;
-            BYTE R;
-            BYTE A;
-        };
-        DWORD ARGB;
-    };
+	union {
+		struct {
+			BYTE B;
+			BYTE G;
+			BYTE R;
+			BYTE A;
+		};
+		DWORD ARGB;
+	};
 } ARGBCOLOR, *PARGBCOLOR;
 
 // 10-22-2003 Lax
 typedef struct _EQUIPMENT {
    union {
-      struct// EQUIPARRAY
-      {
-         DWORD Item[9];
-      };// Array;
-      struct //EQUIPUNIQUE
-      {
-         DWORD Head;
-         DWORD Chest;
-         DWORD Arms;
-         DWORD Wrists;
-         DWORD Hands;
-         DWORD Legs;
-         DWORD Feet;
-         DWORD Primary;
-         DWORD Offhand;
-      };// Unique;
+	  struct// EQUIPARRAY
+	  {
+		 DWORD Item[9];
+	  };// Array;
+	  struct //EQUIPUNIQUE
+	  {
+		 DWORD Head;
+		 DWORD Chest;
+		 DWORD Arms;
+		 DWORD Wrists;
+		 DWORD Hands;
+		 DWORD Legs;
+		 DWORD Feet;
+		 DWORD Primary;
+		 DWORD Offhand;
+	  };// Unique;
    };
 } EQUIPMENT, *PEQUIPMENT;
 
 // sizeof(_SPAWNINFO) is 0x348 (5/11/2005) 
 typedef struct _SPAWNINFO { 
 /* 0x0000 */   BYTE    Unknown0x0; 
-/* 0x0001 */   CHAR    Lastname[0x27];  // // Surname on PCs, Newbie Tag on NPCs 
-/* 0x0028 */   DWORD     Unknown0x028[0x2];
-/* 0x0030 */   FLOAT     Y; 
-/* 0x0034 */   FLOAT     X; 
-/* 0x0038 */   FLOAT     Z; 
-/* 0x003c */   FLOAT     delta_Y; 
-/* 0x0040 */   FLOAT     delta_X; 
-/* 0x0044 */   FLOAT     delta_Z; 
-/* 0x0048 */   FLOAT     SpeedRun; 
-/* 0x004c */   FLOAT     heading; 
-/* 0x0050 */   FLOAT     pitch; 
-/* 0x0054 */   FLOAT     delta_pitch; 
-/* 0x0058 */   FLOAT     delta_heading; 
-/* 0x005c */   FLOAT     CameraAngle; 
-/* 0x0060 */   BYTE      Unknown0x60[0x50]; 
-/* 0x00b0 */   FLOAT     Y2;
-/* 0x00b4 */   FLOAT     X2;
-/* 0x00b8 */   FLOAT     Z2;
-/* 0x00bc */   FLOAT     SpeedY2;
-/* 0x00c0 */   FLOAT     SpeedX2;
-/* 0x00c4 */   FLOAT     SpeedZ2;
-/* 0x00c8 */   FLOAT     SpeedRun2;
-/* 0x00cc */   FLOAT     Heading2;
-/* 0x00d0 */   BYTE      Unknown0x0d0[0x50];
-/* 0x0120 */   CHAR      Name[0x40]; // ie priest_of_discord00 
+/* 0x0001 */   CHAR    Lastname[35];  // // Surname on PCs, Newbie Tag on NPCs 
+				float AreaHealthRegen;
+				float AreaEnduranceRegen;
+				float AreaManaRegen;
+				struct CPhysicsInfo physics;
+				struct CPhysicsInfo physics_2;
+				int32 unk_phys1;
+				int32 unk_phys2;
+				int8 unk_phys3;
+				int8 pad_phys3[3];
+				int32 unk_phys4;
+				struct CPhysicsInfo physics_3;
+				struct CPhysicsInfo physics_4;
+/* 0x0120 */   CHAR      Name[64]; // ie priest_of_discord00
 /* 0x0160 */   CHAR      DisplayedName[0x40]; // ie Priest of Discord 
-/* 0x01a0 */   FLOAT     SpeedHeading; 
+/* 0x01a0 */   FLOAT     MeleeDistance; 
 /* 0x01a4 */   DWORD     field_1a4;  
 /* 0x01a8 */   struct    _ACTORINFO   *pActorInfo; 
 /* 0x01ac */   DWORD     field_1ac; 
@@ -945,9 +1054,11 @@ typedef struct _SPAWNINFO {
 /* 0x01b5 */   BYTE      field_1b5; 
 /* 0x01b6 */   BYTE      IsABoat; // 1 = a type of boat 
 /* 0x01b7 */   BYTE      Unknown0x1b7; 
-/* 0x01b8 */   ARGBCOLOR ArmorColor[0x9];  // Armor Dye if custom, otherwise Item Tint 
+				int8 ShowHelm;
+				int8 pad_helm[3];
+/* 0x01b8 */   ARGBCOLOR ArmorColor[0x8];  // Armor Dye if custom, otherwise Item Tint 
+/* 0x0200 */   DWORD     Equip_unk; 
 /* 0x01dc */   struct    _EQUIPMENT Equipment; 
-/* 0x0200 */   DWORD     field_200; 
 /* 0x0204 */   WORD      Zone; 
 /* 0x0206 */   WORD      Instance; 
 /* 0x0208 */   DWORD     field_208; 
@@ -957,12 +1068,12 @@ typedef struct _SPAWNINFO {
 /* 0x0218 */   struct    _CHARINFO  *pCharInfo; 
 /* 0x021c */   DWORD     field_218; 
 /* 0x0220 */   struct    _SPAWNINFO *pPrev; 
-/* 0x0224 */   BYTE      Unknown0x220[0x4]; 
+/* 0x0224 */   DWORD      Unknown0x220; 
 /* 0x0228 */   FLOAT     field_228; 
-/* 0x022c */   DWORD     field_22c; 
+/* 0x022c */   float     field_22c; 
 /* 0x0230 */   FLOAT     RunSpeed; 
-/* 0x0234 */   FLOAT     field_234; 
-/* 0x0238 */   FLOAT     field_238; 
+/* 0x0234 */   FLOAT     ViewHeight; 
+/* 0x0238 */   FLOAT     SpriteOffsetHeight; 
 /* 0x023c */   FLOAT     AvatarHeight;  // height of avatar from ground when standing 
 /* 0x0240 */   FLOAT     WalkSpeed; 
 /* 0x0244 */   BYTE      Type; 
@@ -993,17 +1104,36 @@ typedef struct _SPAWNINFO {
 /* 0x026c */   DWORD     AFK; 
 /* 0x0270 */   DWORD     BodyType; 
 /* 0x0274 */   LONG      HPCurrent; 
-/* 0x0278 */   BYTE      AARank; 
-/* 0x0279 */   BYTE      Unknown0x278[0x3]; 
+/* 0x0278 */   DWORD      AARank; 
 /* 0x027c */   DWORD     GuildStatus; 
 /* 0x0280 */   DWORD     Deity; 
 /* 0x0284 */   DWORD     HPMax; 
 /* 0x0288 */   DWORD     GuildID; 
-/* 0x028c */   BYTE      Levitate;   //0-normal state  2=levitating 3=mob (not levitating) 
-/* 0x028d */   BYTE      Unknown0x28c[0x17]; 
+/* 0x028c */   int32      Levitate;   //0-normal state  2=levitating 3=mob (not levitating) 
+				int32 unk0x28c_2;
+				int32 unk0x28c_3;
+				int32 TintIndex;
+				int32 unkxxx;
+				int32 unkyyy;
 /* 0x02a4 */   CHAR      Title[0x20];
 /* 0x02c4 */   CHAR      Suffix[0x20];
-/* 0x02e4 */   CHAR      Unknown0x2e4[0x348-0x2e4];
+				int8 unk_222;
+				int8 unk_223;
+				int8 unk_224;
+				int8 unk_225;
+				int32 CollisionDataCache;
+				int32 unk_300;
+				int32 unk_301;
+				int32 unk_302;
+				int32 unk_303;
+				int32 unk_304;
+				int32 unk_305;
+				int32 unk_306;
+				int32 unk_307;
+				int32 unk_308;
+/* 0x02e4 */   CHAR      Unknown0x2e4[20];
+				float unk_226;
+				int32 some_array[8];
 /*	        More Data */ 
 } SPAWNINFO, *PSPAWNINFO;
 
@@ -1023,14 +1153,14 @@ typedef struct _SPAWNINFO {
 #define MONITOR_SPAWN_HPCURRENT     32
 
 typedef struct _SPAWNMONITORINFO {
-    WORD SpawnID;
-    FLOAT Y;
-    FLOAT X;
-    FLOAT Z;
-    FLOAT Heading;
-    FLOAT SpeedRun;
-    DWORD HPCurrent;
-    DWORD MonitorMask;
+	WORD SpawnID;
+	FLOAT Y;
+	FLOAT X;
+	FLOAT Z;
+	FLOAT Heading;
+	FLOAT SpeedRun;
+	DWORD HPCurrent;
+	DWORD MonitorMask;
 } SPAWNMONITORINFO, *PSPAWNMONITORINFO;
 
 typedef struct _EQSWITCH {
@@ -1169,8 +1299,8 @@ typedef struct _ZONEINFO {
 
 // size: 0x7d24 (5/11/2005 :: 0x7d00+0x24)
 typedef struct _SPELLMGR {
-            BYTE                unknown[0x24];
-            struct _SPELL*      Spells[TOTAL_SPELL_COUNT];
+			BYTE                unknown[0x24];
+			struct _SPELL*      Spells[TOTAL_SPELL_COUNT];
 } SPELLMGR, *PSPELLMGR;
 
 // Size is 0x268 as of 9/14
@@ -1178,7 +1308,7 @@ typedef struct _SPELLMGR {
 // Size is 0x26C as of 03/03/2005
 // Size is 0x26c as of 5/11/2005
 // Size is 0x26c as of 9/17/2005
-typedef struct _SPELL {
+typedef struct SPELL {
 /*0x000*/   DWORD   ID;
 /*0x004*/   FLOAT   Range;
 /*0x008*/   FLOAT   AERange;
@@ -1199,9 +1329,7 @@ typedef struct _SPELL {
 /*0x0e0*/   DWORD   NoexpendReagent[0x4];
 /*0x0f0*/   DWORD   Calc[0x0c];         //Calc1-Calc12
 /*0x120*/   DWORD   Attrib[0x0c];       //Attrib1-Attrib12
-/*0x150*/   BYTE    Unknown0x150;
-/*0x151*/   BYTE    Level[0x10];        // per class.
-/*0x161*/   BYTE    Unknown0x161[0x13];
+/*0x150*/   BYTE    Level[36];        // per class.
 /*0x174*/   DWORD   BookIcon;
 /*0x178*/   DWORD   GemIcon;
 /*0x17c*/   BYTE    LightType;
@@ -1233,12 +1361,14 @@ typedef struct _SPELL {
 /*0x1a0*/   DWORD   EffectDescNum;         // Unknown145 from lucy
 /*0x1a4*/	DWORD	EffectDescNum2;
 /*0x1a8*/	BYTE	npc_no_los;
-/*0x1a9*/	BYTE	field160;
+/*0x1a9*/	BYTE	feedbackable;
 /*0x1aa*/	BYTE	reflectable;
+BYTE pad_1AB;
 /*0x1ab*/	DWORD	bonushate;
 /*0x1af*/	DWORD	field163;
 /*0x1b*/	DWORD	field164;
 /*0x1c*/	BYTE	ldon_trap;
+BYTE pad_1B9[3];
 /*0x1d*/	DWORD	EnduranceCost;
 /*0x1c0*/   DWORD   CARecastTimerID;    // ID of combat timer, i think.
 /*0x1c4*/   BYTE	IsDiscipline;
@@ -1272,9 +1402,9 @@ typedef struct _SPELL {
 /*0x224*/   CHAR    *WearOff;
 /*0x228*/	BYTE	field199;
 /*0x229*/   BYTE    Unknown0x229[3];
-/*0x22c*/	DWORD	Unk0x22c;
+/*0x22c*/	DWORD	SpriteSpellEffect;
 /*0x230*/   DWORD   SPAIndex; 
-/*0x234*/   DWORD   Unk0x234;
+/*0x234*/   DWORD   NewSpellEffect;
 /*0x238*/   DWORD   SpellAnim;
 /*0x23c*/   DWORD   Deities;
 /*0x240*/   BYTE	NPC_no_cast;
@@ -1290,10 +1420,11 @@ typedef struct _SPELL {
 /*0x264*/	DWORD	viral_range;
 /*0x268*/	BYTE	sneaking;
 /*0x269*/	BYTE	not_extendable;
-/*0x26a*/	BYTE	field198;
+/*0x26a*/	BYTE	no_detrimental_spell_aggro;
+BYTE pad_26B;
 /*0x26b*/   DWORD	songcap;
 /*0x26c*/
-} SPELL, *PSPELL;
+} _SPELL, *PSPELL;
 
 
 // Size 0x180 4-23-2004 Lax
@@ -1348,13 +1479,13 @@ typedef struct _SPELLFAVORITE {
 } SPELLFAVORITE, *PSPELLFAVORITE;
 
 typedef struct _CMDLIST {
-    DWORD LocalizedStringID;
-    PCHAR szName;
-    PCHAR szLocalized;
-    VOID  (__cdecl *fAddress)(PSPAWNINFO, PCHAR);
-    DWORD Restriction;
-    DWORD Category;
-    DWORD Unknown;
+	DWORD LocalizedStringID;
+	PCHAR szName;
+	PCHAR szLocalized;
+	VOID  (__cdecl *fAddress)(PSPAWNINFO, PCHAR);
+	DWORD Restriction;
+	DWORD Category;
+	DWORD Unknown;
 } CMDLIST, *PCMDLIST;
 
 typedef struct _EQSOCIAL {
@@ -1380,7 +1511,7 @@ typedef struct _ALTABILITY {
 /*0x1c*/ DWORD Cost; //Initial Cost or cost the last time you bought a level of it
 /*0x20*/ DWORD ID;              // /alt activate id
 /*0x24*/ DWORD AARankRequired; 
-        union {  
+		union {  
 /*0x28*/ LONG  RequiresAbility;          // If the value is positive then its the index number of the AA required.
 /*0x28*/ DWORD RequiresPointsInCategory; // If the value is negative then abs(value) is the
 	};                                   // category, while (abs(value))*6 is the points required.
@@ -1559,8 +1690,8 @@ typedef struct _EQCURRENTSELECTION {
 // TO BE REMOVED.
 /*
 typedef struct _EQSLOTLIST {
-            DWORD   Parent;
-            DWORD   InvSlots[372];//0-21 inv 22-30 bags
+			DWORD   Parent;
+			DWORD   InvSlots[372];//0-21 inv 22-30 bags
 } EQSLOTLIST, *PEQSLOTLIST;
 /**/
 
@@ -1802,8 +1933,8 @@ typedef struct _CSIDLWND {
 /*0x11c*/   struct _CXSTR  *SidlText; 
 /*0x120*/   union { 
 			   struct _CXSTR  *SidlScreen; 
-               DWORD   SlotID; 
-         }; 
+			   DWORD   SlotID; 
+		 }; 
 /*0x124*/   LPVOID SidlPiece;   // CScreenPieceTemplate (important)  
 /*0x128*/   BYTE    Checked;
 /*0x129*/   BYTE    Highlighted;
@@ -1936,8 +2067,8 @@ typedef struct _EQMERCHWINDOW {
 /*0x000*/   struct _CSIDLWND Wnd;
 /*0x15c*/   BYTE    Unknown0x150[0x8];
 /*0x164*/   PCONTENTS   ItemDesc[0x50];     // the mainwindow has pointers
-                                            // directly to the items in the
-                                            // slots...
+											// directly to the items in the
+											// slots...
 /*0x2a4*/   FLOAT   Markup;
 /*0x2a8*/   DWORD   SelectedSlotID;
 /*0x2ac*/   DWORD   AddressToPointerForSelectedItem;
@@ -2088,7 +2219,7 @@ typedef struct _EQINVSLOTMGR {
 typedef struct _EQCONTAINERWINDOW {
 /*0x000*/ struct _CSIDLWND Wnd;
 /*0x148*/ struct _CONTENTS*   pContents;     // Pointer to the contents of the container;
-                                                 // Matches the pointer in CHARINFO.Inventory/Bank/World
+												 // Matches the pointer in CHARINFO.Inventory/Bank/World
 /*0x14c*/ struct _CSIDLWND*   pSlots[0x0a];
 /*0x000*/ struct _CSIDLWND*   pCombine;
 /*0x168*/ struct _CSIDLWND*   pDone;
@@ -2110,9 +2241,9 @@ typedef struct _EQ_CONTAINERWND_MANAGER {
 } EQ_CONTAINERWND_MANAGER, *PEQ_CONTAINERWND_MANAGER;
 
 typedef struct _POINT3 {
-    FLOAT X;
-    FLOAT Y;
-    FLOAT Z;
+	FLOAT X;
+	FLOAT Y;
+	FLOAT Z;
 } POINT3, *PPOINT3;
 
 // plazmic 08-17-03
@@ -2132,12 +2263,12 @@ typedef struct _MAPLABEL { // sizeof() = 0x28
 } MAPLABEL, *PMAPLABEL;
 
 typedef struct _MAPLINE { // sizeof() = 0x28 (think this might be 0x34 now)
-    struct _MAPLINE *pNext;
-    struct _MAPLINE *pPrev;
-    POINT3 Start;
-    POINT3 End;
-    ARGBCOLOR Color;
-    DWORD Layer;    //0-3;
+	struct _MAPLINE *pNext;
+	struct _MAPLINE *pPrev;
+	POINT3 Start;
+	POINT3 End;
+	ARGBCOLOR Color;
+	DWORD Layer;    //0-3;
 } MAPLINE, *PMAPLINE;
 
 typedef struct _EQLOOTWINDOW {
@@ -2232,8 +2363,8 @@ typedef struct _EQGUILDWINDOW {
 /*0x195*/ BYTE ShowOffline; // 01 = show offline box is checked
 /*0x196*/ BYTE Unknown0x196[0x2];
 /*0x198*/ struct _GUILDMEMBERINFO **pMember; // This is a pointer to the beginning of a list of pointers, 
-	                                         // each representing one player in the guild.  The number of 
-	                                         // pointers depends upon TotalMemberCount.
+											 // each representing one player in the guild.  The number of 
+											 // pointers depends upon TotalMemberCount.
 /*0x19c*/ DWORD TotalMemberCount;
 /*0x1a0*/ DWORD Unknown0x1a0;  // 150?
 /*0x1a4*/ DWORD Unknown0x1a4;  // 1?
@@ -3138,8 +3269,8 @@ public:
 /*0x11 */   struct _CXSTR  *SidlText; 
 /*0x11 */   union { 
 			   struct _CXSTR  *SidlScreen; 
-               DWORD   SlotID; 
-         }; //-->120
+			   DWORD   SlotID; 
+		 }; //-->120
 /*0x11 */   LPVOID SidlPiece;   // CScreenPieceTemplate (important)  // -->124
 /*0x12 */   BYTE    Checked;
 /*0x12 */   BYTE    Highlighted;
@@ -4129,6 +4260,11 @@ public:
 //EQLIB_OBJECT void CDisplay::CleanUpNewUI(void);
 //EQLIB_OBJECT void CDisplay::InitGameUI(void);
 //EQLIB_OBJECT void CDisplay::InitNewUI(void);
+
+	// 11632 bytes
+	char pad[328];
+	int current_time;
+	char pad2[11300];
 };
 
 class CEditBaseWnd : public CSidlScreenWnd
@@ -7970,7 +8106,7 @@ public:
 //EQLIB_OBJECT void EQ_Note::SendTextRequestMsg(void);
 };
 
-class EQ_PC
+class PcClient
 {
 public:
 //EQLIB_OBJECT EQ_PC::~EQ_PC(void);
@@ -8009,10 +8145,17 @@ public:
 //EQLIB_OBJECT void EQ_PC::SetFatigue(int);
 //EQLIB_OBJECT void EQ_PC::UnpackMyNetPC(char *,int);
 //EQLIB_OBJECT unsigned long EQ_PC::GetItemTimerValue(class EQ_Item *);
-	char pad[0xC280];
+	//char pad[0xC280];
+
+	// PcBase
+	// CharacterZoneClient
+	// PcZoneClient
+	// PcClient
+	// CharacterBase
 	struct _CHARINFO CI;
 	struct _CHARINFO2 CI2;
 };
+typedef PcClient EQ_PC;
 
 /*
 class EQ_Skill
@@ -8226,18 +8369,18 @@ struct Spawn_Struct {
 /*0088*/ uint8  findable;       // 0=can't be found, 1=can be found
 /*0089*/ uint8 unknown0089[5];
 /*0094*/ signed   deltaHeading:10;// change in heading
-         signed   x:19;           // x coord
-         signed   padding0054:3;  // ***Placeholder
+		 signed   x:19;           // x coord
+		 signed   padding0054:3;  // ***Placeholder
 /*0098*/ signed   y:19;           // y coord
-         signed   animation:10;   // animation
-         signed   padding0058:3;  // ***Placeholder
+		 signed   animation:10;   // animation
+		 signed   padding0058:3;  // ***Placeholder
 /*0102*/ signed   z:19;           // z coord
-         signed   deltaY:13;      // change in y
+		 signed   deltaY:13;      // change in y
 /*0106*/ signed   deltaX:13;      // change in x
-         unsigned heading:12;     // heading
-         signed   padding0066:7;  // ***Placeholder
+		 unsigned heading:12;     // heading
+		 signed   padding0066:7;  // ***Placeholder
 /*0110*/ signed   deltaZ:13;      // change in z
-         signed   padding0070:19; // ***Placeholder
+		 signed   padding0070:19; // ***Placeholder
 /*0114*/ uint8  eyecolor1;      // Player's left eye color
 /*0115*/ uint8 unknown0115[24];
 /*0139*/ uint8  showhelm;       // 0=no, 1=yes
@@ -8277,9 +8420,9 @@ struct Spawn_Struct {
 union
 {
 /*0339*/ uint8 equip_chest2;     // Second place in packet for chest texture (usually 0xFF in live packets)
-                                  // Not sure why there are 2 of them, but it effects chest texture!
+								  // Not sure why there are 2 of them, but it effects chest texture!
 /*0339*/ uint8 mount_color;      // drogmor: 0=white, 1=black, 2=green, 3=red
-                                  // horse: 0=brown, 1=white, 2=black, 3=tan
+								  // horse: 0=brown, 1=white, 2=black, 3=tan
 };
 /*0340*/ uint32 spawnId;        // Spawn Id
 /*0344*/ float bounding_radius; // used in melee, overrides calc
@@ -8287,6 +8430,11 @@ union
 /*0384*/ uint8  lfg;            // 0=off, 1=lfg on
 /*0385*/
 
+};
+
+class PlayerZoneClient
+{
+	struct _SPAWNINFO Data;
 };
 
 class EQPlayer
@@ -9582,25 +9730,25 @@ struct PhysicsInfo2
 	float delta_y;
 	float delta_x;
 	float delta_heading;
-	float phys6;
+	float accel;
 	float phys7;
 };
 
 struct PhysicsInfo3
 {
 /*0094*/ signed   deltaHeading:10;// change in heading
-         signed   x:19;           // x coord
-         signed   padding0054:3;  // ***Placeholder
+		 signed   x:19;           // x coord
+		 signed   padding0054:3;  // ***Placeholder
 /*0098*/ signed   y:19;           // y coord
-         signed   animation:10;   // animation
-         signed   padding0058:3;  // ***Placeholder
+		 signed   animation:10;   // animation
+		 signed   padding0058:3;  // ***Placeholder
 /*0102*/ signed   z:19;           // z coord
-         signed   deltaY:13;      // change in y
+		 signed   deltaY:13;      // change in y
 /*0106*/ signed   deltaX:13;      // change in x
-         unsigned heading:12;     // heading
-         signed   padding0066:7;  // ***Placeholder
+		 unsigned heading:12;     // heading
+		 signed   padding0066:7;  // ***Placeholder
 /*0110*/ signed   deltaZ:13;      // change in z
-         signed   padding0070:19; // ***Placeholder
+		 signed   padding0070:19; // ***Placeholder
 };
 
 
@@ -10345,21 +10493,21 @@ RACE_Node_2254 = 2254,
 
 
 enum StartZoneIndexEnum {
-    StartZone_Odus_0 = 0,
-    StartZone_Qeynos_1,
-    StartZone_Halas_2,
+	StartZone_Odus_0 = 0,
+	StartZone_Qeynos_1,
+	StartZone_Halas_2,
 	StartZone_Rivervale_3,
-    StartZone_Freeport_4,
-    StartZone_Neriak_5,
-    StartZone_Grobb_6,
-    StartZone_Oggok_7,
-    StartZone_Kaladim_8,
-    StartZone_GreaterFaydark_9,
-    StartZone_Felwithe_10,
-    StartZone_Akanon_11,
-    StartZone_Cabilis_12,
-    StartZone_SharVahl_13,
-    StartZone_RatheMtn_14
+	StartZone_Freeport_4,
+	StartZone_Neriak_5,
+	StartZone_Grobb_6,
+	StartZone_Oggok_7,
+	StartZone_Kaladim_8,
+	StartZone_GreaterFaydark_9,
+	StartZone_Felwithe_10,
+	StartZone_Akanon_11,
+	StartZone_Cabilis_12,
+	StartZone_SharVahl_13,
+	StartZone_RatheMtn_14
 };
 
 enum SkillEnum : int {
@@ -11181,31 +11329,31 @@ enum TargetTypeEnum {
 /* 04 */	ST_AECaster_4 = 0x04,
 /* 05 */	ST_Target_5 = 0x05,
 /* 06 */	ST_Self_6 = 0x06,
-/* 07 */	// NOT USED
+/* 07 */	ST_UNK_7 = 7,// NOT USED
 /* 08 */	ST_AETarget_8 = 0x08,
 /* 09 */	ST_Animal_9 = 0x09,
 /* 10 */	ST_Undead_10 = 0x0a,
 /* 11 */	ST_Summoned_11 = 0x0b,
-/* 12 */	// NOT USED error is 218 (This spell only works on things that are flying.)
+/* 12 */	ST_Flying_Unused_12 = 12, // NOT USED error is 218 (This spell only works on things that are flying.)
 /* 13 */	ST_Tap_13 = 0x0d,
 /* 14 */	ST_Pet_14 = 0x0e,
 /* 15 */	ST_Corpse_15 = 0x0f,
 /* 16 */	ST_Plant_16 = 0x10,
 /* 17 */	ST_Giant_17 = 0x11, //special giant
 /* 18 */	ST_Dragon_18 = 0x12, //special dragon
-/* 19 */	// NOT USED error is 227 (This spell only works on specific coldain.)
+/* 19 */	ST_Coldain_Unused_19 = 19, // NOT USED error is 227 (This spell only works on specific coldain.)
 /* 20 */	ST_TargetAETap_20 = 0x14,
-/* 21 */	// NOT USED same switch case as ST_Undead
-/* 22 */	// NOT USED same switch case as ST_Summoned
-/* 23 */	// NOT USED same switch case as ST_Animal
+/* 21 */	ST_UNK_21 = 21, // NOT USED same switch case as ST_Undead
+/* 22 */	ST_UNK_22 = 22, // NOT USED same switch case as ST_Summoned
+/* 23 */	ST_UNK_23 = 23, // NOT USED same switch case as ST_Animal
 /* 24 */	ST_UndeadAE_24 = 0x18,
 /* 25 */	ST_SummonedAE_25 = 0x19,
-/* 26 */	// NOT USED
-/* 27 */	// NOT USED error is 223 (This spell only works on insects.)
-/* 28 */	// NOT USED error is 223 (This spell only works on insects.)
-/* 29 */	// NOT USED
-/* 30 */	// NOT USED
-/* 31 */	// NOT USED
+/* 26 */	ST_UNK_26 = 26, // NOT USED
+/* 27 */	ST_Insect1_27 = 27, // NOT USED error is 223 (This spell only works on insects.)
+/* 28 */	ST_Insect2_28 = 28, // NOT USED error is 223 (This spell only works on insects.)
+/* 29 */	ST_UNK_29 = 29, // NOT USED
+/* 30 */	ST_UNK_30 = 30, // NOT USED
+/* 31 */	ST_UNK_31 = 31, // NOT USED
 /* 32 */	ST_AETargetHateList_32 = 0x20,
 /* 33 */	ST_HateList_33 = 0x21,
 /* 34 */	ST_LDoNChest_Cursed_34 = 0x22,
@@ -11222,8 +11370,8 @@ enum TargetTypeEnum {
 /* 45 */	ST_Ring_45 = 0x2d,
 /* 46 */	ST_TargetsTarget_46 = 0x2e, // uses the target of your target
 /* 47 */	ST_PetMaster_47 = 0x2f, // uses the master as target
-/* 48 */	// UNKNOWN
-/* 49 */	// NOT USED
+/* 48 */	ST_UNK_48 = 48, // UNKNOWN
+/* 49 */	ST_UNK_49 = 49,// NOT USED
 /* 50 */	ST_TargetAENoPlayersPets_50 = 0x32,
 };
 
@@ -11456,3 +11604,1383 @@ evomax
 
 
 */
+
+struct AA_Effect {
+/*00*/	int32 effect_id;
+/*04*/	int32 base_value;
+/*08*/	int32 limit_value;
+/*12*/	int32 slot;
+};
+
+
+struct SendAA_Struct { // this is the packet
+/*0000*/	int32 id;
+/*0004*/	int32 unknown004;		//set to 1.
+/*0008*/	int32 hotkey_sid;
+/*0012*/	int32 hotkey_sid2;
+/*0016*/	int32 title_sid;
+/*0020*/	int32 desc_sid;
+/*0024*/	int32 level_req;
+/*0028*/	int32 cost;
+/*0032*/	int32 ability_id;
+/*0036*/	int32 current_level; //1s, MQ2 calls this AARankRequired
+/*0040*/	int32 prereq_skill;		//is < 0, abs() is category #
+/*0044*/	int32 prereq_minpoints; //min points in the prereq
+/*0048*/	int32 type;
+/*0052*/	int32 spellid;
+/*0056*/	int32 spell_timer_id;
+/*0060*/	int32 spell_refresh;
+/*0064*/	int32 classes;
+/*0068*/	int32 max_level;
+/*0072*/	int32 prev_id;
+/*0076*/	int32 next_id;
+/*0080*/	int32 total_cost;
+/*0084*/	int32 alt_timer;
+/*0088*/	int32 grant_only;
+/*0092*/	int32 total_effects;
+/*0096*/	AA_Effect effects[0];
+/*0112*/
+};
+
+
+
+struct CAltAbilityEffects
+{
+/*0092*/	int32 total_effects;
+/*0096*/	AA_Effect effects[0];
+};
+struct CAltAbilityData // 108 bytes - this is the internal structure, similar but not identical
+{
+/*0000*/	int32 id;
+/*0004*/	int8 unknown004;		//set to 1.
+			char pad05[3];
+/*0008*/	int32 hotkey_sid;
+/*0012*/	int32 hotkey_sid2;
+/*0016*/	int32 title_sid;
+/*0020*/	int32 desc_sid;
+/*0024*/	int32 level_req;
+/*0028*/	int32 cost;
+/*0032*/	int32 ability_id;
+/*0036*/	int32 current_level; //1s, MQ2 calls this AARankRequired
+/*0040*/	int32 prereq_skill;		//is < 0, abs() is category #
+/*0044*/	int32 prereq_minpoints; //min points in the prereq
+/*0048*/	int32 type;
+/*0052*/	int32 spell_id;
+/*0056*/	int8 unk56;
+			char pad57[3];
+/*0060*/	int32 spell_timer_id;
+/*0064*/	int32 spell_refresh;
+/*0068*/	int32 classes;
+/*0072*/	int32 max_level;
+/*0076*/	int32 total_cost;
+/*0080*/	int32 last_id;
+/*0084*/	int32 next_id;
+/*0088*/	int8 grant_only;
+			char pad89[3];
+/*0092*/	struct CAltAbilityEffects effect_obj;
+/*0108*/
+};
+
+struct InspectResponse_Struct{//Cofruben:need to send two of this for the inspect response.
+/*000*/	uint32 TargetID;
+/*004*/	uint32 playerid;
+/*008*/	char itemnames[22][64];
+/*1416*/uint32 itemicons[22];
+/*1504*/char text[288];
+/*1792*/
+};
+
+
+enum SpawnAppearanceEnum {
+	 SA_Die_0                   = 0, // Causes the client to keel over and zone to bind point (default action)
+	 SA_WhoLevel_1              = 1, // Level that shows up on /who
+	 SA_MaxHealth_2             = 2,
+	 SA_Invisibility_3          = 3, // 0 = Visible, 1 = Invisible
+	 SA_PVP_4                   = 4, // 0 = Non-PVP, 1 = PVP
+	 SA_Light_5                 = 5, // Light type emitted by player (lightstone, shiny shield)
+	 SA_Animation_14             = 14, // 100 = Standing, 102 = Freeze, 105 = Looting, 110 = Sitting, 111 = Crouching, 115 = Lying
+	 SA_Sneak_15                 = 15, // 0 = Normal, 1 = Sneaking
+	 SA_SpawnID_16               = 16, // Server -> Client, sets player spawn ID
+	 SA_Health_17                = 17, // Client->Server, my HP has changed (like regen tic)
+	 SA_Linkdead_18              = 18, // 0 = Normal, 1 = Linkdead
+	 SA_FlyMode_19               = 19, // 0 = Off, 1 = Flying, 2 = Levitating, 3 = Water, 4 = Floating, 5 = Levitating while Running
+	 SA_GM_20                    = 20, // 0 = Non-GM, 1 = GM
+	 SA_Anonymous_21             = 21, // 0 = Non-Anonymous, 1 = Anonymous, 2 = Roleplaying
+	 SA_GuildID_22               = 22,
+	 SA_GuildRank_23             = 23,
+	 SA_AFK_24                   = 24, // 0 = Non-AFK, 1 = AFK
+	 SA_Pet_25                   = 25, // Parameter is Entity ID of owner, or 0 for when charm breaks
+	 SA_Summoned_27              = 27,
+	 SA_Split_28                 = 28, // 0 = No Split, 1 = Auto Split
+	 SA_Size_29                  = 29, // Spawn's Size
+	 SA_SetType_30               = 30, // 0 = PC, 1 = NPC, 2 = Corpse
+	 SA_NPCName_31               = 31, // Change PC name color to NPC name color
+	 SA_AARank_32                = 32, // AA Rank Title ID, title in /who?
+	 SA_CancelSneakHide_33       = 33, // Turns off Hide and Sneak
+	  SA_Findable_34              = 34,
+	 SA_AreaHealthRegen_35       = 35, // Guild Hall Regeneration Pool sets to value * 0.001
+	 SA_AreaManaRegen_36         = 36, // Guild Hall Regeneration Pool sets to value * 0.001
+	 SA_AreaEnduranceRegen_37    = 37, // Guild Hall Regeneration Pool sets to value * 0.001
+	 SA_FreezeBeneficialBuffs_38 = 38, // Freezes beneficial buff timers for PCs
+	 SA_NPCTintIndex_39          = 39,
+	 SA_GroupAutoConsent_40      = 40, // Auto Consent Group
+	 SA_RaidAutoConsent_41       = 41, // Auto Consent Raid
+	 SA_GuildAutoConsent_42      = 42, // Auto Consent Guild
+	 SA_ShowHelm_43              = 43, // 0 = Hide, 1 = Show
+	 SA_DamageState_44           = 44, // The damage state of a destructible object (0 through 10) plays sound IDs, most only have 2 or 4 states though
+	 SA_EQPlayers_45             = 45, // EQ Players Update
+	 SA_FindBits_46              = 46, // Set Find Bits?
+	 SA_TextureType_48           = 48, // Texture Type?
+	 SA_FacePick_49              = 49, // Turns off face pick window?
+	 SA_AntiCheat_51             = 51, // Sent by the client randomly telling the server how long since last action has occurred
+	 SA_GuildShow_52             = 52,
+	 SA_OfflineMode_53           = 53, // Offline Mode
+};
+
+
+struct AA_Action {
+/*00*/	uint32	action;
+/*04*/	uint32	ability;
+/*08*/	uint32	target_id;
+/*12*/	uint32	exp_value;
+};
+
+struct Duel_Struct
+{
+	uint32 duel_target;
+	uint32 duel_initiator;
+};
+
+
+struct DuelResponse_Struct
+{
+	uint32 duel_target;
+	uint32 duel_initiator;
+	int8 reponse_type;
+	int8 pad9[3];	// eq structs have alignment padding
+};
+
+struct CPhysicsInfo
+{
+/*1  00*/  float Y;
+/*2  04*/  float X;
+/*3  08*/  float Z;
+/*4  12*/  float delta_X;
+/*5  16*/  float delta_Y;
+/*6  20*/  float delta_Z;
+/*7  24*/  float accel;
+/*8  28*/  float heading;
+/*9  32*/  float pitch;
+/*10 36*/  float delta_pitch;
+/*11 40*/  float delta_heading;
+/*12 44*/  float camera_angle;
+/*12 48*/  float camera_angle_2;
+/*12 52*/  float camera_angle_3;
+/*56*/
+};
+
+enum RegionTypeEnum {
+	RegionTypeUnsupported_n2 = -2,
+	RegionTypeUntagged_n1 = -1,
+        RegionTypeNormal_0 = 0,
+        RegionTypeWater_1 = 1,
+        RegionTypeLava_2 = 2,
+		RegionTypeZoneLine_3 = 3,
+	RegionTypePVP_4 = 4,
+	RegionTypeSlime_5  = 5,
+	RegionTypeIce_6 = 6,
+	RegionTypeVWater_7 =7,
+	RegionTypeUnk_8 = 8,
+	RegionTypeUnk_9 = 9,
+	RegionTypeUnk_10 = 10
+
+};
+
+
+
+enum AnimationEnum  {	//type arguments to DoAnim
+	Animation_STILL_0 = 0,											 // 0 jesus arms
+	Animation_Kick_1 = 1,
+	Animation_Piercing_2 = 2,	//might be piercing?
+	Animation_Slashing2H_3 = 3,
+	Animation_Weapon2H_4 = 4,
+	Animation_Weapon1H_5 = 5,
+	Animation_DualWield_6 = 6,
+	Animation_Slam_7 = 7,		//slam & Dpunch too
+	Animation_Hand2Hand_8 = 8,
+	Animation_ShootBow_8 = 9,
+	Animation_C10__SWIM_ATK_10 = 10,	// 10 nothing
+	Animation_RoundKick_11 = 11,
+	Animation_D01__LT_DMG_12 = 12,	// 12 nothing
+	Animation_D02__NORMAL_DMG_13 = 13,	// 13 nothing
+	Animation_Falling_14 = 14,
+	Animation_Drowning_15 = 15,
+	Animation_FeignDeath_16 = 16,
+	Animation_Walk_17 = 17,
+	Animation_Slippery_18 = 18,
+	Animation_ForwardJump_19 = 19,
+	Animation_JumpStright_20 = 20, //20
+	Animation_Fall_21 = 21,
+	Animation_DuckWalk_22 = 22,
+	Animation_LadderUp_23 = 23,
+	Animation_Duck_24 = 24,
+	Animation_SwimStill_25 = 25, // or burn
+	Animation_LookAround_26 = 26,
+	Animation_RightOn_27 = 27,
+	Animation_Shy_28 = 28,
+	Animation_Wave_29 = 29,
+	Animation_Rude_30 = 30, //30
+	Animation_Yawn_31 = 31,
+	Animation_P01__STAND_STILL_32,
+	Animation_Sit_33 = 33,
+	Animation_LeftTurn_34 = 34,
+	Animation_RightTurn_35 = 35,
+	Animation_Kneel_36 = 36,
+	Animation_SwimMove_37 = 37,
+	Animation_Unknown38 = 38,
+	Animation_T01__PLAY_DRUM_39 = 39,
+	Animation_T02__PLAY_LUTE_40 = 40, //40
+	Animation_T03__PLAY_HORN_41 = 41,
+	Animation_T04__DEFENSE_SPELL_42 = 42,
+	Animation_T05__GENERAL_SPELL_43 = 43,
+	Animation_T06__MISSILE_SPELL_44 = 44,
+	Animation_FlyingKick_45 = 45,
+	Animation_TigerClaw_46 = 46,
+	Animation_EagleStrike_47 = 47,
+	Animation_Agree_48 = 48,
+	Animation_Amaze_49 = 49,
+	Animation_Plead_50 = 50, //50
+	Animation_Clap_51 = 51,
+	Animation_Bleed_52 = 52,
+	Animation_Blush_53 = 53,
+	Animation_Chuckle_54 =54,
+	Animation_Cough_55 = 55,
+	Animation_Cringe_56 = 56,
+	Animation_HeadSideways_57 = 57,
+	Animation_Dance_58 = 58,
+	Animation_Veto_59 = 59,
+	Animation_Glare_60 = 60, // 60
+	Animation_Peer_61 = 61,
+	Animation_Knelt_62 = 62,
+	Animation_LaughHard_63 = 63,
+	Animation_Point_64 = 64,
+	Animation_Shrug_65 = 65,
+	Animation_Handraise_66 = 66,
+	Animation_Salute_67 = 67,
+	Animation_Shiver_68 = 68,
+	Animation_FootTap_69 = 69,
+	Animation_WaistBow_70 = 70,
+	Animation_Unknown71 = 71,
+	Animation_LookAroundIdle_72 = 72,
+	Animation_Unknown73 = 73,
+	Animation_Mounted_74 = 74,
+	Animation_Unknown75 = 75,
+	Animation_Unknown76 = 76,
+	Animation_FiddleWeapon = 77,
+	Animation_MountedFall = 78
+};
+
+enum AnimTypeEnum
+{
+	AnimStand_100 = 100,
+	AnimFreeze_102 = 102,
+	AnimLooting_105 = 105,
+	AnimSit_110 = 110,
+	AnimDuck_111 = 111,
+	AnimFallenDown_115 = 115,
+	AnimCorpse_120 = 120
+};
+
+struct SpawnAppearance_Struct
+{
+/*0000*/ uint16 spawn_id;          // ID of the spawn
+/*0002*/ uint16 type;              // Values associated with the type
+/*0004*/ uint32 parameter;         // Type of data sent
+/*0008*/
+};
+
+struct vec3
+{
+	float Y;
+	float X;
+	float Z;
+};
+
+struct vec4
+{
+	float Y;
+	float X;
+	float Z;
+	float heading;
+};
+
+struct PlayerAnimationOld
+{
+  int32 vtable;
+  PlayerZoneClient *player;
+  int32 unk1;
+};
+
+
+
+class BaseProfile;
+class PcProfile;
+
+enum eProfileListType
+{
+	eProfileTypeNormal = 0,
+	eProfileTypeMonsterMission,
+};
+
+enum eProfileType
+{
+	eProfileTypeMain = 0,
+	eProfileTypeAlt,
+	eProfileTypeMonster,
+	eProfileTypeOther
+};
+
+struct ProfileList
+{
+/*0x00*/ eProfileListType ListType;
+/*0x04*/ BaseProfile* pFirst;
+/*0x08*/ BaseProfile* pLast;
+/*0x0c*/ ProfileList* pNext;
+/*0x10*/ ProfileList* pPrev;
+/*0x14*/
+};
+
+struct ProfileManager
+{
+/*0x00*/ ProfileList* pFirst;
+/*0x04*/ eProfileListType CurProfileList;
+/*0x08*/
+};
+
+struct BaseProfile
+{
+	struct _CHARINFO2 PP;
+};
+
+struct CharacterBase
+{
+	struct _CHARINFO_C CB;
+};
+
+struct PcBase
+{
+	struct _CHARINFO_A CI_A;
+};
+
+struct CharacterZoneClient
+{
+	struct _CHARINFO_B CI_B;
+	struct CharacterBase CB;
+};
+
+struct PcZoneClient
+{
+};
+
+struct PcClient
+{
+	// PcBase
+	// CharacterZoneClient
+	// PcZoneClient
+	// PcClient
+	// CharacterBase
+
+	PcBase PcBase;
+	CharacterZoneClient CharacterZoneClient;
+	PcZoneClient PcZoneClient;
+	//PcClient PcClient;
+	CharacterBase CharacterBase;
+};
+
+struct SpellBuff_Struct
+{
+/*000*/	uint8	effect_type;	// 0 = no buff, 2 = buff, 4 = inverse affects of buff
+/*001*/ uint8	level;
+/*002*/	uint8	bard_modifier;
+/*003*/	uint8	unknown003;		// MQ2 used to call this "damage shield" -- don't see client referencing it, so maybe server side DS type tracking?
+/*004*/	uint32	spellid;
+/*008*/ int32	duration;
+/*012*/	uint32	counters;		// single book keeping value (counters, rune/vie)
+/*016*/	uint32	player_id;		// caster ID, pretty sure just zone ID
+};
+
+struct CombatDamage_Struct
+{
+	/* 00 */	uint16	target;
+	/* 02 */	uint16	source;
+	/* 04 */	uint8	type; //slashing, etc.  231 (0xE7) for spells, skill
+	/* 05 */	uint16	spellid;
+	/* 07 */	uint32	damage;
+	/* 11 */	float force;
+	/* 15 */	float hit_heading;	// see above notes in Action_Struct
+	/* 19 */	float hit_pitch;
+	/* 23 */
+};
+
+struct _EQMissileHitInfo
+{
+  uint16 target;
+  uint16 source;
+  uint16 level;
+  uint16 target_level;
+  int16 instrument_mod;
+  float force;
+  float sequence;
+  float pushup_angle;
+  uint8 type;
+  int8 unkx[2];
+  uint8 type2[2];
+  uint16 spell_id_unused;
+  int16 tap_amount;
+  uint16 spell;
+  uint8 unknown25;
+  uint8 unknown32;
+  uint8 buff_unknown;
+};
+
+// this is used inside profile
+struct SpellBuff_Struct
+{
+/*000*/	uint8	effect_type;	// 0 = no buff, 2 = buff, 4 = inverse affects of buff
+/*001*/ uint8	level;
+/*002*/	uint8	bard_modifier;
+/*003*/	uint8	unknown003;		// MQ2 used to call this "damage shield" -- don't see client referencing it, so maybe server side DS type tracking?
+/*004*/	uint32	spellid;
+/*008*/ int32	duration;
+/*012*/	uint32	counters;		// single book keeping value (counters, rune/vie)
+/*016*/	uint32	player_id;		// caster ID, pretty sure just zone ID
+};
+
+struct SpellBuffPacket_Struct {
+/*000*/	uint32 entityid;
+/*004*/	SpellBuff_Struct buff;
+/*024*/	uint32 slotid;
+/*028*/	uint32 bufffade;
+/*032*/
+};
+
+enum InnateSkillEnum
+{
+	// Given to monks and rangers but don't see any use for it in the client
+	InnateAwareness = 1,
+
+	// Seems to be granted but then removed in EQ_Main::Activate
+	InnateBashDoor = 2,
+
+	// Unused ?
+	InnateBreatheFire = 3,
+
+	// Given to druids but don't see any use for it in the client
+	InnateHarmony = 4,
+
+	// SK ability, checked when selecting andusing skill
+	InnateHarmTouch = 5,
+
+	// This flag is actually what's checked all over to provide vision, including from buffs
+	InnateInfravision = 6,
+
+	// PAL ability, checked when selecting andusing skill
+	InnateLayHands = 7,
+
+	// Erudite, High Elf andGnome.Not used for anything in client
+	InnateLore = 8,
+
+	// Ogre. Not used for anything in client?
+	InnateNoBash = 9,
+
+	// This controls regeneration on the client, but should it on the server?
+	InnateRegeneration = 10,
+
+	// Like harm touch and lay hands, checked when selecting andusing skill
+	InnateSlam = 11,
+
+	// Monk and Rogue but doesn't seem to do anything in client
+	InnateSurprise = 12,
+
+	// Same as Infravision
+	InnateUltravision = 13,
+		InnateInspect = 14,
+	InnateOpen = 15,
+	InnateReveal = 16,
+};
+
+struct ItemBase
+{
+	struct _CONTENTS Data;
+};
+
+struct ItemClient : ItemBase
+{
+};
+
+enum ItemEffectIndex
+{
+	ItemEffectClick_0 = 0,
+	ItemEffectProc_1 = 1,
+	ItemEffectWorn_2 = 2,
+	ItemEffectFocus_3 = 3,
+	ItemEffectScroll_4 = 4
+};
+
+struct LogServer2_Struct{
+/*000*/	uint32	enable_roleplay;
+/*004*/	uint8	enable_pvp; // 1 = Rallos Zek traditional FFA 4 level diff, 2 = 8 level diff, 4 = Sullon Zek Deity Teams, 6 = Tallon/Vallon Zek Race Teams
+/*005*/	uint8	unknown005;
+/*006*/	uint8	unknown006;
+/*007*/	uint8	unknown007;
+/*008*/	uint8	enable_lorename;
+/*009*/	uint8	unknown009;
+/*010*/	uint8	unknown010;
+/*011*/	uint8	unknown011;
+/*012*/	uint32	unknown012;	// htonl(1) on live
+/*016*/	uint32	unknown016;	// htonl(1) on live
+/*020*/ int32	beta_server;
+/*024*/	uint8	unknown020[8];
+/*032*/	char	worldshortname[32];
+/*064*/	uint8	unknown064[32];
+/*096*/	char	unknown096[16];	// 'pacman' on live
+/*112*/	char	unknown112[16];	// '64.37,148,36' on live
+/*126*/	uint8	unknown128[48];
+/*176*/	uint32	unknown176;	// htonl(0x00002695)
+/*180*/	char	unknown180[64];	// 'eqdataexceptions@mail.station.sony.com' on live
+/*244*/ int8	enable_korean_extra_regen_under_level_21;
+/*245*/ int8	disable_corpse_runs;
+/*246*/ char	unknown246[14];
+/*260*/	uint8	enable_petition_wnd;
+/*261*/	uint8	enablevoicemacros;
+/*262*/	uint8	enablemail;
+/*263*/	uint8	disable_tutorial_go_home; // This appears valid on Ti and RoF..other clients need verification
+/*264*/
+};
+
+
+struct LogServer_Struct {
+// Op_Code OP_LOGSERVER
+/*000*/	uint32	enable_roleplay; // rp_active
+/*004*/	uint32	enable_pvp; // pk_active 1 = Rallos Zek traditional FFA 4 level diff, 2 = Tallon/Vallon Zek 8 level diff, 4 = Sullon Zek Deity Teams, 6 = Discord?
+/*008*/	uint32	enable_lorename; // AutoIdentify
+/*012*/	uint32	require_vowels_in_name;	// NameGen htonl(1) on live - this is not used by the titanium client but was used in older versions
+/*016*/	uint32	use_languages;	// Gibberish htonl(1) on live
+/*020*/ int32	beta_server; // test_server (enables /betabuff)
+/*024*/ int32	locale; // not used by titanium client
+/*028*/ int32	ProfanityFilter; // not used by titanium client
+/*032*/	char	worldshortname[64]; // ServerName
+/*096*/	char	loggingServerPassword[16];	// loggingServerPassword 'pacman' on live
+/*112*/	char	loggingServerAddress[64];	// loggingServerAddress '64.37,148,36' on live
+/*176*/	uint32	loggingServerPort;	// loggingServerPort htonl(0x00002695)
+/*180*/	char	localizedEmailAddress[64];	// localizedEmailAddress 'eqdataexceptions@mail.station.sony.com' on live
+/*244*/ int8	enable_extra_regen_under_level_21; // SpeedUpGamePlay in client
+/*245*/ int8	keep_items_on_death; // KeepItemsOnDeath
+/*246*/ char	unknown246[14];
+/*260*/	uint8	enable_petition_wnd;
+/*261*/	uint8	enablevoicemacros;
+/*262*/	uint8	enablemail;
+/*263*/	uint8	disable_tutorial_go_home; // This appears valid on Ti and RoF..other clients need verification
+/*264*/
+};
+
+struct NewZone_Struct {
+/*0000*/	char	char_name[64];			// Character Name
+/*0064*/	char	zone_short_name[32];	// Zone Short Name
+/*0096*/	char	zone_long_name[278];	// Zone Long Name
+/*0374*/	uint8	ztype;					// Zone type (usually FF)
+/*0375*/	uint8	fog_red[4];				// Zone fog (red)
+/*0379*/	uint8	fog_green[4];			// Zone fog (green)
+/*0383*/	uint8	fog_blue[4];			// Zone fog (blue)
+/*0387*/	uint8	unknown323;
+/*0388*/	float	fog_minclip[4];
+/*0404*/	float	fog_maxclip[4];
+/*0420*/	float	gravity;
+/*0424*/	uint8	time_type;
+/*0425*/    uint8   rain_chance[4];
+/*0429*/    uint8   rain_duration[4];
+/*0433*/    uint8   snow_chance[4];
+/*0437*/    uint8   snow_duration[4];
+/*0441*/	uint8	unknown360[33];
+/*0474*/	uint8	sky;					// Sky Type
+/*0475*/	uint8	unknown331[13];			// ***Placeholder
+/*0488*/	float	zone_exp_multiplier;	// Experience Multiplier
+/*0492*/	float	safe_y;					// Zone Safe Y
+/*0496*/	float	safe_x;					// Zone Safe X
+/*0500*/	float	safe_z;					// Zone Safe Z
+/*0504*/	float	max_z;					// Guessed
+/*0508*/	float	underworld;				// Underworld, min z (Not Sure?)
+/*0512*/	float	minclip;				// Minimum View Distance
+/*0516*/	float	maxclip;				// Maximum View DIstance
+/*0520*/	uint8	unknown_end[72];		// ***Placeholder
+/*0592*/	int32	unknown592;
+/*0596*/	uint8	unknown596[8];
+/*0604*/	char	zone_short_name2[32];
+/*0636*/	char	unknown636[32];
+/*0668*/	char	unknown668[16];
+/*0684*/	uint16	zone_id;
+/*0686*/	uint16	zone_instance;
+/*0688*/	uint32	unknown688;
+/*0692*/	uint8	unknown692[8];
+/*0700*/
+};
+
+struct CharCreate_Struct
+{
+/*0000*/	uint32	class_;
+/*0004*/	uint32	haircolor;	// Might be hairstyle
+/*0008*/	uint32	beardcolor;	// Might be beard
+/*0012*/	uint32	beard;		// Might be beardcolor
+/*0016*/	uint32	gender;
+/*0020*/	uint32	race;
+/*0024*/	uint32	start_zone;
+	// 0 = odus
+	// 1 = qeynos
+	// 2 = halas
+	// 3 = rivervale
+	// 4 = freeport
+	// 5 = neriak
+	// 6 = gukta/grobb
+	// 7 = ogguk
+	// 8 = kaladim
+	// 9 = gfay
+	// 10 = felwithe
+	// 11 = akanon
+	// 12 = cabalis
+	// 13 = shar vahl
+/*0028*/	uint32	hairstyle;	// Might be haircolor
+/*0032*/	uint32	deity;
+/*0036*/	uint32	STR;
+/*0040*/	uint32	STA;
+/*0044*/	uint32	AGI;
+/*0048*/	uint32	DEX;
+/*0052*/	uint32	WIS;
+/*0056*/	uint32	INT;
+/*0060*/	uint32	CHA;
+/*0064*/	uint32	face;		// Could be unknown0076
+/*0068*/	uint32	eyecolor1;	//its possiable we could have these switched
+/*0073*/	uint32	eyecolor2;	//since setting one sets the other we really can't check
+/*0076*/	uint32	tutorial;
+/*0080*/
+};
+
+struct Weather_Struct {
+	int32 type;
+	int32 intensity;
+};
+
+
+enum ZoneEnum
+{
+ZONE_qeynos_1 = 1, // South Qeynos
+ZONE_qeynos2_2 = 2, // North Qeynos
+ZONE_qrg_3 = 3, // The Surefall Glade
+ZONE_qeytoqrg_4 = 4, // The Qeynos Hills
+ZONE_highpass_5 = 5, // Highpass Hold
+ZONE_highkeep_6 = 6, // High Keep
+ZONE_freportn_8 = 8, // North Freeport
+ZONE_freportw_9 = 9, // West Freeport
+ZONE_freporte_10 = 10, // East Freeport
+ZONE_runnyeye_11 = 11, // The Liberated Citadel of Runnyeye
+ZONE_qey2hh1_12 = 12, // The Western Plains of Karana
+ZONE_northkarana_13 = 13, // The Northern Plains of Karana
+ZONE_southkarana_14 = 14, // The Southern Plains of Karana
+ZONE_eastkarana_15 = 15, // Eastern Plains of Karana
+ZONE_beholder_16 = 16, // Gorge of King Xorbb
+ZONE_blackburrow_17 = 17, // Blackburrow
+ZONE_paw_18 = 18, // The Lair of the Splitpaw
+ZONE_rivervale_19 = 19, // Rivervale
+ZONE_kithicor_20 = 20, // Kithicor Forest
+ZONE_commons_21 = 21, // West Commonlands
+ZONE_ecommons_22 = 22, // East Commonlands
+ZONE_erudnint_23 = 23, // The Erudin Palace
+ZONE_erudnext_24 = 24, // Erudin
+ZONE_nektulos_25 = 25, // The Nektulos Forest
+ZONE_cshome_26 = 26, // Sunset Home
+ZONE_lavastorm_27 = 27, // The Lavastorm Mountains
+ZONE_nektropos_28 = 28, // Nektropos
+ZONE_halas_29 = 29, // Halas
+ZONE_everfrost_30 = 30, // Everfrost Peaks
+ZONE_soldunga_31 = 31, // Solusek's Eye
+ZONE_soldungb_32 = 32, // Nagafen's Lair
+ZONE_misty_33 = 33, // Misty Thicket
+ZONE_nro_34 = 34, // Northern Desert of Ro
+ZONE_sro_35 = 35, // Southern Desert of Ro
+ZONE_befallen_36 = 36, // Befallen
+ZONE_oasis_37 = 37, // Oasis of Marr
+ZONE_tox_38 = 38, // Toxxulia Forest
+ZONE_hole_39 = 39, // The Hole
+ZONE_neriaka_40 = 40, // Neriak - Foreign Quarter
+ZONE_neriakb_41 = 41, // Neriak - Commons
+ZONE_neriakc_42 = 42, // Neriak - 3rd Gate
+ZONE_neriakd_43 = 43, // Neriak Palace
+ZONE_najena_44 = 44, // Najena
+ZONE_qcat_45 = 45, // The Qeynos Aqueduct System
+ZONE_innothule_46 = 46, // Innothule Swamp
+ZONE_feerrott_47 = 47, // The Feerrott
+ZONE_cazicthule_48 = 48, // Accursed Temple of CazicThule
+ZONE_oggok_49 = 49, // Oggok
+ZONE_rathemtn_50 = 50, // The Rathe Mountains
+ZONE_lakerathe_51 = 51, // Lake Rathetear
+ZONE_grobb_52 = 52, // Grobb
+ZONE_aviak_53 = 53, // Aviak Village
+ZONE_gfaydark_54 = 54, // The Greater Faydark
+ZONE_akanon_55 = 55, // Ak'Anon
+ZONE_steamfont_56 = 56, // Steamfont Mountains
+ZONE_lfaydark_57 = 57, // The Lesser Faydark
+ZONE_crushbone_58 = 58, // Crushbone
+ZONE_mistmoore_59 = 59, // The Castle of Mistmoore
+ZONE_kaladima_60 = 60, // South Kaladim
+ZONE_felwithea_61 = 61, // Northern Felwithe
+ZONE_felwitheb_62 = 62, // Southern Felwithe
+ZONE_unrest_63 = 63, // The Estate of Unrest
+ZONE_kedge_64 = 64, // Kedge Keep
+ZONE_guktop_65 = 65, // The City of Guk
+ZONE_gukbottom_66 = 66, // The Ruins of Old Guk
+ZONE_kaladimb_67 = 67, // North Kaladim
+ZONE_butcher_68 = 68, // Butcherblock Mountains
+ZONE_oot_69 = 69, // Ocean of Tears
+ZONE_cauldron_70 = 70, // Dagnor's Cauldron
+ZONE_airplane_71 = 71, // The Plane of Sky
+ZONE_fearplane_72 = 72, // The Plane of Fear
+ZONE_permafrost_73 = 73, // The Permafrost Caverns
+ZONE_kerraridge_74 = 74, // Kerra Isle
+ZONE_paineel_75 = 75, // Paineel
+ZONE_hateplane_76 = 76, // Plane of Hate
+ZONE_arena_77 = 77, // The Arena
+ZONE_fieldofbone_78 = 78, // The Field of Bone
+ZONE_warslikswood_79 = 79, // The Warsliks Woods
+ZONE_soltemple_80 = 80, // The Temple of Solusek Ro
+ZONE_droga_81 = 81, // The Temple of Droga
+ZONE_cabwest_82 = 82, // Cabilis West
+ZONE_swampofnohope_83 = 83, // The Swamp of No Hope
+ZONE_firiona_84 = 84, // Firiona Vie
+ZONE_lakeofillomen_85 = 85, // Lake of Ill Omen
+ZONE_dreadlands_86 = 86, // The Dreadlands
+ZONE_burningwood_87 = 87, // The Burning Wood
+ZONE_kaesora_88 = 88, // Kaesora
+ZONE_sebilis_89 = 89, // The Ruins of Sebilis
+ZONE_citymist_90 = 90, // The City of Mist
+ZONE_skyfire_91 = 91, // The Skyfire Mountains
+ZONE_frontiermtns_92 = 92, // Frontier Mountains
+ZONE_overthere_93 = 93, // The Overthere
+ZONE_emeraldjungle_94 = 94, // The Emerald Jungle
+ZONE_trakanon_95 = 95, // Trakanon's Teeth
+ZONE_timorous_96 = 96, // Timorous Deep
+ZONE_kurn_97 = 97, // Kurn's Tower
+ZONE_erudsxing_98 = 98, // Erud's Crossing
+ZONE_stonebrunt_100 = 100, // The Stonebrunt Mountains
+ZONE_warrens_101 = 101, // The Warrens
+ZONE_karnor_102 = 102, // Karnor's Castle
+ZONE_chardok_103 = 103, // Chardok
+ZONE_dalnir_104 = 104, // The Crypt of Dalnir
+ZONE_charasis_105 = 105, // The Howling Stones
+ZONE_cabeast_106 = 106, // Cabilis East
+ZONE_nurga_107 = 107, // The Mines of Nurga
+ZONE_veeshan_108 = 108, // Veeshan's Peak
+ZONE_veksar_109 = 109, // Veksar
+ZONE_iceclad_110 = 110, // The Iceclad Ocean
+ZONE_frozenshadow_111 = 111, // The Tower of Frozen Shadow
+ZONE_velketor_112 = 112, // Velketor's Labyrinth
+ZONE_kael_113 = 113, // Kael Drakkel
+ZONE_skyshrine_114 = 114, // Skyshrine
+ZONE_thurgadina_115 = 115, // The City of Thurgadin
+ZONE_eastwastes_116 = 116, // Eastern Wastes
+ZONE_cobaltscar_117 = 117, // Cobaltscar
+ZONE_greatdivide_118 = 118, // The Great Divide
+ZONE_wakening_119 = 119, // The Wakening Land
+ZONE_westwastes_120 = 120, // The Western Wastes
+ZONE_crystal_121 = 121, // The Crystal Caverns
+ZONE_necropolis_123 = 123, // Dragon Necropolis
+ZONE_templeveeshan_124 = 124, // The Temple of Veeshan
+ZONE_sirens_125 = 125, // Siren's Grotto
+ZONE_mischiefplane_126 = 126, // The Plane of Mischief
+ZONE_growthplane_127 = 127, // The Plane of Growth
+ZONE_sleeper_128 = 128, // The Sleeper's Tomb
+ZONE_thurgadinb_129 = 129, // Icewell Keep
+ZONE_erudsxing2_130 = 130, // Marauders Mire
+ZONE_shadowhaven_150 = 150, // Shadow Haven
+ZONE_bazaar_151 = 151, // The Bazaar
+ZONE_nexus_152 = 152, // Nexus
+ZONE_echo_153 = 153, // The Echo Caverns
+ZONE_acrylia_154 = 154, // The Acrylia Caverns
+ZONE_sharvahl_155 = 155, // The City of Shar Vahl
+ZONE_paludal_156 = 156, // The Paludal Caverns
+ZONE_fungusgrove_157 = 157, // The Fungus Grove
+ZONE_vexthal_158 = 158, // Vex Thal
+ZONE_sseru_159 = 159, // Sanctus Seru
+ZONE_katta_160 = 160, // Katta Castellum
+ZONE_netherbian_161 = 161, // Netherbian Lair
+ZONE_ssratemple_162 = 162, // Ssraeshza Temple
+ZONE_griegsend_163 = 163, // Grieg's End
+ZONE_thedeep_164 = 164, // The Deep
+ZONE_shadeweaver_165 = 165, // Shadeweaver's Thicket
+ZONE_hollowshade_166 = 166, // Hollowshade Moor
+ZONE_grimling_167 = 167, // Grimling Forest
+ZONE_mseru_168 = 168, // Marus Seru
+ZONE_letalis_169 = 169, // Mons Letalis
+ZONE_twilight_170 = 170, // The Twilight Sea
+ZONE_thegrey_171 = 171, // The Grey
+ZONE_tenebrous_172 = 172, // The Tenebrous Mountains
+ZONE_maiden_173 = 173, // The Maiden's Eye
+ZONE_dawnshroud_174 = 174, // The Dawnshroud Peaks
+ZONE_scarlet_175 = 175, // The Scarlet Desert
+ZONE_umbral_176 = 176, // The Umbral Plains
+ZONE_akheva_179 = 179, // The Akheva Ruins
+ZONE_arena2_180 = 180, // The Arena Two
+ZONE_jaggedpine_181 = 181, // The Jaggedpine Forest
+ZONE_nedaria_182 = 182, // Nedaria's Landing
+ZONE_tutorial_183 = 183, // EverQuest Tutorial
+ZONE_load_184 = 184, // Loading Zone
+ZONE_load2_185 = 185, // New Loading Zone
+ZONE_hateplaneb_186 = 186, // The Plane of Hate
+ZONE_shadowrest_187 = 187, // Shadowrest
+ZONE_tutoriala_188 = 188, // The Mines of Gloomingdeep
+ZONE_tutorialb_189 = 189, // The Mines of Gloomingdeep
+ZONE_clz_190 = 190, // Loading
+ZONE_codecay_200 = 200, // The Crypt of Decay
+ZONE_pojustice_201 = 201, // The Plane of Justice
+ZONE_poknowledge_202 = 202, // The Plane of Knowledge
+ZONE_potranquility_203 = 203, // The Plane of Tranquility
+ZONE_ponightmare_204 = 204, // The Plane of Nightmares
+ZONE_podisease_205 = 205, // The Plane of Disease
+ZONE_poinnovation_206 = 206, // The Plane of Innovation
+ZONE_potorment_207 = 207, // Torment, the Plane of Pain
+ZONE_povalor_208 = 208, // The Plane of Valor
+ZONE_bothunder_209 = 209, // Bastion of Thunder
+ZONE_postorms_210 = 210, // The Plane of Storms
+ZONE_hohonora_211 = 211, // The Halls of Honor
+ZONE_solrotower_212 = 212, // The Tower of Solusek Ro
+ZONE_powar_213 = 213, // Plane of War
+ZONE_potactics_214 = 214, // Drunder, the Fortress of Zek
+ZONE_poair_215 = 215, // The Plane of Air
+ZONE_powater_216 = 216, // The Plane of Water
+ZONE_pofire_217 = 217, // The Plane of Fire
+ZONE_poeartha_218 = 218, // The Plane of Earth
+ZONE_potimea_219 = 219, // The Plane of Time
+ZONE_hohonorb_220 = 220, // The Temple of Marr
+ZONE_nightmareb_221 = 221, // The Lair of Terris Thule
+ZONE_poearthb_222 = 222, // The Plane of Earth
+ZONE_potimeb_223 = 223, // The Plane of Time
+ZONE_gunthak_224 = 224, // The Gulf of Gunthak
+ZONE_dulak_225 = 225, // Dulak's Harbor
+ZONE_torgiran_226 = 226, // The Torgiran Mines
+ZONE_nadox_227 = 227, // The Crypt of Nadox
+ZONE_hatesfury_228 = 228, // Hate's Fury
+ZONE_guka_229 = 229, // Deepest Guk: Cauldron of Lost Souls
+ZONE_ruja_230 = 230, // The Rujarkian Hills: Bloodied Quarries
+ZONE_taka_231 = 231, // Takish-Hiz: Sunken Library
+ZONE_mira_232 = 232, // Miragul's Menagerie: Silent Gallery
+ZONE_mmca_233 = 233, // Mistmoore's Catacombs: Forlorn Caverns
+ZONE_gukb_234 = 234, // The Drowning Crypt
+ZONE_rujb_235 = 235, // The Rujarkian Hills: Halls of War
+ZONE_takb_236 = 236, // Takish-Hiz: Shifting Tower
+ZONE_mirb_237 = 237, // Miragul's Menagerie: Frozen Nightmare
+ZONE_mmcb_238 = 238, // Mistmoore's Catacombs: Dreary Grotto
+ZONE_gukc_239 = 239, // Deepest Guk: Ancient Aqueducts
+ZONE_rujc_240 = 240, // The Rujarkian Hills: Wind Bridges
+ZONE_takc_241 = 241, // Takish-Hiz: Within the Compact
+ZONE_mirc_242 = 242, // The Spider Den
+ZONE_mmcc_243 = 243, // Mistmoore's Catacombs: Struggles within the Progeny
+ZONE_gukd_244 = 244, // Deepest Guk: The Mushroom Grove
+ZONE_rujd_245 = 245, // The Rujarkian Hills: Prison Break
+ZONE_takd_246 = 246, // Takish-Hiz: Royal Observatory
+ZONE_mird_247 = 247, // Miragul's Menagerie: Hushed Banquet
+ZONE_mmcd_248 = 248, // Mistmoore's Catacombs: Chambers of Eternal Affliction
+ZONE_guke_249 = 249, // Deepest Guk: The Curse Reborn
+ZONE_ruje_250 = 250, // The Rujarkian Hills: Drudge Hollows
+ZONE_take_251 = 251, // Takish-Hiz: River of Recollection
+ZONE_mire_252 = 252, // The Frosted Halls
+ZONE_mmce_253 = 253, // Mistmoore's Catacombs: Sepulcher of the Damned
+ZONE_gukf_254 = 254, // Deepest Guk: Chapel of the Witnesses
+ZONE_rujf_255 = 255, // The Rujarkian Hills: Fortified Lair of the Taskmasters
+ZONE_takf_256 = 256, // Takish-Hiz: Sandfall Corridors
+ZONE_mirf_257 = 257, // The Forgotten Wastes
+ZONE_mmcf_258 = 258, // Mistmoore's Catacombs: Scion Lair of Fury
+ZONE_gukg_259 = 259, // Deepest Guk: The Root Garden
+ZONE_rujg_260 = 260, // The Rujarkian Hills: Hidden Vale of Deceit
+ZONE_takg_261 = 261, // Takish-Hiz: Balancing Chamber
+ZONE_mirg_262 = 262, // Miragul's Menagerie: Heart of the Menagerie
+ZONE_mmcg_263 = 263, // Mistmoore's Catacombs: Cesspits of Putrescence
+ZONE_gukh_264 = 264, // Deepest Guk: Accursed Sanctuary
+ZONE_rujh_265 = 265, // The Rujarkian Hills: Blazing Forge 
+ZONE_takh_266 = 266, // Takish-Hiz: Sweeping Tides
+ZONE_mirh_267 = 267, // The Morbid Laboratory
+ZONE_mmch_268 = 268, // Mistmoore's Catacombs: Aisles of Blood
+ZONE_ruji_269 = 269, // The Rujarkian Hills: Arena of Chance
+ZONE_taki_270 = 270, // Takish-Hiz: Antiquated Palace
+ZONE_miri_271 = 271, // The Theater of Imprisoned Horror
+ZONE_mmci_272 = 272, // Mistmoore's Catacombs: Halls of Sanguinary Rites
+ZONE_rujj_273 = 273, // The Rujarkian Hills: Barracks of War
+ZONE_takj_274 = 274, // Takish-Hiz: Prismatic Corridors
+ZONE_mirj_275 = 275, // Miragul's Menagerie: Grand Library
+ZONE_mmcj_276 = 276, // Mistmoore's Catacombs: Infernal Sanctuary
+ZONE_chardokb_277 = 277, // Chardok: The Halls of Betrayal
+ZONE_soldungc_278 = 278, // The Caverns of Exile
+ZONE_abysmal_279 = 279, // The Abysmal Sea
+ZONE_natimbi_280 = 280, // Natimbi, the Broken Shores
+ZONE_qinimi_281 = 281, // Qinimi, Court of Nihilia
+ZONE_riwwi_282 = 282, // Riwwi, Coliseum of Games
+ZONE_barindu_283 = 283, // Barindu, Hanging Gardens
+ZONE_ferubi_284 = 284, // Ferubi, Forgotten Temple of Taelosia
+ZONE_snpool_285 = 285, // Sewers of Nihilia, Pool of Sludg
+ZONE_snlair_286 = 286, // Sewers of Nihilia, Lair of Trapp
+ZONE_snplant_287 = 287, // Sewers of Nihilia, Purifying Pla
+ZONE_sncrematory_288 = 288, // Sewers of Nihilia, Emanating Cre
+ZONE_tipt_289 = 289, // Tipt, Treacherous Crags
+ZONE_vxed_290 = 290, // Vxed, the Crumbling Caverns
+ZONE_yxtta_291 = 291, // Yxtta, Pulpit of Exiles 
+ZONE_uqua_292 = 292, // Uqua, the Ocean God Chantry
+ZONE_kodtaz_293 = 293, // Kod'Taz, Broken Trial Grounds
+ZONE_ikkinz_294 = 294, // Ikkinz, Chambers of Transcendence
+ZONE_qvic_295 = 295, // Qvic, Prayer Grounds of Calling
+ZONE_inktuta_296 = 296, // Inktu'Ta, the Unmasked Chapel
+ZONE_txevu_297 = 297, // Txevu, Lair of the Elite
+ZONE_tacvi_298 = 298, // Tacvi, The Broken Temple
+ZONE_qvicb_299 = 299, // Qvic, the Hidden Vault
+ZONE_wallofslaughter_300 = 300, // Wall of Slaughter
+ZONE_bloodfields_301 = 301, // The Bloodfields
+ZONE_draniksscar_302 = 302, // Dranik's Scar
+ZONE_causeway_303 = 303, // Nobles' Causeway
+ZONE_chambersa_304 = 304, // Muramite Proving Grounds
+ZONE_chambersb_305 = 305, // Muramite Proving Grounds
+ZONE_chambersc_306 = 306, // Muramite Proving Grounds
+ZONE_chambersd_307 = 307, // Muramite Proving Grounds
+ZONE_chamberse_308 = 308, // Muramite Proving Grounds
+ZONE_chambersf_309 = 309, // Muramite Proving Grounds
+ZONE_provinggrounds_316 = 316, // Muramite Proving Grounds
+ZONE_anguish_317 = 317, // Anguish, the Fallen Palace
+ZONE_dranikhollowsa_318 = 318, // Dranik's Hollows
+ZONE_dranikhollowsb_319 = 319, // Dranik's Hollows
+ZONE_dranikhollowsc_320 = 320, // Dranik's Hollows
+ZONE_dranikcatacombsa_328 = 328, // Catacombs of Dranik
+ZONE_dranikcatacombsb_329 = 329, // Catacombs of Dranik
+ZONE_dranikcatacombsc_330 = 330, // Catacombs of Dranik
+ZONE_draniksewersa_331 = 331, // Sewers of Dranik
+ZONE_draniksewersb_332 = 332, // Sewers of Dranik
+ZONE_draniksewersc_333 = 333, // Sewers of Dranik
+ZONE_riftseekers_334 = 334, // Riftseekers' Sanctum
+ZONE_harbingers_335 = 335, // Harbinger's Spire
+ZONE_dranik_336 = 336, // The Ruined City of Dranik
+ZONE_broodlands_337 = 337, // The Broodlands
+ZONE_stillmoona_338 = 338, // Stillmoon Temple
+ZONE_stillmoonb_339 = 339, // The Ascent
+ZONE_thundercrest_340 = 340, // Thundercrest Isles
+ZONE_delvea_341 = 341, // Lavaspinner's Lair
+ZONE_delveb_342 = 342, // Tirranun's Delve
+ZONE_thenest_343 = 343, // The Nest
+ZONE_guildlobby_344 = 344, // Guild Lobby
+ZONE_guildhall_345 = 345, // Guild Hall
+ZONE_barter_346 = 346, // The Barter Hall
+ZONE_illsalin_347 = 347, // Ruins of Illsalin
+ZONE_illsalina_348 = 348, // Illsalin Marketplace
+ZONE_illsalinb_349 = 349, // Temple of Korlach
+ZONE_illsalinc_350 = 350, // The Nargil Pits
+ZONE_dreadspire_351 = 351, // Dreadspire Keep
+ZONE_drachnidhive_354 = 354, // The Hive
+ZONE_drachnidhivea_355 = 355, // The Hatchery
+ZONE_drachnidhiveb_356 = 356, // The Cocoons
+ZONE_drachnidhivec_357 = 357, // Queen Sendaii`s Lair
+ZONE_westkorlach_358 = 358, // Stoneroot Falls
+ZONE_westkorlacha_359 = 359, // Prince's Manor
+ZONE_westkorlachb_360 = 360, // Caverns of the Lost
+ZONE_westkorlachc_361 = 361, // Lair of the Korlach
+ZONE_eastkorlach_362 = 362, // The Undershore
+ZONE_eastkorlacha_363 = 363, // Snarlstone Dens
+ZONE_shadowspine_364 = 364, // Shadow Spine
+ZONE_corathus_365 = 365, // Corathus Creep
+ZONE_corathusa_366 = 366, // Sporali Caverns
+ZONE_corathusb_367 = 367, // The Corathus Mines
+ZONE_nektulosa_368 = 368, // Shadowed Grove
+};
+
+struct CPrecipitation
+{
+  int32 active_preciptype;
+  int8 weatherUpdated;
+  int8 unk5;
+  int8 unk6;
+  int8 unk7;
+  int8 unk8;
+  int8 unk9;
+  int8 unk10;
+  int8 unk11;
+  int32 new_preciptype; // if val1 is 255, this is set to the type, otherwise to what was in val1
+  int32 new_intensity; // if val1 is 255, this is set to 0, otherwise to what was in type
+  int32 i6;
+  int32 lightningStrikeTimer;
+  int32 i8;
+  int32 i9;
+  int32 i10;
+  int32 i11;
+};
+
+struct CastSpell_Struct
+{
+	uint32	slot;
+	uint32	spell_id;
+	uint32	inventoryslot;  // slot for clicky item, 0xFFFF = normal cast
+	uint32	target_id;
+	uint32	crc32;
+};
+
+struct BindStruct {
+   /*000*/ uint32 zone_id;
+   /*004*/ float x;
+   /*008*/ float y;
+   /*012*/ float z;
+   /*016*/ float heading;
+   /*020*/
+};
+
+struct Texture_Struct
+{
+	uint32 Material;
+};
+struct Tint_Struct
+{
+	union {
+		struct {
+			uint8 Blue;
+			uint8 Green;
+			uint8 Red;
+			uint8 UseTint;	// if there's a tint this is FF
+		};
+		uint32 Color;
+	};
+};
+
+struct TextureProfile
+{
+	union {
+		struct {
+			Texture_Struct Head;
+			Texture_Struct Chest;
+			Texture_Struct Arms;
+			Texture_Struct Wrist;
+			Texture_Struct Hands;
+			Texture_Struct Legs;
+			Texture_Struct Feet;
+			Texture_Struct Primary;
+			Texture_Struct Secondary;
+		};
+		Texture_Struct Slot[9];
+	};
+};
+struct TintProfile {
+	union {
+		struct {
+			Tint_Struct Head;
+			Tint_Struct Chest;
+			Tint_Struct Arms;
+			Tint_Struct Wrist;
+			Tint_Struct Hands;
+			Tint_Struct Legs;
+			Tint_Struct Feet;
+			Tint_Struct Primary;
+			Tint_Struct Secondary;
+		};
+		Tint_Struct Slot[9];
+	};
+};
+struct AA_Array
+{
+	uint32 AA;
+	uint32 value;
+};
+struct SpellBuff_Struct
+{
+	/*000*/	uint8	effect_type;	// 0 = no buff, 2 = buff, 4 = inverse affects of buff
+	/*001*/ uint8	level;
+	/*002*/	uint8	bard_modifier;
+	/*003*/	uint8	unknown003;		// MQ2 used to call this "damage shield" -- don't see client referencing it, so maybe server side DS type tracking?
+	/*004*/	uint32	spellid;
+	/*008*/ int32	duration;
+	/*012*/	uint32	counters;		// single book keeping value (counters, rune/vie)
+	/*016*/	uint32	player_id;		// caster ID, pretty sure just zone ID
+};
+struct Disciplines_Struct {
+	uint32 values[100];
+};
+struct BandolierItem_Struct
+{
+	uint32 ID;
+	uint32 Icon;
+	char Name[64];
+};
+struct Bandolier_Struct
+{
+	char Name[32];
+	BandolierItem_Struct Items[4];
+};
+struct PotionBeltItem_Struct
+{
+	uint32 ID;
+	uint32 Icon;
+	char Name[64];
+};
+struct PotionBelt_Struct
+{
+	PotionBeltItem_Struct Items[4];
+};
+struct Tribute_Struct {
+	uint32 tribute;
+	uint32 tier;
+};
+struct GroupLeadershipAA_Struct {
+	union {
+		struct {
+			uint32 groupAAMarkNPC;
+			uint32 groupAANPCHealth;
+			uint32 groupAADelegateMainAssist;
+			uint32 groupAADelegateMarkNPC;
+			uint32 groupAA4;
+			uint32 groupAA5;
+			uint32 groupAAInspectBuffs;
+			uint32 groupAA7;
+			uint32 groupAASpellAwareness;
+			uint32 groupAAOffenseEnhancement;
+			uint32 groupAAManaEnhancement;
+			uint32 groupAAHealthEnhancement;
+			uint32 groupAAHealthRegeneration;
+			uint32 groupAAFindPathToPC;
+			uint32 groupAAHealthOfTargetsTarget;
+			uint32 groupAA15;
+		};
+		uint32 ranks[16];
+	};
+};
+
+struct RaidLeadershipAA_Struct {
+	union {
+		struct {
+			uint32 raidAAMarkNPC;
+			uint32 raidAANPCHealth;
+			uint32 raidAADelegateMainAssist;
+			uint32 raidAADelegateMarkNPC;
+			uint32 raidAA4;
+			uint32 raidAA5;
+			uint32 raidAA6;
+			uint32 raidAASpellAwareness;
+			uint32 raidAAOffenseEnhancement;
+			uint32 raidAAManaEnhancement;
+			uint32 raidAAHealthEnhancement;
+			uint32 raidAAHealthRegeneration;
+			uint32 raidAAFindPathToPC;
+			uint32 raidAAHealthOfTargetsTarget;
+			uint32 raidAA14;
+			uint32 raidAA15;
+		};
+		uint32 ranks[16];
+	};
+};
+
+struct LeadershipAA_Struct {
+	union {
+		struct {
+			GroupLeadershipAA_Struct group;
+			RaidLeadershipAA_Struct raid;
+		};
+		uint32 ranks[32];
+	};
+};
+struct PVPStatsEntry_Struct
+{
+/*00*/ char Name[64];
+/*64*/ uint32 Level;
+/*68*/ uint32 Race;
+/*72*/ uint32 Class;
+/*76*/ uint32 Zone;
+/*80*/ uint32 Time;
+/*84*/ uint32 Points;
+/*88*/
+};
+
+
+
+// this is the 'net PC' sent with opcode OP_PlayerProfile, called MSG_SEND_PC in the client
+struct NetPC
+{
+/*00000*/ //uint32  checksum;           //
+/*00004*/ uint32  gender;             // Player Gender - 0 Male, 1 Female
+/*00008*/ uint32  race;               // Player race
+/*00012*/ uint32  class_;             // Player class
+/*00016*/ uint32  unknown00016;       // ***Placeholder
+/*00020*/ uint8   level;              // Level of player
+/*00021*/ uint8   level1;             // Level of player (again?)
+/*00022*/ uint8   unknown00022[2];    // ***Placeholder
+/*00024*/ BindStruct binds[5];          // Bind points (primary is first)
+/*00124*/ uint32  deity;              // deity
+/*00128*/ uint32  intoxication;       // Alcohol level (in ticks till sober?)
+/*00132*/ uint32  spellSlotRefresh[9]; // Refresh time (millis)
+/*00168*/ uint32  abilitySlotRefresh;
+/*00172*/ uint8   haircolor;          // Player hair color
+/*00173*/ uint8   beardcolor;         // Player beard color
+/*00174*/ uint8   eyecolor1;          // Player left eye color
+/*00175*/ uint8   eyecolor2;          // Player right eye color
+/*00176*/ uint8   hairstyle;          // Player hair style
+/*00177*/ uint8   beard;              // Player beard type
+/*00178*/ uint8 unknown00178[10];
+/*00188*/ TextureProfile  item_material;   // Item texture/material of worn items
+/*00224*/ uint8 unknown00224[44];
+/*00268*/ TintProfile item_tint;    // RR GG BB 00
+/*00304*/ AA_Array  aa_array[240];   // AAs
+/*02224*/ uint32  points;             // Unspent Practice points
+/*02228*/ uint32  mana;               // Current mana
+/*02232*/ uint32  cur_hp;              // Current HP without +HP equipment
+/*02236*/ uint32  STR;                // Strength
+/*02240*/ uint32  STA;                // Stamina
+/*02244*/ uint32  CHA;                // Charisma
+/*02248*/ uint32  DEX;                // Dexterity
+/*02252*/ uint32  INT;                // Intelligence
+/*02256*/ uint32  AGI;                // Agility
+/*02260*/ uint32  WIS;                // Wisdom
+/*02264*/ uint8   face;               // Player face
+/*02265*/ uint8 unknown02264[47];
+/*02312*/ uint32   spell_book[400];    // List of the Spells in spellbook
+/*03912*/ uint8   unknown4184[448];   // all 0xff after last spell
+/*04360*/ uint32   mem_spells[9]; // List of spells memorized
+/*04396*/ uint8 unknown04396[32];
+/*04428*/ uint32  platinum;           // Platinum Pieces on player
+/*04432*/ uint32  gold;               // Gold Pieces on player
+/*04436*/ uint32  silver;             // Silver Pieces on player
+/*04440*/ uint32  copper;             // Copper Pieces on player
+/*04444*/ uint32  platinum_cursor;    // Platinum Pieces on cursor
+/*04448*/ uint32  gold_cursor;        // Gold Pieces on cursor
+/*04452*/ uint32  silver_cursor;      // Silver Pieces on cursor
+/*04456*/ uint32  copper_cursor;      // Copper Pieces on cursor
+/*04460*/ uint32  skills[100]; // [400] List of skills	// 100 dword buffer
+/*04860*/ uint32  InnateSkills[25];
+/*04960*/ uint8   unknown04760[36];
+/*04996*/ uint32  toxicity;           // Potion Toxicity (15=too toxic, each potion adds 3)
+/*05000*/ uint32  thirst_level;             // Drink (ticks till next drink)
+/*05004*/ uint32  hunger_level;             // Food (ticks till next eat)
+/*05008*/ SpellBuff_Struct buffs[25];   // Buffs currently on the player
+/*05508*/ Disciplines_Struct  disciplines; // Known disciplines
+/*05908*/ uint32 recastTimers[20]; // Timers (GMT of last use)
+/*05988*/ uint8 unknown05008[160];
+/*06148*/ uint32  endurance;          // Current endurance
+/*06152*/ uint32  aapoints_spent;           // Number of spent AA points
+/*06156*/ uint32  aapoints;         // Unspent AA points
+/*06160*/ uint8 unknown06160[4];
+/*06164*/ Bandolier_Struct bandoliers[4]; // bandolier contents
+/*07444*/ uint8 unknown07444[5120];
+/*12564*/ PotionBelt_Struct  potionbelt; // potion belt
+/*12852*/ uint8 unknown12852[8];
+/*12860*/ uint32 available_slots;
+/*12864*/ uint8 unknown12864[76];
+/*12940*/ char      name[64];           // Name of player
+/*13004*/ char      last_name[32];       // Last name of player
+/*13036*/ uint32   guild_id;            // guildid
+/*13040*/ uint32  birthday;       // character birthday
+/*13044*/ uint32  lastlogin;       // character last save time
+/*13048*/ uint32  timePlayedMin;      // time character played
+/*13052*/ uint8   pvp;                // 1=pvp, 0=not pvp
+/*13053*/ uint8   anon;               // 2=roleplay, 1=anon, 0=not anon
+/*13054*/ uint8   gm;                 // 0=no, 1=yes (guessing!)
+/*13055*/ uint8    guildrank;        // 0=member, 1=officer, 2=guildleader
+/*13056*/ uint32  guildbanker;
+/*13060*/ uint8 unknown13054[8];
+/*13068*/ uint32  exp;                // Current Experience
+/*13072*/ uint8 unknown13072[8];
+/*13080*/ uint32 timeentitledonaccount; // In days, displayed in /played
+/*13084*/ uint8   languages[28]; // List of languages
+/*13109*/ uint8   unknown13109[4];    // All 0x00 (language buffer?)
+/*13116*/ float     x;                  // Players x position
+/*13120*/ float     y;                  // Players y position
+/*13124*/ float     z;                  // Players z position
+/*13128*/ float     heading;            // Players heading
+/*13132*/ uint8   unknown13132[4];    // ***Placeholder
+/*13136*/ uint32  platinum_bank;      // Platinum Pieces in Bank
+/*13140*/ uint32  gold_bank;          // Gold Pieces in Bank
+/*13144*/ uint32  silver_bank;        // Silver Pieces in Bank
+/*13148*/ uint32  copper_bank;        // Copper Pieces in Bank
+/*13152*/ uint32  platinum_shared;    // Shared platinum pieces
+/*13156*/ uint8 unknown13156[84];
+/*13240*/ uint32  expansions;         // Bitmask for expansions
+/*13244*/ uint8 unknown13244[12];
+/*13256*/ uint32  autosplit;          // 0 = off, 1 = on
+/*13260*/ uint8 unknown13260[16];
+/*13276*/ uint16  zone_id;             // see zones.h
+/*13278*/ uint16  zoneInstance;       // Instance id
+/*13280*/ char      groupMembers[6][64];// all the members in group, including self
+/*13664*/ char      groupLeader[64];    // Leader of the group ?
+/*13728*/ uint8 unknown13728[656];
+/*14384*/ uint32  entityid;
+/*14388*/ uint32  leadAAActive;       // 0 = leader AA off, 1 = leader AA on
+/*14392*/ uint8 unknown14392[4];
+/*14396*/ int32  ldon_points_guk;    // Earned GUK points
+/*14400*/ int32  ldon_points_mir;    // Earned MIR points
+/*14404*/ int32  ldon_points_mmc;    // Earned MMC points
+/*14408*/ int32  ldon_points_ruj;    // Earned RUJ points
+/*14412*/ int32  ldon_points_tak;    // Earned TAK points
+/*14416*/ int32  ldon_points_available;  // Available LDON points
+/*14420*/ uint8 unknown14420[132];
+/*14552*/ uint32  tribute_time_remaining;        // Time remaining on tribute (millisecs)
+/*14556*/ uint32  career_tribute_points;      // Total favor points for this char
+/*14560*/ uint32  unknown7208;        // *** Placeholder
+/*14564*/ uint32  tribute_points;     // Current tribute points
+/*14568*/ uint32  unknown7216;        // *** Placeholder
+/*14572*/ uint32  tribute_active;      // 0 = off, 1=on
+/*14576*/ Tribute_Struct tributes[5]; // Current tribute loadout
+/*14616*/ uint32  unknown14616;
+/*14620*/ double  group_leadership_exp;
+/*14628*/ double  raid_leadership_exp;
+/*14640*/ uint32  group_leadership_points; // Unspent group lead AA points
+/*14644*/ uint32  raid_leadership_points;  // Unspent raid lead AA points
+/*14644*/ LeadershipAA_Struct leader_abilities; // Leader AA ranks
+/*14772*/ uint8 unknown14772[128];
+/*14900*/ uint32  air_remaining;       // Air supply (seconds)
+/*14904*/ uint32  PVPKills;
+/*14908*/ uint32  PVPDeaths;
+/*14912*/ uint32  PVPCurrentPoints;
+/*14916*/ uint32  PVPCareerPoints;
+/*14920*/ uint32  PVPBestKillStreak;
+/*14924*/ uint32  PVPWorstDeathStreak;
+/*14928*/ uint32  PVPCurrentKillStreak;
+/*14932*/ PVPStatsEntry_Struct PVPLastKill;
+/*15020*/ PVPStatsEntry_Struct PVPLastDeath;
+/*15108*/ uint32  PVPNumberOfKillsInLast24Hours;
+/*15112*/ PVPStatsEntry_Struct PVPRecentKills[50];
+/*19512*/ uint32 expAA;               // Exp earned in current AA point
+/*19516*/ uint8 unknown19516[40];
+/*19556*/ uint32 currentRadCrystals;  // Current count of radiant crystals
+/*19560*/ uint32 careerRadCrystals;   // Total count of radiant crystals ever
+/*19564*/ uint32 currentEbonCrystals; // Current count of ebon crystals
+/*19568*/ uint32 careerEbonCrystals;  // Total count of ebon crystals ever
+/*19572*/ uint8  groupAutoconsent;    // 0=off, 1=on
+/*19573*/ uint8  raidAutoconsent;     // 0=off, 1=on
+/*19574*/ uint8  guildAutoconsent;    // 0=off, 1=on
+/*19575*/ uint8  unknown19575;     // ***Placeholder (6/29/2005)
+/*19576*/ uint32 level3;              // Titanium looks here to determine the max leadership points you can bank.
+/*19580*/ uint32 showhelm;            // 0=no, 1=yes
+/*19584*/ uint8  unknown19584[4];     // ***Placeholder (10/27/2005)
+/*19588*/ uint32 unknown19588;        // *** Placeholder
+/*19592*/
+};
+
+struct NetPCWithChecksum
+{
+	uint32 checksum;
+	struct NetPC pc;
+};
+
+struct UseAA_Struct {
+	uint32 begin;
+	uint32 ability;
+	uint32 end;
+};
+
+struct BookRequest_Struct {
+	uint8 window;	// where to display the text (0xFF means new window)
+	uint8 type;             //type: 0=scroll, 1=book, 2=item info.. prolly others.
+	char txtfile[1];	// Variable length
+};
+
+struct BeginCast_Struct
+{
+	// len = 8
+/*000*/	uint16	caster_id;
+/*002*/	uint16	spell_id;
+/*004*/	uint32	cast_time;		// in miliseconds
+};

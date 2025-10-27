@@ -18,83 +18,6 @@
 #include "../common.h"
 #include "../util.h"
 #include "../settings.h"
-#include "../eq_titanium.h"
-
-int can_move_wait_ms = 10;
-
-// 0x004BFE0F
-// void __cdecl process_physics(EQPlayer *player, int missile, char *effect)
-typedef void (*_process_physics)(int player, int missile, int effect);
-_process_physics process_physics_Trampoline;
-void __cdecl process_physics_Detour(int player, int missile, int effect)
-{
-	int LocalPlayer = *(int *)Offset_LocalPlayer;
-	int actorInfoPtr = *(int *)(player+424);
-	int Physics_timestamp = *(int *)(actorInfoPtr+80);
-
-	if (player && actorInfoPtr && missile == 0 && player == LocalPlayer)
-	{
-		int cur_time = ((int(*)())(Offset_EqGetTime))();
-		static int prev_time = cur_time;
-		int time_diff = cur_time - prev_time;
-		prev_time = cur_time;
-		int physics_delta = cur_time - Physics_timestamp;
-		if (physics_delta >= can_move_wait_ms) 
-		{
-			process_physics_Trampoline(player, missile, effect);
-		}
-
-		// This frametime calculation is done inside process physics but since we are limiting how often its called we need
-		// to fix it up
-		float frametime = (float)time_diff * 0.02f;
-		*(float *)0x00924858 = frametime;
-	}
-	else 
-	{
-		process_physics_Trampoline(player, missile, effect);
-	}
-}
-
-std::map<int, int> move_timers;
-bool can_move(int spawn_id) 
-{
-	if(spawn_id == 0) // this happens during character select
-		return true;
-
-	int cur_time = ((int(*)())(Offset_EqGetTime))();
-
-	bool move = false;
-	if(move_timers.count(spawn_id) == 0) 
-	{
-		move_timers[spawn_id] = 0;
-	}
-	move = cur_time - move_timers[spawn_id] >= can_move_wait_ms;
-
-	if(move)
-		move_timers[spawn_id] = cur_time;
-
-	return move;
-}
-
-
-// 0x0048BA76
-// int __thiscall EQPlayer::MovePlayer(EQPlayer *this)
-typedef int (__fastcall *_EQPlayer__MovePlayer)(int thisptr);
-_EQPlayer__MovePlayer EQPlayer__MovePlayer_Trampoline;
-int __fastcall EQPlayer__MovePlayer_Detour(int thisptr)
-{
-	if(thisptr)
-	{
-		int spawn_id = *(int *)(thisptr+0x258);
-
-		if(can_move(spawn_id))
-		{
-			return EQPlayer__MovePlayer_Trampoline(thisptr);
-		}
-	}
-
-	return 1;
-}
 
 void LoadSleepRemoverHack()
 {
@@ -127,8 +50,6 @@ void LoadSleepRemoverHack()
 	removeLoadingSleep = ParseINIBool(buf);
 	GetINIString("SleepRemover", "HighFPSPhysicsFix", "TRUE", buf, sizeof(buf), true);
 	highFPSPhysicsFix = ParseINIBool(buf);
-	GetINIString("SleepRemover", "PhysicsMovePlayerWaitMS", "10", buf, sizeof(buf), true);
-	can_move_wait_ms = atoi(buf);
 #endif
 
 	Log("LoadSleepRemoverHack(): hack is %s", enable ? "ENABLED" : "DISABLED");
@@ -201,9 +122,11 @@ void LoadSleepRemoverHack()
 
 		if(highFPSPhysicsFix)
 		{
-			// credit to the Zeal authors for this fix: https://github.com/CoastalRedwood/Zeal/blob/mount_accel/Zeal/physics.cpp
-			process_physics_Trampoline =(_process_physics)DetourWithTrampoline((void *)Offset_process_physics, process_physics_Detour, 6);
-			EQPlayer__MovePlayer_Trampoline = (_EQPlayer__MovePlayer)DetourWithTrampoline((void *)Offset_EQPlayer__MovePlayer, EQPlayer__MovePlayer_Detour, 6);
+			unsigned char nop[] = { 0x90, 0x90, 0x90,0x90, 0x90, 0x90 };
+
+			// this disables the collision movement cache system which fails to work correctly at high framerates because it filters small movements
+			// .text:0048AD17 1CC FF 86 E8 02 00 00                             inc     dword ptr [esi+2E8h]
+			Patch((void *)(0x0048AD17), nop, 6);
 		}
 	}
 }
