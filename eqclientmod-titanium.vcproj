@@ -175,6 +175,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Modules\FileHook.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Modules\FileHook.h"
+			>
+		</File>
+		<File
 			RelativePath=".\IDA_types.h"
 			>
 		</File>

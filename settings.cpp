@@ -10,7 +10,7 @@ void GetINIString(LPCSTR appName, LPCSTR keyName, LPCSTR defaultStr, LPSTR resul
 	if (result[0] == '*')
 	{
 		WritePrivateProfileStringA(appName, keyName, defaultStr, INI_FILE);
-		strncpy(result, defaultStr, result_size);
+		strcpy_s(result, result_size, defaultStr);
 	}
 }
 

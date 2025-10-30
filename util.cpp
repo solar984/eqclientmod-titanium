@@ -187,6 +187,7 @@ char *trim(char *s)
 	return rtrim(ltrim(s));
 }
 
+#if 0
 int LoadPatchFile(const char *filename)
 {
 	char tmp[200], line[200];
@@ -285,5 +286,6 @@ int LoadPatchFile(const char *filename)
 
 	return success;
 }
+#endif
 
 #include "InstructionLength.h"

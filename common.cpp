@@ -52,7 +52,7 @@ public:
 		if (LocalPlayer && text && *text == '/')
 		{
 			char buf2[201];
-			strncpy(buf2, text, 200);
+			strcpy_s(buf2, 201, text);
 			buf2[200] = 0;
 
 			char *sep = buf2;

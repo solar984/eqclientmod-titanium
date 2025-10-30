@@ -20,7 +20,7 @@ BOOL WINAPI SetWindowTextA_Detour(HWND hWnd, LPCSTR lpString)
 		char title[50];
 		for (int i = 1; i < 100; i++)
 		{
-			_snprintf(title, 50, "Client%d", i);
+			_snprintf_s(title, 50, "Client%d", i);
 			if (FindWindow(NULL, title) == 0)
 				break;
 		}
@@ -56,7 +56,7 @@ void LoadWindowTitleHack()
 		{
 			SetWindowTextA_Original = (_SetWindowTextA)*SetWindowTextA_Ptr;
 			uintptr_t addr = (uintptr_t)SetWindowTextA_Detour;
-			Patch((void *)SetWindowTextA_Ptr, &addr, 8);
+			Patch((void *)SetWindowTextA_Ptr, &addr, 4);
 		}
 	}
 }

@@ -187,7 +187,7 @@ void command_tinfo(void *LocalPlayer, char *text, char *cmd, char *&sep)
 		EverQuestObject->dsp_chat(buf, 269, 1);
 		return;
 	}
-	sprintf(buf, "Name: %s Type %d", target->Name, target->Type);
+	sprintf(buf, "Name: %s Type %d Race %d Gender %d", target->Name, target->Type, target->Race, target->Gender);
 	EverQuestObject->dsp_chat(buf, 269, 1);
 	sprintf(buf, "RunSpeed: %f WalkSpeed %f", target->RunSpeed, target->WalkSpeed);
 	EverQuestObject->dsp_chat(buf, 269, 1);

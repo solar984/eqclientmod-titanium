@@ -2797,8 +2797,6 @@ class EqSoundManager;
 class EQSwitch;
 class EqSwitchManager;
 class EQUtil;
-class EQWorldData;
-class EQZoneInfo;
 class FilePath;
 class flex_unit;
 class GrammarRulesClass;
@@ -8686,38 +8684,7 @@ public:
 //EQLIB_OBJECT static char * __cdecl EQUtil::FormatCharName(char *,char *,int);
 };
 
-class EQWorldData
-{
-public:
-//EQLIB_OBJECT EQWorldData::EQWorldData(void);
-//EQLIB_OBJECT bool EQWorldData::GetGeometryNameFromIndex(EQZoneIndex,char *)const;
-//EQLIB_OBJECT bool EQWorldData::IsFlagSet(EQZoneIndex,unsigned long)const;
-//EQLIB_OBJECT bool EQWorldData::IsNewbieZone(EQZoneIndex)const;
-//EQLIB_OBJECT bool EQWorldData::IsNoAirZone(EQZoneIndex)const;
-//EQLIB_OBJECT bool EQWorldData::IsNoBindZone(EQZoneIndex)const;
-//EQLIB_OBJECT bool const EQWorldData::AddZone(enum EQExpansion,EQZoneIndex,char const *,char const *,int,unsigned long,int,int);
-////EQLIB_OBJECT enum EQExpansion const EQWorldData::ExpansionZone(EQZoneIndex)const;
-//EQLIB_OBJECT DWORD EQWorldData::GetIndexFromZoneName(char const *); // EQZoneIndex
-//EQLIB_OBJECT int EQWorldData::GetMinLevel(EQZoneIndex)const;
-//EQLIB_OBJECT void EQWorldData::AdvanceTime(unsigned int);
-//EQLIB_OBJECT void EQWorldData::CurrentGameTime(char *);
-//EQLIB_OBJECT void EQWorldData::GetFullZoneName(EQZoneIndex,char *);
-// virtual
-//EQLIB_OBJECT EQWorldData::~EQWorldData(void);
-////EQLIB_OBJECT void * EQWorldData::`scalar deleting destructor'(unsigned int);
-////EQLIB_OBJECT void * EQWorldData::`vector deleting destructor'(unsigned int);
-	_WORLDDATA Data;
-};
 
-class EQZoneInfo
-{
-public:
-//EQLIB_OBJECT EQZoneInfo::EQZoneInfo(enum EQExpansion,EQZoneIndex,char const *,char const *,int,unsigned long,int,int);
-// virtual
-//EQLIB_OBJECT EQZoneInfo::~EQZoneInfo(void);
-////EQLIB_OBJECT void * EQZoneInfo::`scalar deleting destructor'(unsigned int);
-////EQLIB_OBJECT void * EQZoneInfo::`vector deleting destructor'(unsigned int);
-};
 
 class FilePath
 {
@@ -12984,3 +12951,53 @@ struct BeginCast_Struct
 /*002*/	uint16	spell_id;
 /*004*/	uint32	cast_time;		// in miliseconds
 };
+
+struct EQZoneInfo
+{
+/*0x000*/   uint32   vtable; 
+/*0x004*/   int   Unknown0x4;         //pointer to something? 
+/*0x008*/   int   Expansion;          // szZoneExpansionName[] 
+/*0x00c*/   int16    Id; 
+/*0x00e*/   int16    Instance; 
+/*0x010*/   char    ShortName[129]; 
+/*0x091*/   char    LongName[259]; 
+/*0x194*/   int   Unknown0x194; 
+/*0x198*/   int   Flags;              // (Flags & 0x100000) = HasMinLevel, 0x4000 no air, 0x2 newbie zone, 0x20 no bind, 0x400000 something 
+/*0x19c*/   int   MultiInstanceZone;	// only tutorialb has this set to 1 the others are 0
+/*0x1a0*/   int   name_string_id;
+/*0x1a4*/   int   pop_tier;           // This has something to do with PoP zones. 
+/*0x1a8*/   int   min_level;           // Minimum level to access 
+/*0x1ac*/   int TutorialB_75; // set to 75 for tutorialb only
+			int	TutorialB_100; // set to 100 for tutorialb only
+		    int16   SomethingRandom; 
+		    int16   Unknown0x1b4b; 
+/*0x1b8*/   int   Unknown0x1b8; 
+/*0x1bc*/   int   Unknown0x1bc; 
+			int unk448a;
+			int unk448b;
+			int unk448c;
+			int unk448d;
+			int unk448e;
+			int unk448f;
+			int unk448g;
+			int unk448h;
+};
+
+struct EQWorldData
+{
+    int32 vtable;
+    unsigned char Hour;
+    char Minute;
+    unsigned char Day;
+    unsigned  char Month;
+    int Year;
+    unsigned char EpochHour;
+    char EpochMinute;
+    unsigned char EpochDay;
+    unsigned char EpochMonth;
+    int EpochYear;
+    int EpochTicks;
+    int EpochSeconds;
+    struct EQZoneInfo *ZoneArray[1000];
+};
+
