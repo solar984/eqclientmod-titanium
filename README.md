@@ -56,7 +56,7 @@ This hack removes the requirement to pass the 'patchme' argument to the program 
 ### Zone Version
 This hack is for switching between the old and new versions of nektulos, lavastorm, arena and bazaar zones.  There are toggles in the INI file.  The mod works by intercepting the filenames for the new .eqg zone files and acting as if the file was not found.
 This makes the game load the old s3d version of the zones which are still present in the client.  The old bazaar files were removed from the titanium client so we add these back in.  These files go into an `eqclientmod-assets` subdirectory.
-There is also a music mod for the old bazaar as it doesn't normally play music.  Read the comments in [a Modules/ZoneVersionHack.cpp](Modules/ZoneVersionHack.cpp) for an explanation of everything the mod does and how you can do it manually without using this mod.
+There is also a music mod for the old bazaar as it doesn't normally play music.  Read the comments in [Modules/ZoneVersionHack.cpp](Modules/ZoneVersionHack.cpp) for an explanation of everything the mod does and how you can do it manually without using this mod.
 
 ### Window Title
 This hack renames the application window from EverQuest to Client1, Client2, etc depending on how many other windows are already open.  This is intended for macro software like hotkeynet and AutoHotKey to make it easier to search for the window.
