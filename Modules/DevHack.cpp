@@ -195,6 +195,17 @@ void command_tinfo(void *LocalPlayer, char *text, char *cmd, char *&sep)
 	EverQuestObject->dsp_chat(buf, 269, 1);
 }
 
+void command_arrowcam(void *LocalPlayer, char *text, char *cmd, char *&sep)
+{
+	char buf[200];
+
+	char *arrowcam_ptr = (char *)0x009858C6;
+	*arrowcam_ptr = !*arrowcam_ptr;
+
+	sprintf(buf, "Arrow Cam is %s", *arrowcam_ptr ? "ON" : "OFF");
+	EverQuestObject->dsp_chat(buf, 269, 1);
+}
+
 #if 0
 // struct _SPELLBUFF *__thiscall CharacterZoneClient::GetEffect(CharacterZoneClient *this, int slot)
 typedef struct _SPELLBUFF *(__fastcall *_CharacterZoneClient__GetEffect)(int thisptr, int unused, int slot);
@@ -225,6 +236,125 @@ int __fastcall CharacterZoneClient__ProcessAffects_Detour(int thisptr)
 	return ret;
 }
 #endif
+
+// void __thiscall EqSoundManager::WaveLoad(_BYTE *this, char *String2, int a3, char a4)
+/*
+typedef void (__fastcall *_EqSoundManager__WaveLoad)(int thisptr, int unused, char *String2, int a3, char a4);
+_EqSoundManager__WaveLoad EqSoundManager__WaveLoad_Trampoline;
+void __fastcall EqSoundManager__WaveLoad_Detour(int thisptr, int, char *String2, int a3, char a4)
+{
+	Log("%d %s", a3, String2 ? String2 : "");
+	EqSoundManager__WaveLoad_Trampoline(thisptr, 0, String2, a3, a4);
+}
+*/
+
+/*
+class DH;
+typedef void (__thiscall *_EqSoundManager__WaveLoad)(DH *thisptr, char *String2, int a3, char a4);
+_EqSoundManager__WaveLoad EqSoundManager__WaveLoad_Trampoline;
+
+class DH
+{
+public:
+	void __thiscall EqSoundManager__WaveLoad_Detour(char *String2, int a3, char a4)
+	{
+		Log("%d %s", a3, String2 ? String2 : "");
+		EqSoundManager__WaveLoad_Trampoline(this, String2, a3, a4);
+	}
+};
+*/
+
+// spell effects
+#pragma pack(1)
+struct StageEmitter // 16 bytes
+{
+  int emitter_type;
+  int min_level;
+  int attach_type; // 3 = target player's position
+  int DAGnum; // where to attach, 0-8
+};
+
+struct StageTypeNew // 68 bytes
+{
+  int SoundNum;
+  struct StageEmitter emitters[4];
+};
+
+struct SpellEffectNew // 268 bytes
+{
+  char name[64];
+  struct StageTypeNew stage[3];
+};
+
+void command_eff(void *LocalPlayer, char *text, char *cmd, char *&sep)
+{
+	struct SpellEffectNew *g_pSpellEffectTableNew = *(struct SpellEffectNew **)0x00851398;
+
+	char *a1 = strtok_s(sep, " ", &sep);
+
+	if(a1 && *a1) // effect index
+	{
+		int ix = atoi(a1);
+		char *a2 = strtok_s(sep, " ", &sep);
+		if(a2 && *a2) // stage
+		{
+			int stage = atoi(a2);
+			char *a3 = strtok_s(sep, " ", &sep);
+			if(a3 && *a3) // emitter index
+			{
+				int emitter_ix = atoi(a3);
+				char *a4 = strtok_s(sep, " ", &sep);
+				if(a4 && *a4) // value index
+				{
+					int value_ix = atoi(a4);
+					char *a5 = strtok_s(sep, " ", &sep);
+					if(a5 && *a5) // new value
+					{
+						int new_val = atoi(a5);
+						// /eff 80 1 0 4 8
+						*((int *)&g_pSpellEffectTableNew[ix].stage[stage].emitters[emitter_ix] + value_ix) = new_val;
+						char buf[200];
+						sprintf(buf, "set new value %d", new_val);
+						EverQuestObject->dsp_chat(buf, 269, 1);
+					}
+				}
+			}
+		}
+	}
+}
+/*
+int __cdecl DoSpellEffect(
+        int type,
+        EQ_Spell *spelldata,
+        PlayerZoneClient *source_player,
+        PlayerZoneClient *target_player,
+        float *pos,
+        EQMissile *missile,
+        int duration)
+*/
+
+#include <intrin.h>
+typedef int (*_DoSpellEffect)(int, int, int, int, int, int, int);
+_DoSpellEffect DoSpellEffect_Trampoline;
+int DoSpellEffect_Detour(int type, int spelldata, int source_player, int target_player, int pos, int missile, int duration)
+{
+	void *retaddr = _ReturnAddress();
+	Log("DoSpellEffect_Detour: %08X - %08X %08X %08X %08X %08X %08X %08X", (int)retaddr, type, spelldata, source_player, target_player, pos, missile, duration);
+
+	return DoSpellEffect_Trampoline(type, spelldata, source_player, target_player, pos, missile, duration);
+}
+
+
+
+
+// int __thiscall CDisplay::SetActorClipPlane(_DWORD *this, int value)
+typedef int (__fastcall *_CDisplay__SetActorClipPlane)(int thisptr, int, int value);
+_CDisplay__SetActorClipPlane CDisplay__SetActorClipPlane_Trampoline;
+int __fastcall CDisplay_SetActorClipPlane_Detour(int thisptr, int, int value)
+{
+	value *= 3;
+	return CDisplay__SetActorClipPlane_Trampoline(thisptr, 0, value);
+}
 
 void LoadDevHack()
 {
@@ -258,14 +388,24 @@ void LoadDevHack()
 	// BOAT is a canoe
 	//unsigned int addr = 0x00648E5C;
 	//Patch((void *)(0x0048CAA5+1), &addr, 4);
-
+	
 	//CharacterZoneClient__ProcessAffects_Trampoline = (_CharacterZoneClient__ProcessAffects)DetourWithTrampoline((void *)0x00413AE4, CharacterZoneClient__ProcessAffects_Detour, 8);
+	CDisplay__SetActorClipPlane_Trampoline = (_CDisplay__SetActorClipPlane)DetourWithTrampoline((void *)0x004360D6, CDisplay_SetActorClipPlane_Detour, 5);
+
+	// capture loaded sound list
+	{
+		//int dtr; 
+		//{ void (__thiscall DH::*fp)(char *,int,char) = &DH::EqSoundManager__WaveLoad_Detour; memcpy(&dtr, &fp, 4); }
+		//EqSoundManager__WaveLoad_Trampoline = (_EqSoundManager__WaveLoad)DetourWithTrampoline((void *)0x0044B6D9, (void *)dtr, 7);
+	}
 
 	if(enable)
 	{
 #ifdef COMMAND_HANDLER
 		ChatCommandMap["/consumption"] = command_consumption;
 		ChatCommandMap["/tinfo"] = command_tinfo;
+		ChatCommandMap["/arrowcam"] = command_arrowcam;
+		ChatCommandMap["/eff"] = command_eff;
 #endif
 	}
 }

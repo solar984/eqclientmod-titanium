@@ -27,7 +27,7 @@
 //    lavastorm_chr.txt
 //    lavastorm_EnvironmentEmitters.txt
 //
-// The Arena was rebuilt for LDoN expansion.
+// The Arena was rebuilt for DoN expansion.
 // For old arena, move/remove these files:
 //
 //    arena.eqg

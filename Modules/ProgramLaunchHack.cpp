@@ -11,14 +11,11 @@ typedef LRESULT (__stdcall *_eqWndProc)(HWND hWnd, DWORD Msg, WPARAM wParam, LPA
 _eqWndProc eqWndProc_Trampoline;
 LRESULT __stdcall eqWndProc_Detour(HWND hWnd, DWORD Msg, WPARAM wParam, LPARAM lParam)
 {
-	if (Msg == WM_SYSKEYDOWN) 
+	if (Msg == WM_CLOSE || (Msg == WM_SYSKEYDOWN && wParam == VK_F4)) 
 	{
-        if (wParam == VK_F4) 
-		{
-			// Alt-F4 was pressed, kill process
-			ExitProcess(0);
-			//return DefWindowProcA(hWnd, Msg, wParam, lParam);
-		}
+		// Alt-F4 was pressed, kill process
+		ExitProcess(0);
+		//return DefWindowProcA(hWnd, Msg, wParam, lParam);
 	}
 	
 	return eqWndProc_Trampoline(hWnd, Msg, wParam, lParam);

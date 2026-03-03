@@ -1111,7 +1111,7 @@ typedef struct _SPAWNINFO {
 /* 0x0288 */   DWORD     GuildID; 
 /* 0x028c */   int32      Levitate;   //0-normal state  2=levitating 3=mob (not levitating) 
 				int32 unk0x28c_2;
-				int32 unk0x28c_3;
+				int32 PlayerState;
 				int32 TintIndex;
 				int32 unkxxx;
 				int32 unkyyy;
@@ -8219,20 +8219,6 @@ public:
 //EQLIB_OBJECT static class EQItemList * EQItemList::top;
 };
 
-class EQMissile
-{
-public:
-//EQLIB_OBJECT EQMissile::~EQMissile(void);
-//EQLIB_OBJECT EQMissile::EQMissile(class EQ_Equipment *,class EQPlayer *,class EQMissile *,char *,unsigned char,unsigned int);
-//EQLIB_OBJECT class EQMissile * EQMissile::is_missile_actor(struct T3D_tagACTORINSTANCE *);
-//EQLIB_OBJECT static class EQMissile * EQMissile::top;
-//EQLIB_OBJECT void EQMissile::CleanUpMyEffects(void);
-//EQLIB_OBJECT void EQMissile::HitActor(struct T3D_tagACTORINSTANCE *,bool);
-//EQLIB_OBJECT void EQMissile::LeaveTrail(void);
-//EQLIB_OBJECT void EQMissile::MissileAI(void);
-//EQLIB_OBJECT void EQMissile::ProcessMissile(void);
-};
-
 class EqMobileEmitter
 {
 public:
@@ -13001,3 +12987,112 @@ struct EQWorldData
     struct EQZoneInfo *ZoneArray[1000];
 };
 
+
+struct ZoneChange_Struct {
+/*000*/	char	char_name[64];	// Character Name
+/*064*/	uint16	zoneID;
+/*066*/	uint16	instanceID;
+/*068*/	float	y;
+/*072*/	float	x;
+/*076*/	float	z;
+/*080*/	uint32	zone_reason;	//0x0A == death, I think
+/*084*/	int32	success;		// =0 client->server, =1 server->client, -X=specific error
+/*088*/
+};
+
+struct ZonePlayerToBind_Struct {
+/*000*/	uint16 bind_zone_id;
+/*002*/	uint16 bind_instance_id;
+/*004*/	float x;
+/*008*/	float y;
+/*012*/	float z;
+/*016*/	float heading;
+/*020*/	char zone_name[1];
+};
+
+#pragma pack(1)
+struct Arrow_Struct {
+/*000*/	uint32	type;		//unsure on name, seems to be 0x1, dosent matter
+/*005*/	uint8	unknown004[12];
+/*016*/	float	src_y;
+/*020*/	float	src_x;
+/*024*/	float	src_z;
+		float	delta_x;
+		float	delta_y;
+		float	delta_z;
+/*040*/	float	velocity;		//4 is normal, 20 is quite fast
+/*044*/	float	heading;	//0-450ish, not sure the units, 140ish is straight
+/*048*/	float	tilt;		//on the order of 125
+/*052*/	uint8	unknown052[8];
+/*060*/	float	arc;
+/*064*/	uint8	unknown064[8];
+		struct  _ACTORINFO *actorInfo;
+/*076*/	uint32	source_id;
+/*080*/ uint32	target_id;	//entity ID
+/*084*/	uint32	item_id;	//1 to about 150ish
+/*088*/	uint32	level;	//seen 125, dosent seem to change anything..
+/*092*/ uint32	spell_id;	//seen 16, dosent seem to change anything
+		uint8	item_light;
+		uint8	item_weight;
+		uint8	item_range;
+		uint8	item_type;
+		uint8	skill_id;
+/*101*/	char	model_name[16];
+/*117*/	uint8	unknown117[19];
+};
+
+#pragma pack(1)
+struct EQMissile { // 136 bytes
+	/*000*/	uint32	type;		//unsure on name, seems to be 0x1, dosent matter
+	/*004*/ uint32 next; // linked list
+	/*008*/ uint32 prev; // linked list
+	/*005*/	uint8	unknown012[4];
+	/*016*/	float	src_y;
+	/*020*/	float	src_x;
+	/*024*/	float	src_z;
+	/*028*/ float	delta_y;
+	/*032*/ float	delta_x;
+	/*036*/ float	delta_z;
+	/*040*/	float	velocity;		//4 is normal, 20 is quite fast
+	/*044*/	float	heading;	//0-450ish, not sure the units, 140ish is straight
+	/*048*/	float	tilt;		//on the order of 125
+	/*052*/	float	phys52;
+	/*056*/	float	phys56;
+	/*060*/	float	heading_inverse;
+	/*064*/	uint8	unknown064[8];
+	/*072*/ uint32	actorinfo;
+	/*076*/	uint32	source_id;
+	/*080*/ uint32	target_id;	//entity ID
+	/*084*/	uint32	item_id;	//1 to about 150ish
+	/*088*/ uint32  offense_level; // offense for arrow, level for spells
+	/*092*/ uint32	spell_id;
+	/*096*/ uint8	light;
+	/*097*/ uint8	weight;
+	/*098*/	uint8	range;
+	/*099*/	uint8	effect_type;
+	/*100*/	uint8	skill_id;
+	/*101*/	char	model_name[31];
+	/*132*/	uint8	unknown132[2];
+	/*136*/
+};
+
+#pragma pack(1)
+struct StageEmitter // 16 bytes
+{
+  int emitter_type;
+  int min_level;
+  int attach_type; // 3 = target player's position
+  int DAGnum; // where to attach, 0-8
+};
+
+struct StageTypeNew // 68 bytes
+{
+  int SoundNum;
+  struct StageEmitter emitters[4];
+};
+
+struct SpellEffectNew // 268 bytes
+{
+  char name[64];
+  struct StageTypeNew stage[3];
+};
