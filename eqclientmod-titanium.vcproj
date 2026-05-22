@@ -143,6 +143,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\Modules\BorderlessWindowHack.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\common.cpp"
 			>
 		</File>
@@ -180,6 +184,10 @@
 		</File>
 		<File
 			RelativePath=".\Modules\FileHook.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Modules\FoVHack.cpp"
 			>
 		</File>
 		<File

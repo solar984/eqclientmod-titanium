@@ -59,6 +59,14 @@ void Payload2()
 	extern void LoadWindowTitleHack();
 	LoadWindowTitleHack();
 #endif
+#ifdef FOV_HACK
+	extern void LoadFoVHack();
+	LoadFoVHack();
+#endif
+#ifdef BORDERLESS_WINDOW_HACK
+	extern void LoadBorderlessWindowHack();
+	LoadBorderlessWindowHack();
+#endif
 
 	// continue from normal program entry point, this never returns
 	((void (*)())entryPoint)();

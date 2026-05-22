@@ -29,7 +29,7 @@ typedef int64_t int64;
 
 #define INI_FILE ".\\eqclientmod.ini"
 
-#define BUILD_VERSION "SOLAR_TITANIUM_2025103000"
+#define BUILD_VERSION "SOLAR_TITANIUM_2026052200"
 
 #define COMMAND_HANDLER
 #define TIMER_HACK
@@ -41,3 +41,5 @@ typedef int64_t int64;
 //#define DEV_HACK
 #define WINDOW_TITLE_HACK
 #define FILE_HOOK
+#define FOV_HACK
+#define BORDERLESS_WINDOW_HACK

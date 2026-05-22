@@ -58,3 +58,13 @@ There is also a music mod for the old bazaar as it doesn't normally play music. 
 
 ### Window Title
 This hack renames the application window from EverQuest to Client1, Client2, etc depending on how many other windows are already open.  This is intended for macro software like hotkeynet and AutoHotKey to make it easier to search for the window.
+
+### Field of View
+Normally EQ expects to render to a 4:3 display and anything wider results in a zoomed in telescope effect (same horizontal field of vision, smaller vertical).
+This mod changes the calculation so the horizontal field of view can expand at wider ratios.  Note that FoV is not something that should be freely adjusted for an
+authentic experience - it's tied to game effects like magnification spells and intoxication (which reduce the field of view) as well as some buffs that increase the field of view.
+You can forcefully set the FoV with the /fov command but be aware that it will change again when one of these effects happens.
+
+### Bordless Window
+This hack makes EQ borderless windowed when the startup window is desktop-sized.  The game should be in windowed mode (WindowedMode=TRUE) and the resolution (WindowedWidth/WindowedHeight) should be set equal to the desktop resolution to trigger this hack.  If you change resolution in game you will have to exit and restart the game to get the mod to activate.
+

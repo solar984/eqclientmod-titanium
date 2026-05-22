@@ -20,6 +20,9 @@
 #define Offset_EQPlayer__MovePlayer 0x0048BA76
 #define Offset_eqWndProc 0x004CE798
 #define Offset_TextFileReader__TextFileReader 0x00576BD0
+#define Offset_DisplayObject 0x00905D24
+#define Offset_CDisplay__SetViewAngle 0x00440F51
+#define Offset_GetEQScreenRes 0x005595DB
 
 // EQGraphicsDX9.DLL - RVA offsets
 #define Offset_DX9_t3dSetGammaLevel 0x0007BD80
